@@ -354,6 +354,71 @@ const foundationLessons = {
 };
 
 
+
+/* Phase 01 completeness pass: standardize learning checks and worked examples
+   across all foundation lessons, and explicitly cover the remaining JS syllabus items. */
+guidedLessons[2].sections.push(
+  ["7. Prototype chains", "Objects can delegate property lookup to a prototype. If a property is not found on the object itself, JavaScript checks its prototype and continues up the chain until null. Classes are syntax built on this prototype model. Use Object.hasOwn(object, key) when you need to know whether a property belongs directly to the object rather than being inherited."],
+  ["8. ES modules", "Use export to expose a module's public bindings and import to consume them in another file. Named exports are imported by name; a default export is imported under a local name. Modules have their own scope and run in strict mode. In browser projects, load the entry file with type=\"module\" and serve files through a development server."],
+  ["9. Map and Set", "Map stores key-value entries and permits keys of any type; use set, get, has, delete and size. Set stores unique values and supports membership checks and de-duplication. Prefer Map for dynamic keyed collections and Set when uniqueness is the central requirement. A plain object remains suitable for records with known string keys."]
+);
+guidedLessons[2].syntaxNotes.push(
+  ["Object.hasOwn(obj, key)", "Returns true only when key is a property directly on obj, not inherited through its prototype chain."],
+  ["export / import", "Defines and consumes a module's public interface; named imports must match an exported name."],
+  ["new Map() / new Set()", "Creates a keyed collection or unique-value collection; use collection methods rather than bracket lookup."]
+);
+guidedLessons[2].knowledgeCheck.push(
+  { question: "How does property lookup work when an object does not own a property?", answer: "JavaScript follows the object's prototype chain until the property is found or the chain ends at null." },
+  { question: "When is Map a better fit than a plain object?", answer: "For a dynamic key-value collection with arbitrary key types and collection methods such as has, get, set and size." },
+  { question: "What is the role of export and import in ES modules?", answer: "They define and consume explicit module bindings, helping keep dependencies and scope clear." }
+);
+guidedLessons[2].workedExample = {
+  title: "A closure with private state, plus Map and module syntax",
+  code: "const makeCounter = () => {\\n  let count = 0;\\n  return () => ++count;\\n};\\nconst next = makeCounter();\\nconsole.log(next(), next()); // 1 2\\n\\nconst cache = new Map();\\ncache.set(\"user-7\", { name: \"Ari\" });\\nconsole.log(cache.has(\"user-7\")); // true\\n\\n// math.js: export const double = n => n * 2;\\n// app.js: import { double } from \"./math.js\";",
+  explanation: [
+    "makeCounter creates a local count binding and returns an inner function that retains access to it.",
+    "Each call to makeCounter creates an independent counter environment.",
+    "Map stores entries through set and retrieves them through get/has; it is not accessed as cache[\"user-7\"].",
+    "The final comments show a named export and its matching import in separate module files."
+  ]
+};
+guidedLessons[2].practice += " Extend the exercise by creating a Map cache and a separate ES module with one named export. Explain the difference between a closure's retained lexical binding and a Map entry.";
+
+for (const trackId of ["python", "excel", "powerbi"]) {
+  const lessons = foundationLessons[trackId];
+  lessons.forEach((lesson) => {
+    const firstSection = lesson.sections[0];
+    const sampleCode = lesson.code || "";
+    lesson.syntaxNotes = [
+      [firstSection[0], firstSection[1]],
+      ["Example code", "Read the sample line by line. Identify each input, operation and result; then change one input and predict how the output should change before running it."]
+    ];
+    lesson.workedExample = {
+      title: "Guided example: apply the lesson concept",
+      code: sampleCode,
+      explanation: [
+        "This example is the lesson's compact implementation. First identify the data or values it starts with.",
+        "Trace each operation in order and connect it to the concept explained in the lesson sections.",
+        "Run or reproduce it, then change one value or add one edge case and compare the observed result with your prediction."
+      ]
+    };
+    lesson.knowledgeCheck = [
+      {
+        question: "In your own words, explain: " + firstSection[0] + ".",
+        answer: firstSection[1]
+      },
+      {
+        question: "What is one realistic mistake or edge case to test for this lesson?",
+        answer: "Use the lesson's practice task to name a likely invalid, missing, empty, duplicated or unexpected input, then describe how you would detect it and verify the result."
+      },
+      {
+        question: "How would you prove your solution works rather than merely looks correct?",
+        answer: "State an expected result, run a normal case and at least one edge case, and compare the observed output with the expectation."
+      }
+    ];
+  });
+}
+
 guidedLessons[0].sources = ["https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Accessibility/HTML"];
 guidedLessons[1].sources = ["https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_flexible_box_layout/Basic_concepts_of_flexbox"];
 guidedLessons[2].sources = ["https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises"];
