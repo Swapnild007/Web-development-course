@@ -225,14 +225,32 @@ document.querySelector("#complete-lesson").addEventListener("click", event => {
   } catch (error) {
     lessonFeedback.textContent = "Could not save completion in this browser.";
   }
+  renderProgress();
 });
 
+function renderProgress() {
+  const isComplete = readSaved(lessonKey) === "complete";
+  const completed = document.querySelector("#progress-completed");
+  const meter = document.querySelector(".progress-meter");
+  const fill = document.querySelector("#progress-meter-fill");
+  const status = document.querySelector("#progress-status");
+  const lessonState = document.querySelector("#progress-lesson-state");
+  if (!completed || !meter || !fill || !status || !lessonState) return;
+  completed.textContent = isComplete ? "1" : "0";
+  meter.setAttribute("aria-valuenow", isComplete ? "1" : "0");
+  fill.style.width = isComplete ? "100%" : "0%";
+  lessonState.textContent = isComplete ? "Completed ✓" : "Not started";
+  status.textContent = isComplete
+    ? "The currently authored lesson is complete. More lessons will appear here as they are added."
+    : "No tracked lessons completed yet. Open the guided lesson to begin.";
+}
 function getSequenceNote() {
   return "Complete Excel Phase 3 before Power BI Phase 2. Full-stack and Python can be studied in parallel from day one.";
 }
 
 document.querySelector(".close").addEventListener("click", () => showView("curriculum"));
 searchInput.addEventListener("input", event => renderTracks(event.target.value));
+renderProgress();
 
 fetch("./data/curriculum.json")
   .then(response => {
