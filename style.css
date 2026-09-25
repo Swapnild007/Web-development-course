@@ -229,3 +229,27 @@ dialog{background:#f8fafc;border-color:#fff;box-shadow:0 28px 90px #1e344d40}
 .lesson-actions .phase-start-action{margin:0}
 .lesson-feedback{min-height:16px;font-size:11px;color:#4b806d;margin:9px 0 0}
 @media(max-width:650px){.lesson-reader h4{font-size:17px}.lesson-code{font-size:10px;padding:12px}.lesson-actions{align-items:stretch}.lesson-actions button{flex:1}}
+
+/* Flat, in-flow curriculum and lesson pages (no modal or floating roadmap) */
+.phase-page{max-width:1160px;margin:0 auto;padding:22px 28px 140px;min-height:calc(100vh - 82px)}
+.phase-page .dialog-top{padding:0 0 15px;border-bottom:1px solid #e5eaf1;align-items:center}
+.phase-page .dialog-top h2{font-size:clamp(22px,3vw,30px);line-height:1.25;letter-spacing:-.7px}
+.phase-page .close{width:36px;height:36px;flex:none}
+.phase-page #dialog-description{font-size:13px;line-height:1.6;margin:13px 0 0}
+.phase-page .roadmap-hint{font-size:11px;color:#73839a;margin:8px 0 0}
+.phase-page .phase-list{display:grid;gap:12px;margin-top:17px;overflow:visible;padding:0}
+.phase-page .phase-study{overflow:visible;min-height:0;padding:0;margin-top:18px}
+.phase-page .phase-detail{border-radius:14px;box-shadow:none}
+.phase-page .phase-summary{padding:15px}
+.phase-page .phase-content{padding:0 17px 17px}
+.phase-page .lesson-reader{scroll-margin-top:16px}
+@media(max-width:650px){
+ .phase-page{padding:18px 17px 130px;min-height:calc(100vh - 68px)}
+ .phase-page .dialog-top{margin-bottom:0}
+ .phase-page .dialog-top h2{font-size:22px}
+ .phase-page #dialog-description{font-size:12px}
+ .phase-page .phase-list{gap:10px;margin-top:14px}
+ .phase-page .phase-summary{padding:13px}
+ .phase-page .phase-content{padding:0 13px 15px}
+ .phase-page .phase-study{margin-top:15px}
+}
