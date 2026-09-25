@@ -258,7 +258,7 @@ function openGuidedLesson(topicIndex = 0) {
   });
   if (lesson.code) {
     const pre = makeElement("pre", "lesson-code");
-    pre.append(makeElement("code", "", lesson.code.replace(/\\\\n/g, "\n")));
+    pre.append(makeElement("code", "", lesson.code.replace(/\\n/g, "\n")));
     lessonReader.append(pre);
   }
   const practice = makeElement("div", "lesson-practice");
@@ -307,20 +307,25 @@ document.querySelector("#complete-lesson").addEventListener("click", event => {
 });
 
 function renderProgress() {
-  const isComplete = readSaved(lessonKey) === "complete";
+  const total = Object.keys(guidedLessons).length;
+  const completedCount = Object.keys(guidedLessons)
+    .filter(topicIndex => readSaved(lessonKey + "." + topicIndex) === "complete").length;
   const completed = document.querySelector("#progress-completed");
+  const available = document.querySelector("#progress-available");
   const meter = document.querySelector(".progress-meter");
   const fill = document.querySelector("#progress-meter-fill");
   const status = document.querySelector("#progress-status");
   const lessonState = document.querySelector("#progress-lesson-state");
   if (!completed || !meter || !fill || !status || !lessonState) return;
-  completed.textContent = isComplete ? "1" : "0";
-  meter.setAttribute("aria-valuenow", isComplete ? "1" : "0");
-  fill.style.width = isComplete ? "100%" : "0%";
-  lessonState.textContent = isComplete ? "Completed ✓" : "Not started";
-  status.textContent = isComplete
-    ? "The currently authored lesson is complete. More lessons will appear here as they are added."
-    : "No tracked lessons completed yet. Open the guided lesson to begin.";
+  if (available) available.textContent = String(total);
+  completed.textContent = String(completedCount);
+  meter.setAttribute("aria-valuemax", String(total));
+  meter.setAttribute("aria-valuenow", String(completedCount));
+  fill.style.width = `${total ? (completedCount / total) * 100 : 0}%`;
+  lessonState.textContent = readSaved(lessonKey + ".0") === "complete" ? "Completed ✓" : "Not started";
+  status.textContent = completedCount === total
+    ? "All four authored Full-stack Phase 1 topic lessons are complete."
+    : `${completedCount} of ${total} authored Full-stack Phase 1 topic lessons completed.`;
 }
 function getSequenceNote() {
   return "Complete Excel Phase 3 before Power BI Phase 2. Full-stack and Python can be studied in parallel from day one.";
