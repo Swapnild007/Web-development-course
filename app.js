@@ -6,6 +6,12 @@ const dialog = document.querySelector("#phase-dialog");
 const title = document.querySelector("#dialog-title");
 const description = document.querySelector("#dialog-description");
 const phaseList = document.querySelector("#phase-list");
+const phaseStudy = document.querySelector("#phase-study");
+const studyTitle = document.querySelector("#study-phase-title");
+const studyDescription = document.querySelector("#study-phase-description");
+const studyTopics = document.querySelector("#study-topics");
+const studyProject = document.querySelector("#study-project");
+const studyCheckpoints = document.querySelector("#study-checkpoints");
 const trackCount = document.querySelector("#track-count");
 const views = [...document.querySelectorAll(".view")];
 const navButtons = [...document.querySelectorAll(".nav-item")];
@@ -104,6 +110,8 @@ function appendBulletList(parent, headingText, entries) {
 function openRoadmap(track) {
   title.textContent = track.name;
   description.textContent = track.description;
+  phaseList.hidden = false;
+  phaseStudy.hidden = true;
   phaseList.replaceChildren();
 
   track.phases.forEach((phase, index) => {
@@ -124,6 +132,10 @@ function openRoadmap(track) {
     project.append(makeElement("p", "project-copy", phase.project));
     content.append(project);
     appendBulletList(content, "Knowledge checkpoints", phase.checkpoints);
+    const startButton = makeElement("button", "phase-start-action", index === 0 ? "Start Phase →" : `Open Phase ${index + 1} →`);
+    startButton.type = "button";
+    startButton.addEventListener("click", () => openPhaseStudy(track, phase, index));
+    content.append(startButton);
     details.append(summary, content);
     details.addEventListener("toggle", () => {
       if (!details.open) return;
@@ -137,8 +149,33 @@ function openRoadmap(track) {
   if (track.id === "powerbi") {
     phaseList.prepend(makeElement("p", "sequence-note", "Learning sequence: " + getSequenceNote()));
   }
+  phaseList.scrollTop = 0;
   dialog.showModal();
 }
+
+function openPhaseStudy(track, phase, index) {
+  studyTitle.textContent = `Phase ${index + 1} · ${phase.title}`;
+  studyDescription.textContent = `${track.name} · Study focus`;
+  studyTopics.replaceChildren();
+  phase.topics.forEach((topic, topicIndex) => {
+    const item = makeElement("article", "study-topic");
+    item.append(makeElement("span", "study-topic-number", `TOPIC GROUP ${String(topicIndex + 1).padStart(2, "0")}`));
+    item.append(makeElement("p", "study-topic-copy", topic));
+    studyTopics.append(item);
+  });
+  studyProject.textContent = phase.project;
+  studyCheckpoints.replaceChildren();
+  phase.checkpoints.forEach(checkpoint => studyCheckpoints.append(makeElement("li", "", checkpoint)));
+  phaseList.hidden = true;
+  phaseStudy.hidden = false;
+  phaseStudy.scrollTop = 0;
+}
+
+document.querySelector("#back-to-roadmap").addEventListener("click", () => {
+  phaseStudy.hidden = true;
+  phaseList.hidden = false;
+  phaseList.scrollTop = 0;
+});
 
 function getSequenceNote() {
   return "Complete Excel Phase 3 before Power BI Phase 2. Full-stack and Python can be studied in parallel from day one.";
