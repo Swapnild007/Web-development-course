@@ -353,7 +353,7 @@ document.querySelector("#phase-page").prepend(roadmapBack);
 searchInput.addEventListener("input", event => renderTracks(event.target.value));
 renderProgress();
 
-fetch("./data/curriculum.json")
+fetch("/Web-development-course/data/curriculum.json", { cache: "no-store" })
   .then(response => {
     if (!response.ok) throw new Error("Curriculum could not be loaded.");
     return response.json();
