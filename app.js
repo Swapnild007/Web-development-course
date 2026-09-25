@@ -1,85 +1,131 @@
+"use strict";
+
 const trackRoot = document.querySelector("#tracks");
 const searchInput = document.querySelector("#search");
 const dialog = document.querySelector("#phase-dialog");
 const title = document.querySelector("#dialog-title");
 const description = document.querySelector("#dialog-description");
 const phaseList = document.querySelector("#phase-list");
+const trackCount = document.querySelector("#track-count");
 
 let tracks = [];
 
+function makeElement(tag, className, textContent) {
+  const element = document.createElement(tag);
+  if (className) element.className = className;
+  if (textContent !== undefined) element.textContent = textContent;
+  return element;
+}
+
 function renderTracks(filter = "") {
-  const q = filter.trim().toLowerCase();
-  const shown = tracks.filter(track =>
-    [track.name, track.description, ...track.phases].join(" ").toLowerCase().includes(q)
-  );
-  document.querySelector("#track-count").textContent = `${shown.length} ${shown.length === 1 ? "track" : "tracks"}`;
+  const query = filter.trim().toLowerCase();
+  const visibleTracks = tracks.filter(track => {
+    const searchableText = [
+      track.name,
+      track.description,
+      ...track.phases.flatMap(phase => [
+        phase.title,
+        ...phase.topics,
+        phase.project,
+        ...phase.checkpoints
+      ])
+    ].join(" ").toLowerCase();
+    return searchableText.includes(query);
+  });
+
+  trackCount.textContent = `${visibleTracks.length} ${visibleTracks.length === 1 ? "track" : "tracks"}`;
   trackRoot.replaceChildren();
-  if (!shown.length) {
-    const empty = document.createElement("p");
-    empty.className = "muted";
-    empty.textContent = "No matching tracks. Try another search.";
-    trackRoot.append(empty);
+
+  if (visibleTracks.length === 0) {
+    trackRoot.append(makeElement("p", "muted", "No matching tracks. Try another search."));
     return;
   }
-  for (const track of shown) {
-    const card = document.createElement("article");
-    card.className = "track-card";
+
+  visibleTracks.forEach(track => {
+    const card = makeElement("article", "track-card");
     card.style.setProperty("--accent", track.accent);
     card.style.setProperty("--tint", track.tint);
-    const top = document.createElement("div");
-    top.className = "card-top";
-    const icon = document.createElement("span");
-    icon.className = "track-icon";
-    icon.textContent = track.icon;
-    const count = document.createElement("span");
-    count.className = "phase-count";
-    count.textContent = "4 PHASES";
-    top.append(icon, count);
-    const heading = document.createElement("h3");
-    heading.textContent = track.name;
-    const copy = document.createElement("p");
-    copy.textContent = track.description;
-    const bottom = document.createElement("div");
-    bottom.className = "card-bottom";
-    const note = document.createElement("span");
-    note.textContent = "Beginner to advanced";
-    const button = document.createElement("button");
+
+    const top = makeElement("div", "card-top");
+    top.append(
+      makeElement("span", "track-icon", track.icon),
+      makeElement("span", "phase-count", `${track.phases.length} PHASES`)
+    );
+
+    const heading = makeElement("h3", "", track.name);
+    const copy = makeElement("p", "", track.description);
+    const bottom = makeElement("div", "card-bottom");
+    bottom.append(makeElement("span", "", "Beginner to advanced"));
+
+    const button = makeElement("button", "open-track", "View roadmap →");
     button.type = "button";
-    button.className = "open-track";
-    button.textContent = "View roadmap →";
+    button.setAttribute("aria-label", `View ${track.name} roadmap`);
     button.addEventListener("click", () => openRoadmap(track));
-    bottom.append(note, button);
+    bottom.append(button);
+
     card.append(top, heading, copy, bottom);
     trackRoot.append(card);
-  }
+  });
+}
+
+function appendBulletList(parent, headingText, entries) {
+  const heading = makeElement("h4", "detail-heading", headingText);
+  const list = makeElement("ul", "detail-list");
+  entries.forEach(entry => list.append(makeElement("li", "", entry)));
+  parent.append(heading, list);
 }
 
 function openRoadmap(track) {
   title.textContent = track.name;
   description.textContent = track.description;
   phaseList.replaceChildren();
+
   track.phases.forEach((phase, index) => {
-    const item = document.createElement("div");
-    item.className = "phase";
-    const number = document.createElement("span");
-    number.className = "phase-number";
-    number.textContent = String(index + 1).padStart(2, "0");
-    const body = document.createElement("div");
-    const heading = document.createElement("strong");
-    heading.textContent = phase;
-    const sub = document.createElement("p");
-    sub.textContent = index === 3 ? "Production project and capstone" : "Concepts, guided practice, and applied work";
-    body.append(heading, sub);
-    item.append(number, body);
-    phaseList.append(item);
+    const details = makeElement("details", "phase-detail");
+    if (index === 0) details.open = true;
+
+    const summary = makeElement("summary", "phase-summary");
+    const number = makeElement("span", "phase-number", String(index + 1).padStart(2, "0"));
+    const summaryText = makeElement("span", "phase-summary-text");
+    summaryText.append(
+      makeElement("strong", "", phase.title),
+      makeElement("small", "", `${phase.topics.length} syllabus topic groups · project · checkpoints`)
+    );
+    summary.append(number, summaryText, makeElement("span", "phase-chevron", "⌄"));
+
+    const content = makeElement("div", "phase-content");
+    appendBulletList(content, "Topics covered", phase.topics);
+
+    const project = makeElement("section", "project-block");
+    project.append(makeElement("h4", "detail-heading", "Applied project"));
+    project.append(makeElement("p", "project-copy", phase.project));
+    content.append(project);
+
+    appendBulletList(content, "Knowledge checkpoints", phase.checkpoints);
+    details.append(summary, content);
+    phaseList.append(details);
   });
+
+  if (track.id === "powerbi") {
+    const sequence = makeElement("p", "sequence-note", "Learning sequence: " + getSequenceNote());
+    phaseList.prepend(sequence);
+  }
+
+  dialog.style.maxHeight = "calc(100dvh - 32px)";
+  dialog.style.overflowY = "auto";
   dialog.showModal();
 }
 
+function getSequenceNote() {
+  return "Complete Excel Phase 3 before Power BI Phase 2. Full-stack and Python can be studied in parallel from day one.";
+}
+
 document.querySelector(".close").addEventListener("click", () => dialog.close());
+
 dialog.addEventListener("click", event => {
   if (event.target === dialog) dialog.close();
 });
+
 searchInput.addEventListener("input", event => renderTracks(event.target.value));
 
 fetch("./data/curriculum.json")
@@ -88,10 +134,13 @@ fetch("./data/curriculum.json")
     return response.json();
   })
   .then(data => {
+    if (!Array.isArray(data.tracks) || data.tracks.length !== 4) {
+      throw new Error("Curriculum data is incomplete or invalid.");
+    }
     tracks = data.tracks;
     renderTracks();
   })
   .catch(error => {
-    trackRoot.textContent = error.message + " Please run this site through a local web server.";
+    trackRoot.textContent = `${error.message} Please refresh or check the published curriculum file.`;
     console.error(error);
   });
