@@ -248,6 +248,76 @@ const guidedLessons = {
   }
 };
 
+
+const foundationLessons = {
+  python: [
+    { title:"Python syntax, values and truthiness", lead:"Python programs are sequences of statements that operate on objects. Learn to read values, types, and branching before building larger scripts.", sections:[
+      ["Names, objects, and assignment","A variable name is a reference to an object, not a box that permanently owns a value. Assignment binds a name; assigning one name to another can make both refer to the same mutable object. Use type(value) when learning what a value is, and repr(value) when you need an unambiguous representation."],
+      ["Expressions, indentation, and truthiness","Python uses indentation to group blocks. if, elif, and else select a branch based on a condition. False, None, numeric zero, and empty collections are falsey; most other objects are truthy. Prefer explicit comparisons when the distinction matters, such as value is None."],
+      ["Mutability and safe updates","Numbers, strings, and tuples are immutable; lists and dictionaries are mutable. An operation that mutates a list changes the same object. Make a copy when you need an independent collection, and do not confuse a shallow copy with a deep copy of nested objects."]
+    ], code:"amount = 125\nname = \"Travel\"\nitems = [\"bus\", \"train\"]\n\nif amount and items:\n    print(f\"{name}: {amount} for {len(items)} items\")", practice:"Write a small script that stores a category, an amount, and a list of expenses. Print a readable summary. Then test the condition with 0, an empty list, and None.", sources:["https://docs.python.org/3/tutorial/introduction.html"]},
+    { title:"Built-in data structures and complexity", lead:"Choose a collection by the operations your program performs most often, not just by how its literal looks.", sections:[
+      ["List, tuple, set, and dictionary","A list is ordered and mutable, suited to sequences. A tuple is ordered and immutable, useful for fixed records. A set stores unique hashable values and supports membership and set algebra. A dictionary maps hashable keys to values and preserves insertion order in modern Python."],
+      ["Practical complexity","List indexing is O(1); appending is amortized O(1); inserting near the front and searching a list are O(n). Set and dictionary membership are average O(1), though worst-case behavior can differ. These are useful models, not guarantees about every workload or implementation."],
+      ["Memory and data shape","A dictionary is convenient for looking up a record by key; a list is convenient for preserving a sequence. For nested data, draw a tiny example and identify which level represents a row, a field, or a group. Measure before optimizing memory."]
+    ], code:"expenses = [120, 80, 120]\nunique_amounts = set(expenses)\nby_category = {\"food\": 120, \"travel\": 80}\n\nprint(120 in unique_amounts)  # True\nprint(by_category[\"food\"])  # 120", practice:"Create a list of five transactions. Use a dictionary to total amounts by category and a set to list the unique categories. Explain why each structure fits its task.", sources:["https://docs.python.org/3/tutorial/datastructures.html"]},
+    { title:"Strings, Unicode and encoding", lead:"Text is made of Unicode code points in Python; bytes are sequences of values used to represent encoded data.", sections:[
+      ["Text versus bytes","str represents text; bytes represents raw byte values. Encoding converts text to bytes, while decoding converts bytes to text. UTF-8 is a common encoding for files and network data, but you should still specify the encoding when reading and writing files."],
+      ["Normalize and inspect text","Visually identical text can have different underlying code-point sequences. When comparing user-entered text, consider Unicode normalization when appropriate. Avoid assuming one character equals one byte or one visible glyph."],
+      ["Robust file handling","Open text files with an explicit encoding such as utf-8. Handle UnicodeDecodeError when input may be malformed, and choose a documented error policy rather than silently corrupting data."]
+    ], code:"text = \"café\"\ndata = text.encode(\"utf-8\")\nprint(data)\nprint(data.decode(\"utf-8\"))", practice:"Write a string containing accented characters, encode it to UTF-8, and decode it. Explain why len(text) and len(data) may differ.", sources:["https://docs.python.org/3/howto/unicode.html"]},
+    { title:"Functions, arguments and scope", lead:"Functions package a task behind a name and a clear input/output contract.", sections:[
+      ["Define and return","Use def to create a function. Parameters name the inputs; return sends a result to the caller. A function without an explicit return returns None. Keep a function focused and make side effects visible in its name or documentation."],
+      ["Default arguments and keyword arguments","Default values are evaluated once when the def statement executes. Avoid mutable defaults such as [] because calls can share the same object; use None and create a new list inside the function. Keyword-only parameters can make optional behavior clearer."],
+      ["LEGB name lookup","Python resolves local, enclosing, global, and built-in names in that order. Prefer passing dependencies as parameters instead of modifying global state. *args collects extra positional arguments; **kwargs collects extra keyword arguments."]
+    ], code:"def add_expense(amount, category, tags=None):\n    if tags is None:\n        tags = []\n    return {\n        \"amount\": amount,\n        \"category\": category,\n        \"tags\": tags,\n    }", practice:"Write a function that accepts amount and category, plus optional tags. Call it twice without tags and prove the returned tag lists are independent.", sources:["https://docs.python.org/3/tutorial/controlflow.html#defining-functions"]}
+  ],
+  excel: [
+    { title:"How Excel calculates formulas and references", lead:"A worksheet is a grid, but a formula is a dependency that Excel recalculates when its inputs change.", sections:[
+      ["Formula evaluation and dependencies","A formula begins with = and combines values, cell references, operators, and functions. Excel tracks dependencies so a changed input can trigger recalculation of dependent formulas. Circular references occur when a formula depends on its own result through a chain; resolve the dependency loop unless iterative calculation is deliberately required."],
+      ["Relative, absolute, and mixed references","A relative reference such as A2 shifts when copied. An absolute reference $A$2 locks both row and column. Mixed references $A2 and A$2 lock only one dimension. Press F4 while editing a reference to cycle reference styles in supported desktop versions."],
+      ["Debugging a copied formula","Before filling a formula down or across, identify which inputs should move and which should stay fixed. Use Evaluate Formula and inspect precedents when a result surprises you. Check number formats too: formatting changes display, not the underlying value."]
+    ], code:"=B2*$F$1\n\nCopying down changes B2 to B3, while $F$1 stays fixed.\n=$A2*B$1 locks column A and row 1.", practice:"Build a small price × quantity table and place a tax rate in one fixed cell. Write a total formula and copy it down, using an absolute reference for the tax rate.", sources:["https://support.microsoft.com/en-us/excel"]},
+    { title:"Tables, structured references and named ranges", lead:"Turn raw ranges into clear, expandable data structures that are easier to maintain.", sections:[
+      ["Convert a range to a Table","A Table gives a dataset named columns, built-in filtering, and formulas that fill down automatically. Keep one header row, one record per row, and avoid merged cells inside the data region."],
+      ["Structured references","Instead of A2:A500, a formula can refer to Table1[Amount]. Structured references follow the table as rows are added, and make formulas more readable. Use the Table Design tab to give the table a meaningful name."],
+      ["Named ranges","A defined name can represent a cell, range, or formula. Names such as TaxRate communicate intent better than a bare address. Keep names unique and check their scope if a workbook contains multiple sheets."]
+    ], code:"=SUM(Expenses[Amount])\n=SUMIFS(Expenses[Amount], Expenses[Category], \"Travel\")", practice:"Convert a transaction list to a Table named Expenses. Add a formula that totals its Amount column and a SUMIFS total for one category.", sources:["https://support.microsoft.com/en-us/office/using-structured-references-with-excel-tables"]}
+    ,{ title:"Core conditional formulas and lookup limits", lead:"Summarize rows by criteria, branch on conditions, and understand what a lookup can and cannot safely assume.", sections:[
+      ["Conditional aggregation","SUMIFS adds values meeting multiple criteria; COUNTIFS counts matching rows; AVERAGEIFS averages matching values. The sum/average range comes first, followed by paired criteria ranges and criteria. All criteria ranges should align in size."],
+      ["Logical formulas and error handling","IF chooses between two results; IFS tests multiple conditions in order. IFERROR replaces any error with a chosen result, so use it carefully: it can hide genuine formula defects. During development, expose errors rather than masking them."],
+      ["VLOOKUP constraints","VLOOKUP searches the first column of a table array and returns a value from a column index. Inserting/reordering columns can make hard-coded indices fragile; exact-match mode should be explicit for most business lookups. Modern alternatives include XLOOKUP, but availability depends on Excel version."]
+    ], code:"=SUMIFS(Expenses[Amount],Expenses[Category],\"Travel\",Expenses[Month],\"Jan\")\n=IF(B2>=1000,\"Review\",\"OK\")\n=IFERROR(XLOOKUP(E2,IDs,Names),\"Not found\")", practice:"Create a three-criteria SUMIFS (category, month, and owner). Add an IF-based review flag. Test a missing lookup value and decide whether an error or friendly message is more appropriate.", sources:["https://support.microsoft.com/en-us/excel"]},
+    { title:"Formatting, validation and trustworthy inputs", lead:"Make a workbook readable while preventing avoidable data-entry errors.", sections:[
+      ["Number formats are presentation","A number format controls how a value appears, such as currency, percentage, or date. It does not convert the stored value. Confirm that imported dates and amounts are real numeric values rather than text."],
+      ["Conditional formatting","Use conditional formatting to draw attention to values that meet a rule. Prefer a small number of meaningful rules and verify the rule range and relative references. Color should not be the only signal; include text, icons, or labels where needed."],
+      ["Data validation","Validation can restrict entries to a list, whole number, decimal, date, or custom formula. Use a source list for consistent categories, and add clear input and error messages. Validation reduces errors but is not a security boundary; pasted data may bypass it."]
+    ], code:"Example validation setup:\nAllow: List\nSource: =CategoryList\nInput message: Choose a listed category.\nError alert: Please select a valid category.", practice:"Create a category dropdown from a named range. Add a date rule and conditional formatting that flags expenses above a chosen threshold.", sources:["https://support.microsoft.com/en-us/excel"]}
+  ],
+  powerbi: [
+    { title:"Connect to data sources responsibly", lead:"A Power BI report starts with a data source decision: where data lives, how it is accessed, and how refresh will work.", sections:[
+      ["Choose a connector","Power BI Desktop can connect to files, databases, web endpoints, and folders. Match the connector to the actual source and confirm credentials, privacy requirements, and refresh support before designing visuals."],
+      ["Understand connection modes","Import loads a model copy that is refreshed on a schedule or manually. DirectQuery sends queries to the source for supported operations, introducing source and network performance considerations. Choose based on freshness, scale, source capability, and governance."],
+      ["Folder ingestion","Combining files from a folder works best when files share a consistent schema and naming convention. Inspect sample-file transformations and test what happens when a file is missing a column or contains a malformed row."]
+    ], practice:"Connect to a small CSV or Excel workbook with two related tables. Record the source, connector, authentication method, and whether Import or DirectQuery fits the exercise.", sources:["https://learn.microsoft.com/en-us/power-bi/connect-data/desktop-data-sources"]},
+    { title:"Power Query ETL and shaping", lead:"Power Query records a repeatable sequence of data-preparation steps before data reaches the model.", sections:[
+      ["ETL in a report workflow","Extract obtains data, transform cleans and shapes it, and load places the result into the model. Rename columns, set types, remove irrelevant rows, and keep transformations understandable and testable."],
+      ["Applied Steps and query design","Each transformation appears as a step. Use clear step names and keep raw-source queries separate from curated outputs when that improves maintainability. Avoid making a long chain of opaque transformations without checking intermediate results."],
+      ["Incremental refresh concept","Incremental refresh partitions data by a date/time range so only a defined recent period needs refresh after initial setup. It requires appropriate date filtering and configuration; it is not a magic speed switch and must be validated against the data source and service setup."]
+    ], practice:"In Power Query, set correct data types, remove blank rows, standardize column names, and filter out test records. Describe which steps would need updating if a source column is renamed.", sources:["https://learn.microsoft.com/en-us/power-query/"]},
+    { title:"Build a report with visuals, slicers and filters", lead:"A report is an interface for asking questions of a model, not just a page of charts.", sections:[
+      ["Choose a visual for the question","Cards show a single KPI; bar charts compare categories; line charts show trends over an ordered axis; tables expose detail. Start with the question and the grain of the data, then choose the visual that communicates it accurately."],
+      ["Filters and slicers","Visual-, page-, and report-level filters act at different scopes. A slicer is a visible filter control for report readers. Check interactions between visuals so selecting one chart does not unexpectedly hide or distort another."],
+      ["Labels and interpretation","Use descriptive titles, meaningful units, sensible sort order, and accessible contrast. Avoid misleading axes and clutter. Include the reporting period and data freshness where they affect interpretation."]
+    ], practice:"Build a two-page report from the sample model: an overview page with KPI cards and a trend, and a detail page with a table and slicer. Write one sentence describing what each visual helps answer.", sources:["https://learn.microsoft.com/en-us/power-bi/visuals/power-bi-report-visualization"]},
+    { title:"Data types, categories and sort order", lead:"Correct metadata prevents misleading visuals and broken aggregations.", sections:[
+      ["Set data types early","Dates, whole numbers, decimals, text, and Boolean values behave differently in the model. Set the type in Power Query where possible, then confirm it in the model. A numeric-looking ID is often text if arithmetic on it has no meaning."],
+      ["Data categorization","Categorization can help Power BI interpret fields such as city, country, postal code, or web URL. Use it only when the column genuinely contains that kind of data, and consider privacy implications before enabling map visuals."],
+      ["Sort by another column","Month names sort alphabetically unless you provide a numeric month index. Set Sort by column so labels display in intended order, and ensure each displayed label maps consistently to the sort key."]
+    ], practice:"Create MonthName and MonthNumber columns, sort MonthName by MonthNumber, and verify that a chart displays Jan through Dec rather than alphabetical order.", sources:["https://learn.microsoft.com/en-us/power-bi/create-reports/desktop-sort-by-column"]}
+  ]
+};
+
 function openPhaseStudy(track, phase, index) {
   studyTitle.textContent = `Phase ${index + 1} · ${phase.title}`;
   studyDescription.textContent = `${track.name} · Study focus`;
@@ -256,10 +326,10 @@ function openPhaseStudy(track, phase, index) {
     const item = makeElement("article", "study-topic");
     item.append(makeElement("span", "study-topic-number", `TOPIC GROUP ${String(topicIndex + 1).padStart(2, "0")}`));
     item.append(makeElement("p", "study-topic-copy", topic));
-    if (track.id === "fullstack" && index === 0 && guidedLessons[topicIndex]) {
+    if (index === 0 && (track.id === "fullstack" ? guidedLessons[topicIndex] : foundationLessons[track.id]?.[topicIndex])) {
       const lessonButton = makeElement("button", "topic-lesson-action", "Study this topic →");
       lessonButton.type = "button";
-      lessonButton.addEventListener("click", () => openGuidedLesson(topicIndex));
+      lessonButton.addEventListener("click", () => openGuidedLesson(topicIndex, track));
       item.append(lessonButton);
     } else {
       item.append(makeElement("small", "lesson-pending", "Lesson content will be authored in a later stage."));
@@ -284,7 +354,7 @@ function openGuidedLesson(topicIndex = 0) {
   const lesson = guidedLessons[topicIndex];
   if (!lesson) return;
   lessonReader.replaceChildren();
-  const eyebrow = makeElement("p", "eyebrow", "GUIDED LESSON · FULL-STACK FOUNDATIONS");
+  const eyebrow = makeElement("p", "eyebrow", `GUIDED LESSON · ${track?.name || "FOUNDATIONS"}`);
   const heading = makeElement("h4", "", lesson.title);
   heading.id = "lesson-title";
   heading.dataset.topicIndex = String(topicIndex);
@@ -310,9 +380,9 @@ function openGuidedLesson(topicIndex = 0) {
   actions.append(saveLessonNotesButton, completeLessonButton);
   lessonReader.append(actions, lessonFeedback);
   lessonReader.hidden = false;
-  lessonNotes.value = readSaved(notesKey);
+  activeLessonKey = `learning-studio.lesson.${track.id}.phase${1}.topic${topicIndex}`;\n  activeNotesKey = activeLessonKey + ".notes";\n  lessonNotes.value = readSaved(activeNotesKey);
   lessonFeedback.textContent = "";
-  const completed = readSaved(lessonKey + "." + topicIndex) === "complete";
+  const completed = readSaved(activeLessonKey) === "complete";
   completeLessonButton.textContent = completed ? "Lesson completed ✓" : "Mark lesson complete";
   showView("lesson");
   lessonReader.scrollIntoView({ block: "start", behavior: "auto" });
@@ -329,7 +399,7 @@ document.querySelector("#back-to-phase").addEventListener("click", () => {
 });
 saveLessonNotesButton.addEventListener("click", () => {
   try {
-    window.localStorage.setItem(notesKey, lessonNotes.value);
+    window.localStorage.setItem(activeNotesKey, lessonNotes.value);
     lessonFeedback.textContent = "Notes saved on this device.";
   } catch (error) {
     lessonFeedback.textContent = "Could not save notes in this browser. You can copy them before leaving.";
@@ -337,7 +407,7 @@ saveLessonNotesButton.addEventListener("click", () => {
 });
 completeLessonButton.addEventListener("click", event => {
   try {
-    window.localStorage.setItem(lessonKey + "." + (document.querySelector("#lesson-title")?.dataset.topicIndex || "0"), "complete");
+    window.localStorage.setItem(activeLessonKey, "complete");
     event.currentTarget.textContent = "Lesson completed ✓";
     lessonFeedback.textContent = "Completion saved on this device.";
   } catch (error) {
