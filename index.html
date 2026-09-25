@@ -17,16 +17,20 @@
     </header>
     <main>
       <section class="view active" id="learn-view" aria-labelledby="home-title">
-        <div class="home-hero">
-          <p class="eyebrow">YOUR PERSONAL LEARNING STUDIO</p>
-          <h1 id="home-title">Build skills.<br><span>One clear step at a time.</span></h1>
-          <p class="hero-copy">A guided space to learn, practice, and build real-world skills at your own pace.</p>
-          <button class="primary-action" id="browse-curriculum" type="button">Explore curriculum <span aria-hidden="true">→</span></button>
+        <div class="study-dashboard">
+          <div class="study-heading"><p class="eyebrow">LEARNING STUDIO · YOUR STUDY DESK</p><h1 id="home-title">Welcome to your<br><span>learning space.</span></h1><p class="hero-copy">A calm place to understand concepts, practice skills, and build confidence one lesson at a time.</p></div>
+          <section class="active-learning-card" aria-labelledby="active-track-title">
+            <div class="desk-card-top"><span class="desk-label">YOUR CURRENT STUDY</span><span class="empty-state-tag">Not started</span></div>
+            <div class="empty-study-icon" aria-hidden="true">▤</div>
+            <h2 id="active-track-title">No active track yet</h2>
+            <p>Choose one of your learning tracks to begin. Your lessons and study progress will have a dedicated space here.</p>
+            <button class="primary-action" id="browse-curriculum" type="button">Browse curriculum <span aria-hidden="true">→</span></button>
+          </section>
+          <section class="learning-method" aria-labelledby="method-title"><div class="method-heading"><p class="eyebrow">HOW YOU’LL LEARN</p><h2 id="method-title">A practical learning cycle</h2><p>Move from understanding a concept to applying it in a real task.</p></div>
+            <ol class="learning-steps"><li><span class="step-number">01</span><div><strong>Learn</strong><small>Clear explanations and examples</small></div></li><li><span class="step-number">02</span><div><strong>Practice</strong><small>Try it with guided exercises</small></div></li><li><span class="step-number">03</span><div><strong>Build</strong><small>Apply skills in projects</small></div></li><li><span class="step-number">04</span><div><strong>Review</strong><small>Check understanding and revisit</small></div></li></ol>
+          </section>
         </div>
-        <section class="welcome-panel">
-          <div class="welcome-icon">✦</div>
-          <div><p class="eyebrow">START HERE</p><h2>Choose a path when you're ready</h2><p>Browse the curriculum to see what each track covers, its projects, and the checkpoints you’ll work toward.</p></div>
-        </section>
+      </section>
       </section>
 
       <section class="view" id="curriculum-view" aria-labelledby="curriculum-title" hidden>
