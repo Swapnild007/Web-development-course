@@ -247,7 +247,9 @@ function openGuidedLesson(topicIndex = 0) {
   const backButton = document.querySelector("#back-to-phase");
   lessonReader.replaceChildren(backButton);
   const eyebrow = makeElement("p", "eyebrow", "GUIDED LESSON · FULL-STACK FOUNDATIONS");
-  const heading = makeElement("h4", "", lesson.title);\n  heading.id = "lesson-title";\n  heading.dataset.topicIndex = String(topicIndex);
+  const heading = makeElement("h4", "", lesson.title);
+  heading.id = "lesson-title";
+  heading.dataset.topicIndex = String(topicIndex);
   const lead = makeElement("p", "lesson-lead", lesson.lead);
   lessonReader.append(eyebrow, heading, lead);
   lesson.sections.forEach(([sectionTitle, sectionBody], index) => {
