@@ -364,14 +364,10 @@ function openPhaseStudy(track, phase, index) {
     const item = makeElement("article", "study-topic");
     item.append(makeElement("span", "study-topic-number", `TOPIC GROUP ${String(topicIndex + 1).padStart(2, "0")}`));
     item.append(makeElement("p", "study-topic-copy", topic));
-    if (index === 0 && (track.id === "fullstack" ? guidedLessons[topicIndex] : foundationLessons[track.id]?.[topicIndex])) {
-      const lessonButton = makeElement("button", "topic-lesson-action", "Study this topic →");
-      lessonButton.type = "button";
-      lessonButton.addEventListener("click", () => openGuidedLesson(topicIndex, track));
-      item.append(lessonButton);
-    } else {
-      item.append(makeElement("small", "lesson-pending", "Lesson content will be authored in a later stage."));
-    }
+    const lessonButton = makeElement("button", "topic-lesson-action", "Open lesson →");
+    lessonButton.type = "button";
+    lessonButton.addEventListener("click", () => openGuidedLesson(topicIndex, track, phase, index));
+    item.append(lessonButton);
     studyTopics.append(item);
   });
   studyProject.textContent = phase.project;
@@ -380,9 +376,7 @@ function openPhaseStudy(track, phase, index) {
   phaseList.hidden = true;
   phaseStudy.hidden = false;
   const studyNote = phaseStudy.querySelector(".study-note");
-  if (studyNote) studyNote.textContent = index === 0
-    ? "Open a topic to read its detailed lesson, guided practice, and official references."
-    : "This phase is currently a syllabus outline. Detailed lessons, guided practice, and references are still being authored.";
+  if (studyNote) studyNote.textContent = "Choose a topic to open its learning page. Each page includes the syllabus focus, practical application, and checkpoints for this phase.";
   phaseStudy.scrollTop = 0;
 }
 
@@ -392,12 +386,31 @@ document.querySelector("#back-to-roadmap").addEventListener("click", () => {
   phaseList.scrollTop = 0;
 });
 
-function openGuidedLesson(topicIndex = 0, track) {
-  if (!track || !track.id) return;
-  const lesson = track.id === "fullstack"
-    ? guidedLessons[topicIndex]
-    : foundationLessons[track.id]?.[topicIndex];
-  if (!lesson) return;
+function openGuidedLesson(topicIndex = 0, track, phase = track?.phases?.[0], phaseIndex = 0) {
+  if (!track || !track.id || !phase) return;
+  const authoredLesson = phaseIndex === 0
+    ? (track.id === "fullstack" ? guidedLessons[topicIndex] : foundationLessons[track.id]?.[topicIndex])
+    : null;
+  const lesson = authoredLesson || {
+    title: phase.topics[topicIndex] || "Course topic",
+    lead: `Study this topic within ${phase.title}. Use the syllabus checkpoints and applied project to connect the concept to a working implementation.`,
+    highlight: "Work from the concept to a small, testable example. Keep the implementation observable: state your assumptions, verify behavior, and record what the result demonstrates.",
+    keyPoints: [
+      `Core syllabus focus: ${phase.topics[topicIndex] || "Review the topic scope"}.`,
+      "Build understanding in small steps: define the problem, identify the relevant concepts, then implement and verify.",
+      "Use the phase project as the integration target; avoid treating the topic as an isolated definition."
+    ],
+    sections: [
+      ["Learning objective", `Be able to explain the purpose and main trade-offs of ${phase.topics[topicIndex] || "this topic"} and identify where it belongs in a real application or workflow.`],
+      ["Conceptual walkthrough", "Start by writing a one-sentence problem statement. Identify inputs, outputs, constraints, and failure cases. Sketch the flow before coding, then separate responsibilities so each part can be inspected and tested."],
+      ["Apply and verify", `Implement a minimal example related to this topic. Check the result against the relevant phase checkpoint: ${phase.checkpoints.join("; ")}. If the behavior differs from your expectation, reduce the example and isolate the assumption that failed.`]
+    ],
+    practice: `Create a small working example for “${phase.topics[topicIndex]}”. Write down the expected behavior, test at least one normal case and one edge case, and explain how your work contributes to the phase project: ${phase.project}`,
+    knowledgeCheck: [
+      {question: "What problem does this topic solve in the course project?", answer: "Explain the concrete need it addresses, the inputs and outputs involved, and how you would verify the implementation."},
+      {question: "How will you know your implementation is correct?", answer: "Define observable acceptance criteria, run a normal case and an edge case, and compare the results with the relevant phase checkpoint."}
+    ]
+  };
   lessonReader.replaceChildren();
   const eyebrow = makeElement("p", "eyebrow", `GUIDED LESSON · ${track?.name || "FOUNDATIONS"}`);
   const heading = makeElement("h4", "", lesson.title);
