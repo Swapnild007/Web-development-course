@@ -417,9 +417,10 @@ completeLessonButton.addEventListener("click", event => {
 });
 
 function renderProgress() {
-  const total = Object.keys(guidedLessons).length;
-  const completedCount = Object.keys(guidedLessons)
-    .filter(topicIndex => readSaved(lessonKey + "." + topicIndex) === "complete").length;
+  const lessonIds = ["fullstack", "python", "excel", "powerbi"]
+    .flatMap(trackId => [0, 1, 2, 3].map(topicIndex =>
+      `learning-studio.lesson.${trackId}.phase1.topic${topicIndex}`));
+  const completedCount = lessonIds.filter(id => readSaved(id) === "complete").length;
   const completed = document.querySelector("#progress-completed");
   const available = document.querySelector("#progress-available");
   const meter = document.querySelector(".progress-meter");
@@ -427,15 +428,15 @@ function renderProgress() {
   const status = document.querySelector("#progress-status");
   const lessonState = document.querySelector("#progress-lesson-state");
   if (!completed || !meter || !fill || !status || !lessonState) return;
-  if (available) available.textContent = String(total);
+  if (available) available.textContent = String(lessonIds.length);
   completed.textContent = String(completedCount);
-  meter.setAttribute("aria-valuemax", String(total));
+  meter.setAttribute("aria-valuemax", String(lessonIds.length));
   meter.setAttribute("aria-valuenow", String(completedCount));
-  fill.style.width = `${total ? (completedCount / total) * 100 : 0}%`;
-  lessonState.textContent = readSaved(lessonKey + ".0") === "complete" ? "Completed ✓" : "Not started";
-  status.textContent = completedCount === total
-    ? "All four authored Full-stack Phase 1 topic lessons are complete."
-    : `${completedCount} of ${total} authored Full-stack Phase 1 topic lessons completed.`;
+  fill.style.width = `${lessonIds.length ? (completedCount / lessonIds.length) * 100 : 0}%`;
+  lessonState.textContent = readSaved(lessonIds[0]) === "complete" ? "Completed ✓" : "Not started";
+  status.textContent = completedCount === lessonIds.length
+    ? "All 16 authored foundation lessons are complete."
+    : `${completedCount} of ${lessonIds.length} authored foundation lessons completed.`;
 }
 function getSequenceNote() {
   return "Complete Excel Phase 3 before Power BI Phase 2. Full-stack and Python can be studied in parallel from day one.";
