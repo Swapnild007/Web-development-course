@@ -318,6 +318,12 @@ const foundationLessons = {
   ]
 };
 
+
+guidedLessons[0].sources = ["https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Accessibility/HTML"];
+guidedLessons[1].sources = ["https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_flexible_box_layout/Basic_concepts_of_flexbox"];
+guidedLessons[2].sources = ["https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises"];
+guidedLessons[3].sources = ["https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_events"];
+
 function openPhaseStudy(track, phase, index) {
   studyTitle.textContent = `Phase ${index + 1} · ${phase.title}`;
   studyDescription.textContent = `${track.name} · Study focus`;
