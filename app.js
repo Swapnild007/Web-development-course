@@ -125,14 +125,18 @@ function openRoadmap(track) {
     content.append(project);
     appendBulletList(content, "Knowledge checkpoints", phase.checkpoints);
     details.append(summary, content);
+    details.addEventListener("toggle", () => {
+      if (!details.open) return;
+      phaseList.querySelectorAll(".phase-detail[open]").forEach(other => {
+        if (other !== details) other.open = false;
+      });
+    });
     phaseList.append(details);
   });
 
   if (track.id === "powerbi") {
     phaseList.prepend(makeElement("p", "sequence-note", "Learning sequence: " + getSequenceNote()));
   }
-  dialog.style.maxHeight = "calc(100dvh - 32px)";
-  dialog.style.overflowY = "auto";
   dialog.showModal();
 }
 
