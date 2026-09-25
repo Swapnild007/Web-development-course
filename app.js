@@ -384,40 +384,842 @@ guidedLessons[2].workedExample = {
 };
 guidedLessons[2].practice += " Extend the exercise by creating a Map cache and a separate ES module with one named export. Explain the difference between a closure's retained lexical binding and a Map entry.";
 
-for (const trackId of ["python", "excel", "powerbi"]) {
-  const lessons = foundationLessons[trackId];
-  lessons.forEach((lesson) => {
-    const firstSection = lesson.sections[0];
-    const sampleCode = lesson.code || "";
-    lesson.syntaxNotes = [
-      [firstSection[0], firstSection[1]],
-      ["Example code", "Read the sample line by line. Identify each input, operation and result; then change one input and predict how the output should change before running it."]
-    ];
-    lesson.workedExample = {
-      title: "Guided example: apply the lesson concept",
-      code: sampleCode,
-      explanation: [
-        "This example is the lesson's compact implementation. First identify the data or values it starts with.",
-        "Trace each operation in order and connect it to the concept explained in the lesson sections.",
-        "Run or reproduce it, then change one value or add one edge case and compare the observed result with your prediction."
-      ]
-    };
-    lesson.knowledgeCheck = [
-      {
-        question: "In your own words, explain: " + firstSection[0] + ".",
-        answer: firstSection[1]
+const phase1TutorRebuild = {
+  "python": [
+    {
+      "highlight": "Names bind to objects. Mutability is a property of the object, not the name; this distinction explains aliasing and many beginner bugs.",
+      "sections": [
+        [
+          "Trace a statement precisely",
+          "For each statement, identify the expression evaluated, the object produced or retrieved, and the name binding or mutation that follows. Python evaluates expressions before assigning the result. Use type(x), repr(x), and id(x) as inspection tools while learning; id identifies object identity during that object's lifetime, not a permanent business identifier."
+        ],
+        [
+          "Truthiness is a language rule, not a data-quality test",
+          "if value: asks whether the value is truthy. Zero, None, False and empty built-in containers are falsey; a non-empty string such as \"0\" is truthy. Do not use truthiness to decide whether a numeric value is valid unless zero truly means absent. For missingness, prefer `is None`; for a non-empty string, test the stripped string explicitly."
+        ],
+        [
+          "Mutability, aliasing and copying",
+          "Assignment does not clone a list. If a and b refer to the same list, mutating through either name is visible through both. A shallow copy creates a new outer container but still shares nested objects. Make the data ownership decision explicit: mutate in place, copy before editing, or construct a new value."
+        ],
+        [
+          "Control flow and boundary cases",
+          "A branch is chosen from the current condition at runtime. Test boundary values such as 0, negative values, empty collections and None. For real inputs, validate type and allowed range before using a value in a calculation; readable code should make invalid-input behavior deliberate."
+        ]
+      ],
+      "syntaxNotes": [
+        [
+          "name = expression",
+          "Evaluates the expression, then binds the name to the resulting object; it does not necessarily copy it."
+        ],
+        [
+          "if value:",
+          "Branches on truthiness; use explicit checks when zero, empty or missing values have different meanings."
+        ],
+        [
+          "value is None",
+          "Identity comparison for the singleton None; use this to check a missing optional value."
+        ],
+        [
+          "items.copy()",
+          "Creates a shallow copy of a list; nested mutable members remain shared."
+        ],
+        [
+          "id(value)",
+          "Returns an identity integer for the object's lifetime, useful for demonstrating aliasing."
+        ]
+      ],
+      "workedExample": {
+        "title": "Predict, inspect, then mutate",
+        "code": "source = [10, 20]\nalias = source\nsnapshot = source.copy()\nalias.append(30)\n\nprint(source)    # [10, 20, 30]\nprint(alias)     # [10, 20, 30]\nprint(snapshot)  # [10, 20]\nprint(source is alias)  # True\nprint(source is snapshot)  # False",
+        "explanation": [
+          "Before running the code, predict each printed line. `alias = source` creates a second name for the same list object.",
+          "append mutates that one shared list, so both source and alias display the appended value.",
+          "copy creates a different outer list, so snapshot keeps its original three? No: it keeps the two original values because the copy happened before append.",
+          "The `is` operator tests identity, while `==` tests value equality. These answer different questions."
+        ]
       },
-      {
-        question: "What is one realistic mistake or edge case to test for this lesson?",
-        answer: "Use the lesson's practice task to name a likely invalid, missing, empty, duplicated or unexpected input, then describe how you would detect it and verify the result."
+      "knowledgeCheck": [
+        {
+          "question": "After `b = a`, what must be true if a is a list?",
+          "answer": "Both names refer to the same list object unless a later assignment rebinds one name."
+        },
+        {
+          "question": "Why can `if amount:` be wrong for checking whether an amount was supplied?",
+          "answer": "Zero is falsey but may be a valid amount. Use `amount is not None` when distinguishing missing from zero."
+        },
+        {
+          "question": "Does `list.copy()` recursively copy nested lists?",
+          "answer": "No. It makes a shallow copy of the outer list; nested objects remain shared."
+        }
+      ],
+      "practice": "Create a function that receives a list of expense amounts and returns a new list with a 10% fee added to each amount. Do not mutate the caller's list. Demonstrate this with id() and an empty input; explain why your output is independent."
+    },
+    {
+      "highlight": "Choose a collection from its invariants and access pattern. Big-O is a model for growth, not a stopwatch prediction.",
+      "sections": [
+        [
+          "Define the collection contract",
+          "A list preserves order and allows duplicates; a tuple is an immutable sequence; a set enforces uniqueness; a dict maps unique hashable keys to values. Before selecting one, write down the operations required: positional access, append, membership, uniqueness, or key-based retrieval."
+        ],
+        [
+          "Complexity with the reason attached",
+          "List indexing is O(1), while membership search is O(n) because a general list may need to inspect each element. Appending is amortized O(1): occasional resizing is more expensive, but averaged across many appends the cost is constant. Inserting at index zero is O(n) because existing elements shift. Dict/set membership is average O(1) under ordinary hashing assumptions, not an unconditional worst-case guarantee."
+        ],
+        [
+          "Specialized structures solve specific workloads",
+          "Use collections.Counter for frequency counts, defaultdict for grouped accumulation, and deque for efficient additions/removals at both ends. These are not automatically better for every task: first state the required operation, then choose the abstraction that makes the invariant clear."
+        ],
+        [
+          "Measure memory and benchmark carefully",
+          "sys.getsizeof reports an object's shallow size and does not include all objects it refers to. Compare realistic datasets and include construction plus access costs. Avoid optimizing based on a tiny sample or assuming one implementation's layout is a language guarantee."
+        ]
+      ],
+      "syntaxNotes": [
+        [
+          "items[i]",
+          "Indexed access to a list or tuple; list/tuple indexing is O(1)."
+        ],
+        [
+          "value in items",
+          "Membership test; O(n) for a list, average O(1) for a set/dict key lookup."
+        ],
+        [
+          "dict.get(key, default)",
+          "Returns a value or default without raising KeyError when the key is absent."
+        ],
+        [
+          "collections.Counter(values)",
+          "Counts hashable values and provides a purpose-built frequency mapping."
+        ],
+        [
+          "collections.deque()",
+          "Double-ended queue; efficient append/pop operations at either end."
+        ]
+      ],
+      "workedExample": {
+        "title": "Count categories without repeated scans",
+        "code": "from collections import Counter\n\ncategories = [\"food\", \"travel\", \"food\", \"supplies\", \"food\"]\ncounts = Counter(categories)\nprint(counts[\"food\"])       # 3\nprint(counts.most_common(2)) # [('food', 3), ('travel', 1)]\n\n# Equivalent core idea, written manually:\nmanual = {}\nfor category in categories:\n    manual[category] = manual.get(category, 0) + 1\nprint(manual[\"food\"])       # 3",
+        "explanation": [
+          "The Counter approach directly expresses the task: frequency counting.",
+          "The manual version reveals the underlying algorithm: one pass, updating one key per item.",
+          "For n categories in the input, the loop performs n updates; dictionary updates are average constant-time, giving expected O(n) work under normal hashing assumptions.",
+          "Counter is a standard-library tool, not magic: understanding the manual version helps debug and adapt it."
+        ]
       },
-      {
-        question: "How would you prove your solution works rather than merely looks correct?",
-        answer: "State an expected result, run a normal case and at least one edge case, and compare the observed output with the expectation."
-      }
-    ];
+      "knowledgeCheck": [
+        {
+          "question": "Why is `item in a_list` generally O(n)?",
+          "answer": "In the general case Python may have to compare the target with each list element until it finds a match or reaches the end."
+        },
+        {
+          "question": "What does amortized O(1) append mean?",
+          "answer": "Most appends are constant-time and occasional resizing is more expensive; averaged across a long sequence of appends, the cost per append is constant."
+        },
+        {
+          "question": "When is deque a better fit than a list?",
+          "answer": "When the workload frequently adds or removes items from both ends, such as a queue."
+        }
+      ],
+      "practice": "Implement a category counter manually from 100 sample transactions, then refactor it to Counter. Compare the results, add a category that never appears, and explain list membership versus set membership for a repeated lookup workload."
+    },
+    {
+      "highlight": "A Python str is text; bytes are encoded data. Crossing that boundary requires an explicit encoding decision.",
+      "sections": [
+        [
+          "Unicode text and encoded bytes",
+          "A Python str contains Unicode text. A bytes value is a sequence of byte values. Encoding maps text to bytes using a codec such as UTF-8; decoding interprets bytes using a codec. The same text can produce different bytes under different encodings, and malformed bytes may fail decoding."
+        ],
+        [
+          "Characters, code points and visible glyphs",
+          "len(str) counts Python string elements (Unicode code points in typical use), not necessarily user-perceived grapheme clusters. A visible character can be made from a base character plus combining marks. UTF-8 byte length is a separate count; never assume len(text) equals len(text.encode('utf-8'))."
+        ],
+        [
+          "File boundaries and error policy",
+          "When reading a text file, specify encoding where the format is known. If data may be malformed, decide whether to reject it, replace invalid sequences, or report it for correction. Silent replacement can be acceptable for some display-only pipelines but is risky for identifiers and audit data."
+        ],
+        [
+          "Normalize only when the domain requires it",
+          "Visually identical strings can have different Unicode representations. Normalization can help comparisons, but it is a domain decision: preserve original text for display/audit and normalize comparison keys consistently where appropriate."
+        ]
+      ],
+      "syntaxNotes": [
+        [
+          "str",
+          "Unicode text object; not a byte array."
+        ],
+        [
+          "bytes",
+          "Immutable sequence of byte values, often used for encoded files and network payloads."
+        ],
+        [
+          "text.encode('utf-8')",
+          "Encodes Unicode text into UTF-8 bytes."
+        ],
+        [
+          "payload.decode('utf-8')",
+          "Decodes bytes as UTF-8; invalid sequences can raise UnicodeDecodeError."
+        ],
+        [
+          "open(path, encoding='utf-8')",
+          "Opens a text file using an explicit codec, avoiding dependence on a platform default."
+        ]
+      ],
+      "workedExample": {
+        "title": "Round-trip a non-ASCII value",
+        "code": "label = \"café\"\npayload = label.encode(\"utf-8\")\nrestored = payload.decode(\"utf-8\")\n\nprint(type(label).__name__)       # str\nprint(type(payload).__name__)     # bytes\nprint(len(label))                 # 4\nprint(len(payload))               # 5\nprint(restored == label)          # True",
+        "explanation": [
+          "The accented é is one Python string element in this example, so the text length is four.",
+          "UTF-8 encodes é using more than one byte, so the payload length is five.",
+          "Decoding with the matching codec reconstructs the original text.",
+          "A successful round trip checks this sample, but robust file handling should also test invalid byte sequences and define an error policy."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "What does encode do, and what does decode do?",
+          "answer": "encode converts text (str) into bytes using a codec; decode interprets bytes as text using a codec."
+        },
+        {
+          "question": "Why can UTF-8 byte length exceed len(text)?",
+          "answer": "UTF-8 uses a variable number of bytes per code point; non-ASCII code points often require multiple bytes."
+        },
+        {
+          "question": "Should malformed bytes always be silently replaced?",
+          "answer": "No. Choose a policy based on the data's purpose; rejecting or logging malformed identifiers may be safer than silently changing them."
+        }
+      ],
+      "practice": "Read a UTF-8 text file containing accented names. Print both its decoded text and encoded byte length. Add a malformed-byte test and document whether your program rejects, replaces, or reports it."
+    },
+    {
+      "highlight": "A function has an input/output contract and a scope. Defaults are evaluated once when the function is defined.",
+      "sections": [
+        [
+          "Function contract and return values",
+          "A function should state what inputs it accepts, what it returns, and what side effects it performs. `return` exits the function and passes a value to the caller; falling off the end returns None. Distinguish printing a result from returning it: printed text is for a human or console, while a returned value can be reused by other code."
+        ],
+        [
+          "Arguments and parameter binding",
+          "Positional arguments bind by position; keyword arguments bind by parameter name. Use keyword-only parameters when optional settings would be ambiguous. *args gathers extra positional arguments into a tuple; **kwargs gathers extra keyword arguments into a dict. These are collection mechanisms, not a substitute for a clear function signature."
+        ],
+        [
+          "Mutable default trap",
+          "Default expressions are evaluated when the def statement runs, not freshly for each call. A default list can therefore be shared across calls. Use None as the sentinel and create a fresh list inside the function when the caller omitted the argument."
+        ],
+        [
+          "LEGB scope and closures",
+          "A name is resolved through Local, Enclosing, Global, then Built-in scopes. Assignment inside a function normally binds a local name unless declared global/nonlocal. Passing values explicitly often makes dependencies easier to test than relying on global state."
+        ]
+      ],
+      "syntaxNotes": [
+        [
+          "def name(arg):",
+          "Defines a function; its indented body runs when called."
+        ],
+        [
+          "return value",
+          "Ends the current function call and provides a result to the caller."
+        ],
+        [
+          "parameter=None",
+          "Common sentinel pattern for optional mutable inputs; create the fresh mutable object inside."
+        ],
+        [
+          "*args / **kwargs",
+          "Collect extra positional arguments into a tuple and extra keyword arguments into a dictionary."
+        ],
+        [
+          "nonlocal name",
+          "Declares that assignment should rebind a name in the nearest enclosing function scope."
+        ]
+      ],
+      "workedExample": {
+        "title": "Make independent defaults and return a value",
+        "code": "def add_tag(tag, tags=None):\n    if tags is None:\n        tags = []\n    tags.append(tag)\n    return tags\n\nfirst = add_tag(\"urgent\")\nsecond = add_tag(\"later\")\nprint(first)   # ['urgent']\nprint(second)  # ['later']\n\n# The caller can also pass an existing list:\nshared = [\"finance\"]\nresult = add_tag(\"review\", shared)\nprint(shared)  # ['finance', 'review']",
+        "explanation": [
+          "None marks the absence of a supplied list; it is not used as the working list itself.",
+          "The function creates a fresh list for each omitted argument, so the first two calls do not share state.",
+          "When the caller explicitly passes a list, this implementation mutates that list. That side effect is part of the function contract and should be documented or redesigned if mutation is not intended.",
+          "The function returns the list rather than printing it, allowing callers to store, test or transform the result."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "What does a function return if it has no explicit return statement?",
+          "answer": "None."
+        },
+        {
+          "question": "Why is `def f(items=[])` often a bug?",
+          "answer": "The list default is created once at function definition time and reused by calls that omit the argument."
+        },
+        {
+          "question": "What is the difference between print and return?",
+          "answer": "print writes a representation to an output stream; return provides a value to the caller and ends the function."
+        }
+      ],
+      "practice": "Write `summarize_expenses(records, threshold=...)` to return total and count without printing. Add an optional category list safely, call it twice without that list, and test empty records, zero amount and a missing category. State the function's contract."
+    }
+  ],
+  "excel": [
+    {
+      "highlight": "Excel formulas form a dependency graph. References should move only when the underlying business input should move.",
+      "sections": [
+        [
+          "Formula anatomy and calculation",
+          "A formula begins with `=` and evaluates references, operators, constants and functions. Excel tracks precedent/dependent relationships and recalculates affected formulas. Operator precedence matters; use parentheses to make intended grouping explicit rather than relying on a reader to remember the order."
+        ],
+        [
+          "Reference translation when copied",
+          "Relative A1 references adjust by the number of rows/columns moved. `$A$1` locks both axes; `$A1` locks the column; `A$1` locks the row. Decide which references are inputs that should vary per record and which are shared assumptions."
+        ],
+        [
+          "Circular references and intentional iteration",
+          "A circular reference exists when a formula depends on itself directly or through a chain. It is often a design mistake, such as a total cell included in its own sum range. Iterative calculation can be appropriate for specific financial models, but it changes workbook calculation behavior and needs documented convergence assumptions."
+        ],
+        [
+          "Audit a result instead of guessing",
+          "Use Trace Precedents/Dependents and Evaluate Formula to inspect how a result is built. Check whether source cells are numeric or text and whether number formatting is disguising a unit mismatch. Validate with a hand-calculated small case."
+        ]
+      ],
+      "syntaxNotes": [
+        [
+          "=B2*$F$1",
+          "Multiplies a row-specific value by a fixed assumption cell."
+        ],
+        [
+          "$A$1",
+          "Absolute reference: locks column A and row 1 when copied."
+        ],
+        [
+          "$A2 / A$2",
+          "Mixed references: lock only the column or only the row."
+        ],
+        [
+          "=SUM(C2:C10)",
+          "Aggregates a range; range endpoints should exclude the output cell to avoid self-reference."
+        ],
+        [
+          "Evaluate Formula",
+          "Steps through formula evaluation to expose an incorrect intermediate reference or operation."
+        ]
+      ],
+      "workedExample": {
+        "title": "Copy a tax calculation down safely",
+        "code": "A2 = Unit price\nB2 = Quantity\nF1 = Tax rate (e.g. 8%)\nC2 = A2*B2\nD2 = C2*$F$1\nE2 = C2+D2\n\nFill C2:E2 down for the next transaction.",
+        "explanation": [
+          "C2 uses relative references because each row has its own price and quantity; when copied down, the references should become A3 and B3.",
+          "D2 keeps the tax assumption anchored at $F$1 while its subtotal reference changes by row.",
+          "E2 adds subtotal and tax. A hand check with price 100, quantity 2, tax 8% should produce subtotal 200, tax 16 and total 216.",
+          "If the total formula is placed inside the range it sums, Excel may report a circular reference; check the output cell is outside its input range."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "When copied one row down, how does `=B2*$F$1` change?",
+          "answer": "It becomes `=B3*$F$1`: B2 is relative, while the absolute F1 reference remains fixed."
+        },
+        {
+          "question": "What is the difference between `$A2` and `A$2`?",
+          "answer": "$A2 locks the column but lets the row move; A$2 lets the column move but locks the row."
+        },
+        {
+          "question": "Why should iterative calculation not be enabled as a reflexive fix?",
+          "answer": "It can mask a mistaken circular dependency and introduces calculation settings/convergence behavior that must be intentional and documented."
+        }
+      ],
+      "practice": "Build a 5-row expense calculation with unit price, quantity, tax rate and total. Fill formulas down, audit one row with Evaluate Formula, and intentionally create then fix a circular reference. Record the expected and actual results."
+    },
+    {
+      "highlight": "A Table gives a range a schema: named columns, consistent records and references that expand with new rows.",
+      "sections": [
+        [
+          "Shape source data like a dataset",
+          "Use one header row, one record per row and one field per column. Avoid merged cells, blank separator rows and multiple unrelated tables in one rectangle. This tidy structure makes filters, formulas, charts and future Power Query work more reliable."
+        ],
+        [
+          "Create and name a Table",
+          "Convert the source range to an Excel Table and give it a descriptive name such as Expenses. Tables expand when records are added and can carry calculated-column formulas down. Confirm that the header names are unique and meaningful."
+        ],
+        [
+          "Structured reference anatomy",
+          "`Expenses[Amount]` refers to the Amount column; `Expenses[@Amount]` refers to the current row's Amount within a table formula. Special specifiers such as `[#Headers]` and `[#Totals]` select table parts. Structured references adjust as table rows are added or removed."
+        ],
+        [
+          "Named ranges as semantic labels",
+          "A defined name can identify a cell, range or formula. A name like TaxRate communicates the role of an assumption better than `$F$1`. Workbook scope and worksheet scope differ, so resolve duplicate names deliberately."
+        ]
+      ],
+      "syntaxNotes": [
+        [
+          "Ctrl+T / Insert > Table",
+          "Converts a selected data range into a structured Table in supported Excel versions."
+        ],
+        [
+          "Expenses[Amount]",
+          "References the full Amount column of the named table."
+        ],
+        [
+          "Expenses[@Amount]",
+          "References the Amount value in the current row of a table formula."
+        ],
+        [
+          "=SUM(Expenses[Amount])",
+          "Totals a table column and includes appended rows as the table expands."
+        ],
+        [
+          "Name Manager",
+          "Creates, edits and audits defined names and their scope."
+        ]
+      ],
+      "workedExample": {
+        "title": "Create an expandable expense register",
+        "code": "Table: Expenses\nColumns: Date | Category | Owner | Amount\n\nTotal spend:\n=SUM(Expenses[Amount])\n\nTravel spend:\n=SUMIFS(Expenses[Amount],Expenses[Category],\"Travel\")\n\nCurrent row flag (inside table):\n=[@Amount]>500",
+        "explanation": [
+          "Convert the raw rows to a Table named Expenses and verify that the field names match the formulas exactly.",
+          "The total and category subtotal use full-column structured references, so new table records are included as the table grows.",
+          "The current-row reference `[@Amount]` is useful in a calculated column because each row evaluates against its own amount.",
+          "Append a new record and verify both totals update. A fixed range such as C2:C100 may silently omit later rows."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "What is the structural advantage of one record per row?",
+          "answer": "It gives each row a consistent record shape, enabling reliable filtering, aggregation, formulas and data import."
+        },
+        {
+          "question": "What does `Expenses[@Amount]` mean inside a table formula?",
+          "answer": "The Amount value for the current row."
+        },
+        {
+          "question": "Why are structured references often more maintainable than fixed ranges?",
+          "answer": "They use table and field names and adjust as table records are added or removed."
+        }
+      ],
+      "practice": "Create an Expenses table with at least 10 records and a named TaxRate assumption. Add a total, a category SUMIFS, and a calculated column that flags amounts over a threshold. Append records and verify formulas expand."
+    },
+    {
+      "highlight": "Conditional aggregation is criteria-driven. Keep the criteria ranges aligned and make the meaning of each criterion explicit.",
+      "sections": [
+        [
+          "Build conditional aggregations in pairs",
+          "SUMIFS uses the sum range first, then one or more criteria-range/criteria pairs. COUNTIFS uses criteria pairs to count matching rows; AVERAGEIFS averages values for matching records. For clean results, each criteria range should align to the same row set and have compatible dimensions."
+        ],
+        [
+          "Understand criteria strings",
+          "A criterion can be a value, cell reference, or expression such as `\">=100\"`. When combining an operator with a cell value, concatenate the operator and reference, for example `\">=\"&G1`. Dates should be compared as actual Excel date serial values, not ambiguous text."
+        ],
+        [
+          "Branching and error behavior",
+          "IF evaluates one condition; IFS evaluates conditions in order, so order matters when ranges overlap. IFERROR catches any error and returns a fallback, but can hide broken references or type errors. Use IFNA when only a missing lookup result should be handled."
+        ],
+        [
+          "Lookup assumptions",
+          "VLOOKUP searches the leftmost column of its table array and returns a specified column index. Inserting or rearranging columns can make the index wrong. Exact-match mode should be explicit for identifiers; modern XLOOKUP can separate lookup and return arrays but is version-dependent."
+        ]
+      ],
+      "syntaxNotes": [
+        [
+          "SUMIFS(sum_range, range1, criteria1, ...)",
+          "Adds values whose corresponding records satisfy every criteria pair."
+        ],
+        [
+          "COUNTIFS(range1, criteria1, ...)",
+          "Counts records satisfying all supplied criteria pairs."
+        ],
+        [
+          "IF(test, true_value, false_value)",
+          "Returns one branch based on a logical test."
+        ],
+        [
+          "IFNA(value, fallback)",
+          "Handles #N/A specifically, leaving other errors visible."
+        ],
+        [
+          "VLOOKUP(key, table, col_index, FALSE)",
+          "Looks in the table's first column and requests an exact match."
+        ]
+      ],
+      "workedExample": {
+        "title": "Reconcile a three-condition monthly report",
+        "code": "=SUMIFS(Expenses[Amount],\n        Expenses[Category],\"Travel\",\n        Expenses[Month],\"Jan\",\n        Expenses[Owner],\"Mina\")\n\n=IF(B2>=1000,\"Review\",\"OK\")\n\n=IFNA(XLOOKUP(E2,People[ID],People[Name]),\"Unknown ID\")",
+        "explanation": [
+          "The SUMIFS formula adds Amount only where Category is Travel, Month is Jan and Owner is Mina; the conditions are ANDed.",
+          "Check that the month and owner fields use consistent values and that Amount contains numeric values, not text imported from a CSV.",
+          "The IF formula creates an explicit review rule. Test values immediately below, at and above 1000 to verify the boundary.",
+          "The XLOOKUP example handles only a missing ID with IFNA; other errors remain visible for diagnosis. If your Excel version lacks XLOOKUP, use an exact-match alternative supported by that version."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "Are SUMIFS criteria pairs combined as OR or AND?",
+          "answer": "AND: a record must satisfy every criteria pair to be included."
+        },
+        {
+          "question": "How do you create a criterion meaning greater than or equal to the value in G1?",
+          "answer": "Use a concatenated criterion such as `\">=\"&G1`."
+        },
+        {
+          "question": "Why might IFERROR be less appropriate than IFNA for a missing lookup?",
+          "answer": "IFERROR hides all error types; IFNA handles only #N/A and leaves unrelated formula defects visible."
+        }
+      ],
+      "practice": "Build a monthly expense report using category, month and owner criteria. Add a review flag with IF, and a lookup for an owner name. Test missing IDs, amounts stored as text, criteria boundary cases and one intentionally broken reference."
+    },
+    {
+      "highlight": "Formatting communicates; validation guides entry. Neither substitutes for correct underlying values or a deliberate data-quality process.",
+      "sections": [
+        [
+          "Separate value from display",
+          "A date or currency format changes how a stored number is displayed; it does not transform text into a real date or number. Imported data may look numeric while being stored as text. Check the underlying type before using it in arithmetic or date logic."
+        ],
+        [
+          "Conditional formatting as a signal",
+          "Rules evaluate values or formulas over a specified Applies To range. Relative references can shift across that range, so test the top-left cell logic and verify the range boundaries. Use formatting sparingly and pair color with labels or icons when the distinction matters."
+        ],
+        [
+          "Validation rules and user guidance",
+          "Data Validation can restrict entries to a list, number, date or custom formula. Add an input message that states the expected value and an error alert that tells users how to correct invalid input. Some paste/import paths can bypass validation, so inspect incoming data separately."
+        ],
+        [
+          "Design for audit and accessibility",
+          "Use consistent number formats, clear units and descriptive headings. Avoid merged cells in data tables. Do not rely on color alone to communicate status, and make the workbook's assumptions and allowed inputs easy to find."
+        ]
+      ],
+      "syntaxNotes": [
+        [
+          "Format Cells > Number",
+          "Controls display format; does not convert a text value into a number."
+        ],
+        [
+          "Conditional Formatting > New Rule",
+          "Creates a rule and an Applies To range; validate relative/absolute references."
+        ],
+        [
+          "Data Validation > List",
+          "Restricts normal cell entry to values in a source list."
+        ],
+        [
+          "=CategoryList",
+          "Can reference a named range as a validation-list source in supported Excel configurations."
+        ],
+        [
+          "Stop-style error alert",
+          "Blocks ordinary invalid entries and explains correction; pasted/imported data still needs validation."
+        ]
+      ],
+      "workedExample": {
+        "title": "Build a controlled category input",
+        "code": "1. Place allowed categories in a small reference list.\n2. Define the name CategoryList for that range.\n3. Select the Category cells in the expense register.\n4. Data > Data Validation > Allow: List.\n5. Source: =CategoryList\n6. Add an input message and a clear error alert.\n7. Apply a conditional format to flag Amount > budget threshold.",
+        "explanation": [
+          "A single maintained list reduces category spelling variants that would otherwise split totals across labels.",
+          "The validation dropdown helps a person choose a valid value, while the error alert explains what to do if they type something else.",
+          "Test typing an invalid value and also test pasting a value; validation behavior can differ across data-entry routes.",
+          "The conditional format should identify the relevant row/cell and be backed by a numeric rule, not by manually colored cells."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "Does applying Currency format convert text like `\"125\"` into a number?",
+          "answer": "No. Number formatting changes display; convert and validate the underlying value separately."
+        },
+        {
+          "question": "Why should conditional-format rules be tested at the top-left cell of their range?",
+          "answer": "Relative references are interpreted from the rule's anchor and shift across the Applies To range."
+        },
+        {
+          "question": "Is Data Validation a complete guarantee that all imported records are valid?",
+          "answer": "No. It guides normal entry but can be bypassed by paste/import workflows; validate source data independently."
+        }
+      ],
+      "practice": "Create a category list and validation dropdown, plus a date validation rule and an over-budget conditional format. Test valid, invalid, pasted, blank and boundary inputs. Write a short data-entry guide for another user."
+    }
+  ],
+  "powerbi": [
+    {
+      "highlight": "A connection choice determines how data is accessed, secured and refreshed. Choose it from requirements, not convenience alone.",
+      "sections": [
+        [
+          "Start from the source contract",
+          "Record where the data lives, who owns it, what credentials are permitted, whether the source schema is stable, and how often data changes. A report's freshness promise cannot exceed the refresh and source-access design."
+        ],
+        [
+          "Import and DirectQuery are different trade-offs",
+          "Import stores a refreshed copy in the semantic model; report interactions query that model, while source changes appear after a successful refresh. DirectQuery sends supported queries to the source and depends on its performance, capacity and network. Neither mode is universally best."
+        ],
+        [
+          "Choose connectors and credentials deliberately",
+          "Use a connector designed for the source (SQL, workbook, web, folder). Check authentication, privacy levels and gateway requirements before building the report. Do not embed credentials or personal secrets in query text."
+        ],
+        [
+          "Folder combine and schema drift",
+          "Combining files from a folder assumes a consistent file structure. Inspect the sample transformation and test missing columns, extra columns, blank files and malformed rows. A production pipeline should fail visibly or handle drift intentionally rather than silently dropping data."
+        ]
+      ],
+      "syntaxNotes": [
+        [
+          "Get Data",
+          "Starts the connector workflow; select the source type and provide its location and credentials."
+        ],
+        [
+          "Import",
+          "Loads a data copy into the model; data freshness depends on refresh."
+        ],
+        [
+          "DirectQuery",
+          "Queries the source for supported operations; monitor source workload and query latency."
+        ],
+        [
+          "Privacy levels",
+          "Help govern how Power Query combines data sources; set them based on actual data sensitivity."
+        ],
+        [
+          "Folder connector",
+          "Combines files most reliably when their schema and layout are consistent."
+        ]
+      ],
+      "workedExample": {
+        "title": "Select a connection mode for a daily sales report",
+        "code": "Requirement: 18 months of sales history\nSource: governed SQL database\nNeed: interactive slicing; data refreshed once each morning\n\nEvaluate:\n- Import: model size, scheduled refresh, refresh duration\n- DirectQuery: source capacity, query latency, network dependency\n- Both: credential/gateway configuration and access policy\n\nDecision record: document freshness, volume, performance and security trade-offs.",
+        "explanation": [
+          "A morning-updated report may fit Import if the model size and refresh window are acceptable; this is a hypothesis to test, not an automatic answer.",
+          "DirectQuery may be needed for fresher source values or particular governance requirements, but interactive report queries then depend on the source.",
+          "Validate using a representative dataset and typical report interactions. Measure refresh duration and visual response, then record the reason for the chosen mode.",
+          "Keep source credentials out of code and test the actual published refresh path if deployment is part of the exercise."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "Does an imported model automatically include every source update?",
+          "answer": "No. The data copy changes after a successful refresh; visual refresh alone does not reload imported source data."
+        },
+        {
+          "question": "What practical dependency increases with DirectQuery?",
+          "answer": "The report's supported query interactions depend on source performance, network and capacity."
+        },
+        {
+          "question": "What should you test before combining a folder of files?",
+          "answer": "Schema consistency and behavior for missing/extra columns, empty files and malformed records."
+        }
+      ],
+      "practice": "Connect Power BI to a small workbook or CSV sample. Document the source and credentials approach, choose Import for the exercise, then explain what would have to change if users required near-real-time values. Test a file with one missing field."
+    },
+    {
+      "highlight": "Power Query is a repeatable transformation pipeline. Each step should have a clear reason and a verifiable effect on rows, columns and types.",
+      "sections": [
+        [
+          "ETL and query responsibility",
+          "Extract obtains records from the source; transform standardizes and shapes them; load places the result in the model. Keep source acquisition separate from business logic when that separation improves reuse and auditability."
+        ],
+        [
+          "Applied Steps as a transformation log",
+          "Power Query records operations as ordered steps. Rename columns, promote headers, set types, filter rows, split or combine columns and remove errors with an explicit policy. Inspect intermediate output when row counts or values change unexpectedly."
+        ],
+        [
+          "Data profiling before aggregation",
+          "Check column quality, distribution and profile; compare row counts before and after filters. Confirm whether blank, null, error and zero have different meanings. Avoid deleting data merely because it is inconvenient to visualize."
+        ],
+        [
+          "Incremental refresh is a model/service feature",
+          "Incremental refresh uses date/time parameters and partition policies to limit the portion of a large table refreshed after initial load. It requires compatible filtering and service configuration; test folding and refresh behavior rather than assuming desktop preview proves the published policy works."
+        ]
+      ],
+      "syntaxNotes": [
+        [
+          "Applied Steps",
+          "An ordered record of transformations applied to the query."
+        ],
+        [
+          "Changed Type",
+          "Sets a column's data type; verify locale-sensitive dates and decimals."
+        ],
+        [
+          "Filter Rows",
+          "Keeps rows matching a condition; inspect whether the operation folds to the source."
+        ],
+        [
+          "Reference query",
+          "Creates a query based on another query's result, useful for separating raw and curated layers."
+        ],
+        [
+          "RangeStart / RangeEnd",
+          "Date/time parameters commonly used in incremental-refresh filtering patterns."
+        ]
+      ],
+      "workedExample": {
+        "title": "Build and validate a small clean-up pipeline",
+        "code": "Source\n→ Promote Headers\n→ Rename Columns\n→ Set Data Types\n→ Remove Blank Rows\n→ Filter invalid/test records\n→ Load to model\n\nValidation log:\nRows at source: ______\nRows after cleaning: ______\nNulls in required key: ______\nDate range after filter: ______",
+        "explanation": [
+          "Record the starting row count before transforming so that removed rows can be explained.",
+          "Set data types intentionally; locale-sensitive dates and decimal separators can be misread during automatic detection.",
+          "Every filter should be tied to a requirement and its removed-row count should be reviewed, not merely accepted.",
+          "For incremental refresh, use a date/time column and validate the filter/partition design in the target service configuration."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "Why is an Applied Step sequence more than a history list?",
+          "answer": "It is the repeatable transformation logic rerun when the query refreshes."
+        },
+        {
+          "question": "What should you check when a filter unexpectedly removes many rows?",
+          "answer": "Inspect the filter condition, source values, nulls/types and before/after row counts to establish whether removal is intended."
+        },
+        {
+          "question": "Does setting RangeStart and RangeEnd parameters alone complete incremental refresh?",
+          "answer": "No. The date filter and incremental policy must be configured correctly and validated in the published semantic model/service."
+        }
+      ],
+      "practice": "Take a messy CSV with inconsistent headers, a date column and blank rows. Build a transformation sequence, record row counts at each material step, and explain the policy for nulls and invalid dates. Then outline the extra configuration needed for incremental refresh."
+    },
+    {
+      "highlight": "Visual design starts with the analytical question and data grain. Filters are part of the query context, so their scope and interactions matter.",
+      "sections": [
+        [
+          "Define the question and grain",
+          "Before choosing a visual, state the question (trend, comparison, composition, KPI or detail) and what one row in the underlying data represents. A chart can be visually polished yet analytically wrong if the grain or aggregation is misunderstood."
+        ],
+        [
+          "Map the question to a visual",
+          "A line chart is suited to ordered time trends; a sorted bar chart compares categories; a card communicates a single summarized KPI; a table supports record-level inspection. Label units and periods and avoid implying precision the data does not contain."
+        ],
+        [
+          "Understand filter scopes",
+          "A visual-level filter affects one visual; a page-level filter affects visuals on a page; a report-level filter affects the report. A slicer exposes a filter control to readers. Verify cross-filter/highlight interactions and make reset behavior understandable."
+        ],
+        [
+          "Check accessibility and interpretation",
+          "Use descriptive titles, adequate contrast, readable text, logical tab order and meaningful alt text where supported. Do not rely on color alone. Use appropriate axis scales and sort order, and distinguish missing data from zero."
+        ]
+      ],
+      "syntaxNotes": [
+        [
+          "Card visual",
+          "Displays a single measure or value in the current filter context."
+        ],
+        [
+          "Line chart",
+          "Plots values against an ordered axis such as date/time."
+        ],
+        [
+          "Bar chart",
+          "Compares categories; sort by the measure or meaningful category order."
+        ],
+        [
+          "Slicer",
+          "A visible interactive filter control for report readers."
+        ],
+        [
+          "Visual/page/report filter",
+          "Filter scopes differ; inspect each scope and how filters interact."
+        ]
+      ],
+      "workedExample": {
+        "title": "Design a two-page report from four business questions",
+        "code": "Overview page\n- KPI card: total sales for selected period\n- Line chart: sales by week, chronological axis\n- Bar chart: sales by region, descending order\n- Slicer: reporting period\n\nDetail page\n- Table: order date, order ID, region, amount\n- Slicer: region\n- Drill/selection behavior: test intentionally",
+        "explanation": [
+          "The KPI card summarizes; its value changes with the active filter context, so its title should state the metric and period.",
+          "The trend chart needs a real date/week field sorted chronologically; text week labels can sort incorrectly.",
+          "The bar chart answers a category comparison and should be sorted clearly. Keep categories and measures unambiguous.",
+          "Test slicer interactions with each visual. If an interaction is intentionally disabled, explain why; otherwise readers may infer that a visual is responding when it is not."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "Which visual is a natural starting point for a weekly trend?",
+          "answer": "A line chart with a chronological date/week axis."
+        },
+        {
+          "question": "What is the difference between page-level and report-level filters?",
+          "answer": "A page filter applies to visuals on that page; a report filter applies across report pages."
+        },
+        {
+          "question": "Why should you identify data grain before building a chart?",
+          "answer": "It determines what each record represents and prevents accidental double-counting or invalid aggregation."
+        }
+      ],
+      "practice": "Create a two-page report: overview with a KPI, trend and regional comparison; detail with a transaction table. Add a date slicer, test each visual's interaction, label units and periods, and submit a short design rationale."
+    },
+    {
+      "highlight": "Data types, categories and sort keys are model metadata. Correct metadata protects aggregation and presentation semantics.",
+      "sections": [
+        [
+          "Set and verify types",
+          "Whole number, decimal, fixed decimal, date, text and Boolean types support different operations. Set types in Power Query where practical and verify the loaded model. An ID that happens to contain digits is often a text identifier, not a quantity to sum."
+        ],
+        [
+          "Categorization is metadata, not data cleaning",
+          "Data categories such as city, country/region, URL or postal code tell Power BI how to interpret a field for particular features. Apply a category only when the values actually represent that concept, and consider whether map features expose sensitive location information."
+        ],
+        [
+          "Sort by column and uniqueness",
+          "Text month names sort alphabetically by default. A numeric month number can provide calendar order, but each displayed label must map consistently to one sort value. If data spans multiple years, use a YearMonth key or date grain so repeated month names do not collapse distinct periods."
+        ],
+        [
+          "Validate after load",
+          "Check column types, distinct counts, blank values, relationships and a few manually verified records. Metadata errors can produce confusing totals, wrong axes or unexpected visuals; fix them in the model/query layer rather than patching each chart."
+        ]
+      ],
+      "syntaxNotes": [
+        [
+          "Data type",
+          "Controls valid operations and aggregation behavior; verify after import."
+        ],
+        [
+          "Data category",
+          "Metadata describing fields such as city, country, URL or postal code."
+        ],
+        [
+          "Sort by column",
+          "Uses a separate sort field to order a display column."
+        ],
+        [
+          "MonthNumber",
+          "A numeric key from 1 to 12; suitable for month labels only when the label-to-sort mapping is unambiguous."
+        ],
+        [
+          "ID as text",
+          "Treats identifiers as labels rather than numeric measures."
+        ]
+      ],
+      "workedExample": {
+        "title": "Sort month labels and avoid multi-year ambiguity",
+        "code": "MonthName | MonthNumber\nJan       | 1\nFeb       | 2\nMar       | 3\n...\nDec       | 12\n\nFor a single year:\nSelect MonthName → Sort by column → MonthNumber\n\nFor multiple years, use a YearMonth label/key such as 2026-01\nand sort by a date or numeric YearMonth key.",
+        "explanation": [
+          "MonthName is text and would otherwise sort alphabetically rather than January-to-December.",
+          "MonthNumber gives a calendar sort order only when each label maps to one number; it does not distinguish January 2025 from January 2026.",
+          "For a multi-year trend, use a date column or a unique YearMonth field and sort key so the chronology is preserved.",
+          "After changing metadata, verify the actual axis and a sample total rather than assuming the visual updated as intended."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "Why should a numeric-looking order ID often be typed as text?",
+          "answer": "It identifies a record; arithmetic or numeric aggregation on it usually has no business meaning and may strip leading zeros."
+        },
+        {
+          "question": "When is MonthNumber alone insufficient as a sort key?",
+          "answer": "When multiple years are represented and month labels repeat; use a unique chronological key such as YearMonth/date."
+        },
+        {
+          "question": "What is the purpose of a data category?",
+          "answer": "It provides semantic metadata that helps Power BI interpret a column for supported features; it does not clean or validate the underlying values."
+        }
+      ],
+      "practice": "Import a table with IDs, dates, month names and location fields. Set appropriate data types and categories, build a month axis, and demonstrate the difference between one-year and multi-year sorting. Record the checks you used to confirm no IDs were summed."
+    }
+  ]
+};
+for (const [trackId, lessonSet] of Object.entries(phase1TutorRebuild)) {
+  lessonSet.forEach((content, index) => {
+    const lesson = foundationLessons[trackId][index];
+    lesson.highlight = content.highlight;
+    lesson.sections = [...lesson.sections, ...content.sections];
+    lesson.syntaxNotes = content.syntaxNotes;
+    lesson.workedExample = content.workedExample;
+    lesson.knowledgeCheck = content.knowledgeCheck;
+    lesson.practice = content.practice;
   });
 }
+
 
 
 guidedLessons[1].syntaxNotes = [
