@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#f4f7fb">
   <meta name="description" content="A guided learning studio for Full-stack Web Development, Python, Excel, and Power BI.">
   <title>Learning Studio</title>
-  <link rel="stylesheet" href="style.css?v=20260925-scroll-fix1">
-  <script src="app.js?v=20260925-flat-page-fix1" defer></script>
+  <link rel="stylesheet" href="style.css?v=20260925-progress1">
+  <script src="app.js?v=20260925-progress1" defer></script>
 </head>
 <body>
   <div class="app-shell">
@@ -45,7 +45,15 @@
       </section>
 
       <section class="view" id="progress-view" aria-labelledby="progress-title" hidden>
-        <div class="page-intro"><p class="eyebrow">YOUR LEARNING JOURNEY</p><h1 id="progress-title">Progress</h1><p class="hero-copy">Progress tracking will be added in a later update. For now, use the curriculum roadmaps to review the phases and checkpoints.</p><button class="secondary-action" type="button" data-view="curriculum">Open curriculum →</button></div>
+        <div class="page-intro"><p class="eyebrow">YOUR LEARNING JOURNEY</p><h1 id="progress-title">Progress</h1><p class="hero-copy">A clear record of lessons you have marked complete on this device.</p></div>
+<section class="progress-summary" aria-live="polite" aria-labelledby="progress-summary-title">
+<p class="eyebrow">TRACKED LESSONS</p><h2 id="progress-summary-title">Your learning record</h2>
+<div class="progress-metrics"><div><strong id="progress-completed">0</strong><span>Completed</span></div><div><strong id="progress-available">1</strong><span>Authored and tracked</span></div></div>
+<div class="progress-meter" role="progressbar" aria-label="Completion of currently tracked lessons" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0"><span id="progress-meter-fill"></span></div>
+<p id="progress-status" class="muted">No tracked lessons completed yet. Open the guided lesson to begin.</p>
+<div class="progress-lesson"><div><strong>Semantic HTML and accessible structure</strong><small>Full-stack Web Development · Foundations</small></div><span id="progress-lesson-state" class="progress-state">Not started</span></div>
+<button class="secondary-action" type="button" data-view="curriculum">Continue learning →</button>
+</section>
       </section>
       <section class="view" id="profile-view" aria-labelledby="profile-title" hidden>
         <div class="page-intro"><p class="eyebrow">LEARNING STUDIO</p><h1 id="profile-title">Profile</h1><p class="hero-copy">Personal profile and learning preferences are not configured in this starter version.</p><button class="secondary-action" type="button" data-view="curriculum">Browse curriculum →</button></div>
