@@ -202,6 +202,20 @@ const guidedLessons = {
   0: {
     title: "Semantic HTML and accessible structure",
     lead: "Learn to build the meaning, navigation, and interaction structure of a page before styling it. This lesson moves from browser parsing to landmarks, headings, forms, keyboard use, and a practical audit.",
+    highlight: "Semantic HTML gives content and controls meaning through the browser’s built-in elements. Choose the element for its purpose first; style it afterward.",
+    keyPoints: ["Use native HTML elements before adding ARIA.", "Use headings to show content hierarchy, not to choose font size.", "Links navigate; buttons perform actions.", "Every form control needs a programmatically associated label.", "Check the page with keyboard-only navigation and visible focus."],
+    syntaxNotes: [
+      ["<!doctype html>", "Declares that the document uses modern HTML. It helps the browser render the page in standards mode."],
+      ['<html lang="en">', "The root element wraps the document. The lang attribute identifies the main language, helping assistive technology choose pronunciation and language rules."],
+      ['<meta charset="utf-8">',"Sets the character encoding so text is interpreted consistently."],
+      ['<meta name="viewport" content="width=device-width, initial-scale=1">', "Makes the layout viewport match the device width and starts at the intended scale. It is important for responsive pages."],
+      ["<title>Field Notes</title>", "Sets the document title shown in the browser tab and used as a page identifier in many contexts."],
+      ["<header>, <nav>, <main>, <article>, <footer>", "These are semantic elements. Their names communicate the purpose of each region; they are not interchangeable decoration."],
+      ['<nav aria-label="Primary">', "Creates a navigation landmark and gives it a concise accessible name. Use a distinct name when a page has multiple navigation regions."],
+      ['<a href="#about">', "An anchor with href is a link. The #about fragment navigates to the element whose id is about."],
+      ['<h1> and <h2>',"Heading levels express hierarchy. This example uses h1 for the page title and h2 for the article heading nested within the main content."],
+      ['id="articles" and href="#articles"',"The id gives an element a unique in-page identifier; the matching fragment in href links to it. IDs should be unique in the document."]
+    ],
     sections: [
       ["Learning outcomes", "By the end, you should be able to distinguish semantic HTML from generic containers, choose elements by their purpose, create a useful heading and landmark structure, connect form labels to controls, and check a page with keyboard-only navigation."],
       ["1. What the browser does with HTML", "HTML is a markup language that describes document structure. The browser parses the markup into a Document Object Model (DOM), a tree of nodes that scripts and assistive technologies can inspect. Elements are not merely visual boxes: their native roles, names, states, and relationships can expose useful meaning. CSS changes presentation; it does not automatically give a generic div the same native behavior as a button or link."],
@@ -381,6 +395,20 @@ function openGuidedLesson(topicIndex = 0, track) {
   heading.dataset.topicIndex = String(topicIndex);
   const lead = makeElement("p", "lesson-lead", lesson.lead);
   lessonReader.append(eyebrow, heading, lead);
+  if (lesson.highlight) {
+    const highlight = makeElement("aside", "lesson-highlight");
+    highlight.append(makeElement("strong", "", "Key idea"));
+    highlight.append(makeElement("p", "", lesson.highlight));
+    lessonReader.append(highlight);
+  }
+  if (Array.isArray(lesson.keyPoints) && lesson.keyPoints.length) {
+    const points = makeElement("section", "lesson-key-points");
+    points.append(makeElement("h5", "", "Key points to remember"));
+    const list = makeElement("ul", "detail-list");
+    lesson.keyPoints.forEach(point => list.append(makeElement("li", "", point)));
+    points.append(list);
+    lessonReader.append(points);
+  }
   lesson.sections.forEach(([sectionTitle, sectionBody], index) => {
     lessonReader.append(makeElement("h5", "", `${index + 1}. ${sectionTitle}`));
     lessonReader.append(makeElement("p", "", sectionBody));
@@ -389,6 +417,19 @@ function openGuidedLesson(topicIndex = 0, track) {
     const pre = makeElement("pre", "lesson-code");
     pre.append(makeElement("code", "", lesson.code.replace(/\\n/g, "\n")));
     lessonReader.append(pre);
+    if (Array.isArray(lesson.syntaxNotes) && lesson.syntaxNotes.length) {
+      const syntax = makeElement("section", "lesson-syntax-notes");
+      syntax.append(makeElement("h5", "", "Syntax explained, step by step"));
+      const noteList = makeElement("div", "syntax-note-list");
+      lesson.syntaxNotes.forEach(([syntaxToken, explanation]) => {
+        const note = makeElement("article", "syntax-note");
+        note.append(makeElement("code", "syntax-token", syntaxToken));
+        note.append(makeElement("p", "", explanation));
+        noteList.append(note);
+      });
+      syntax.append(noteList);
+      lessonReader.append(syntax);
+    }
   }
   const practice = makeElement("div", "lesson-practice");
   practice.append(makeElement("strong", "", "Try it"));
