@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#f4f7fb">
   <meta name="description" content="A guided learning studio for Full-stack Web Development, Python, Excel, and Power BI.">
   <title>Learning Studio</title>
-  <link rel="stylesheet" href="style.css?v=20260925-roadmap">
-  <script src="app.js?v=20260925-roadmap" defer></script>
+  <link rel="stylesheet" href="style.css?v=20260925-phase-study">
+  <script src="app.js?v=20260925-phase-study" defer></script>
 </head>
 <body>
   <div class="app-shell">
@@ -61,6 +61,16 @@
   <dialog id="phase-dialog" aria-labelledby="dialog-title">
     <div class="dialog-top"><div><p class="eyebrow">TRACK ROADMAP</p><h2 id="dialog-title"></h2></div><button class="close" type="button" aria-label="Close dialog">×</button></div>
     <p id="dialog-description" class="muted"></p><p class="roadmap-hint">Open a phase to review its topics, applied project, and knowledge checkpoints.</p><div id="phase-list" class="phase-list"></div>
+    <section id="phase-study" class="phase-study" hidden aria-live="polite">
+      <button id="back-to-roadmap" class="back-action" type="button">← Back to roadmap</button>
+      <p class="eyebrow">PHASE STUDY VIEW</p>
+      <h3 id="study-phase-title"></h3>
+      <p id="study-phase-description" class="muted"></p>
+      <div id="study-topics" class="study-topic-list"></div>
+      <section class="study-reader-block"><h4>Applied project</h4><p id="study-project"></p></section>
+      <section class="study-reader-block"><h4>Knowledge checkpoints</h4><ul id="study-checkpoints"></ul></section>
+      <p class="study-note">This view organizes the syllabus for study. Detailed lesson explanations and guided exercises will be added in the lesson-authoring stage.</p>
+    </section>
   </dialog>
 </body>
 </html>
