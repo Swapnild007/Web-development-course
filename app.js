@@ -356,6 +356,395 @@ guidedLessons[1].sources = ["https://developer.mozilla.org/en-US/docs/Web/CSS/CS
 guidedLessons[2].sources = ["https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises"];
 guidedLessons[3].sources = ["https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_events"];
 
+const fullStackPhaseLessons = {
+  1: [
+    {
+      "title": "TypeScript: types, narrowing and generics",
+      "lead": "Add a checked type layer to JavaScript: model data shapes, narrow uncertain values, and write reusable functions without discarding useful type information.",
+      "highlight": "TypeScript checks relationships between values before runtime; it does not validate external data at runtime. Treat parsed API input as unknown until it has been checked.",
+      "keyPoints": [
+        "Use interfaces or type aliases to describe contracts.",
+        "Prefer unknown over any for untrusted values.",
+        "Narrow unions with runtime checks before accessing variant-specific fields.",
+        "Generics preserve the connection between input and output types."
+      ],
+      "sections": [
+        [
+          "Types describe contracts",
+          "A type annotation documents what a value is expected to contain. TypeScript infers many local types, so annotate public boundaries and non-obvious contracts rather than mechanically adding annotations everywhere."
+        ],
+        [
+          "Narrowing turns uncertainty into safe access",
+          "A union such as string | number cannot use string-only methods until control flow proves the value is a string. typeof, equality checks, in, and discriminant properties help narrow. A type assertion only tells the compiler to trust you; it performs no runtime check."
+        ],
+        [
+          "Generics preserve relationships",
+          "A generic function uses a type parameter to express a relationship, for example that the returned value has the same type as the supplied value. Constraints such as T extends { id: string } limit which values are accepted while retaining their specific type."
+        ],
+        [
+          "Utility types transform existing contracts",
+          "Partial<T> makes properties optional; Pick<T, K> selects keys; Omit<T, K> removes keys; Readonly<T> prevents reassignment through that type. Use these to derive related shapes, but avoid exposing internal database records as public API contracts without review."
+        ]
+      ],
+      "code": "type User = { id: string; name: string; role: 'admin' | 'member' };\\n\\nfunction getDisplayName<T extends { name: string }>(item: T): string {\\n  return item.name.trim();\\n}\\n\\nfunction describeInput(value: unknown): string {\\n  if (typeof value === 'string') return value.toUpperCase();\\n  if (typeof value === 'number') return value.toFixed(2);\\n  return 'Unsupported input';\\n}\\n\\ntype UserSummary = Pick<User, 'id' | 'name'>;",
+      "syntaxNotes": [
+        [
+          "type User = { ... }",
+          "Defines a structural object type; a value must have compatible properties to be assigned to User."
+        ],
+        [
+          "'admin' | 'member'",
+          "A string-literal union restricts role to these exact values."
+        ],
+        [
+          "<T extends { name: string }>",
+          "Declares a generic type parameter and constrains it to values with a string name property."
+        ],
+        [
+          "value: unknown",
+          "Accepts any input but requires narrowing before using it as a specific type."
+        ],
+        [
+          "typeof value === 'string'",
+          "A runtime check that also narrows value to string inside that branch."
+        ],
+        [
+          "Pick<User, 'id' | 'name'>",
+          "Creates a type containing only the selected User properties."
+        ]
+      ],
+      "workedExample": {
+        "title": "Safely read a field from unknown input",
+        "code": "function readName(payload: unknown): string {\\n  if (typeof payload !== 'object' || payload === null || !('name' in payload)) {\\n    return 'Anonymous';\\n  }\\n  const name = payload.name;\\n  return typeof name === 'string' ? name : 'Anonymous';\\n}",
+        "explanation": [
+          "The parameter is unknown because data from a network or JSON parse has not yet earned a trusted type.",
+          "The object and null checks prevent invalid property access; the in operator checks whether the key exists.",
+          "The property itself is checked as a string before returning it. A production validator should also verify all required fields and allowed values."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "Does `payload as User` validate an API response?",
+          "answer": "No. It is a compile-time assertion only. Validate untrusted data at runtime, then use the validated result."
+        },
+        {
+          "question": "Why use a generic return type instead of `any`?",
+          "answer": "A generic can preserve the input-output type relationship, while any disables important checking."
+        }
+      ],
+      "practice": "Create a generic `first<T>(items: T[]): T | undefined` function. Then write a `parseRole(value: unknown)` validator that accepts only 'admin' or 'member'. Test empty arrays, valid values, and unexpected inputs.",
+      "sources": [
+        "https://www.typescriptlang.org/docs/handbook/2/narrowing.html",
+        "https://www.typescriptlang.org/docs/handbook/2/generics.html"
+      ]
+    },
+    {
+      "title": "React hooks, state and data fetching",
+      "lead": "Build predictable interactive components using state, effects, reusable hooks, controlled inputs, context, and query-state management.",
+      "highlight": "Render should remain pure: derive UI from props and state. Use effects to synchronize with external systems, not as a default place to calculate values.",
+      "keyPoints": [
+        "Hooks run at the top level of function components or custom hooks.",
+        "State updates schedule a render; they do not mutate the current render's variable.",
+        "Controlled inputs keep the displayed value in React state.",
+        "Effects need accurate dependencies and cleanup when synchronizing external resources."
+      ],
+      "sections": [
+        [
+          "Component and render model",
+          "A React component is a function of its inputs. React calls it to describe the UI, then reconciles the result with the previous render. Keep rendering free of side effects so it can be repeated safely."
+        ],
+        [
+          "State and event handlers",
+          "useState provides a value and setter. When next state depends on previous state, use the updater form: setCount(current => current + 1). Event handlers are the natural place for user-triggered changes."
+        ],
+        [
+          "Effects and custom hooks",
+          "useEffect synchronizes with something outside React, such as a subscription or browser API. Dependencies must include reactive values used by the effect. Return cleanup to unsubscribe or cancel work. A custom hook packages reusable stateful behavior while following the same hook rules."
+        ],
+        [
+          "Context and server state",
+          "Context shares values across a subtree, such as theme or authenticated-user display data; it is not automatically a full state-management strategy. Remote data has lifecycle concerns—loading, errors, freshness, caching, retries, and invalidation—so a query library can be more suitable than hand-written effects for larger apps."
+        ]
+      ],
+      "code": "import { useEffect, useState } from 'react';\\n\\nexport function SearchBox() {\\n  const [query, setQuery] = useState('');\\n  const [results, setResults] = useState<string[]>([]);\\n\\n  useEffect(() => {\\n    const controller = new AbortController();\\n    async function load() {\\n      if (!query.trim()) { setResults([]); return; }\\n      const response = await fetch('/api/search?q=' + encodeURIComponent(query), { signal: controller.signal });\\n      if (!response.ok) throw new Error('Search failed');\\n      const data = await response.json();\\n      setResults(Array.isArray(data.results) ? data.results : []);\\n    }\\n    load().catch(error => { if (error.name !== 'AbortError') console.error(error); });\\n    return () => controller.abort();\\n  }, [query]);\\n\\n  return <input value={query} onChange={event => setQuery(event.target.value)} />;\\n}",
+      "syntaxNotes": [
+        [
+          "useState('')",
+          "Initializes state and returns the current value plus a setter."
+        ],
+        [
+          "useEffect(() => { ... }, [query])",
+          "Runs synchronization after render and reruns when query changes; cleanup runs before resynchronizing and on unmount."
+        ],
+        [
+          "AbortController",
+          "Provides a cancellation signal so obsolete requests can be stopped."
+        ],
+        [
+          "value={query}",
+          "Makes the input controlled: its displayed value comes from component state."
+        ],
+        [
+          "onChange={event => setQuery(...)}",
+          "Updates state from the user's input event; the setter causes a new render."
+        ]
+      ],
+      "workedExample": {
+        "title": "Avoid a stale state update",
+        "code": "setCount(current => current + 1);",
+        "explanation": [
+          "The updater receives the latest queued state value, avoiding reliance on a potentially stale captured variable.",
+          "Use this form when calculating next state from previous state, especially when multiple updates can be queued."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "Should a derived `fullName` usually be copied into state with an effect?",
+          "answer": "No. Calculate it during render from the source state or props unless there is a specific synchronization reason."
+        },
+        {
+          "question": "Why does an effect need cleanup for a subscription?",
+          "answer": "Cleanup prevents obsolete subscriptions from continuing after dependencies change or the component unmounts."
+        }
+      ],
+      "practice": "Build a controlled task form with title and priority fields. Add a custom `useOnlineStatus` hook that subscribes to the browser online/offline events and cleans up its listeners. Explain which state is local and which data is remote.",
+      "sources": [
+        "https://react.dev/reference/react/useState",
+        "https://react.dev/reference/react/useEffect",
+        "https://react.dev/learn/reusing-logic-with-custom-hooks"
+      ]
+    },
+    {
+      "title": "Next.js App Router and rendering strategies",
+      "lead": "Understand the route tree, server and client component boundaries, data fetching, caching, and mutation workflows in a modern Next.js application.",
+      "highlight": "Server Components are the default in the App Router. Add a Client Component boundary only where browser interactivity or client-only APIs are needed.",
+      "keyPoints": [
+        "Folders and files define routes and layouts in the App Router.",
+        "Server Components can access server-side resources without shipping that code to the browser.",
+        "Client Components are needed for state, event handlers, and browser APIs.",
+        "Cache and revalidation behavior must be explicit and appropriate to the data's freshness needs."
+      ],
+      "sections": [
+        [
+          "App Router structure",
+          "The app directory uses nested folders for route segments. page files define route UI, layout files share persistent UI, and loading/error boundaries provide route-level states. Keep shared layouts focused so navigation remains coherent."
+        ],
+        [
+          "Server versus Client Components",
+          "A Server Component renders on the server and can fetch private data without exposing credentials to the browser. A file marked 'use client' creates a client boundary for hooks, event handlers, and browser APIs. Keep that boundary as small as practical and never pass secrets into client props."
+        ],
+        [
+          "Rendering and cache choices",
+          "Static generation can pre-render content that changes infrequently. Dynamic server rendering is useful when output depends on request-time data. Incremental regeneration and cache revalidation can refresh cached output. The correct choice depends on freshness, personalization, and operational requirements—not on a blanket rule that one mode is always fastest."
+        ],
+        [
+          "Mutations and revalidation",
+          "Server Actions can handle form submissions on the server. Validate input and authorize the user at the mutation boundary. After a successful write, revalidate affected paths or tags so subsequent reads reflect the new state. UI optimism improves perceived speed but must reconcile with server errors."
+        ]
+      ],
+      "code": "// app/tasks/page.tsx — Server Component\\nimport { getTasks } from '@/lib/tasks';\\nimport { TaskForm } from './task-form';\\n\\nexport default async function TasksPage() {\\n  const tasks = await getTasks();\\n  return (\\n    <main>\\n      <h1>Tasks</h1>\\n      <TaskForm />\\n      <ul>{tasks.map(task => <li key={task.id}>{task.title}</li>)}</ul>\\n    </main>\\n  );\\n}\\n\\n// app/tasks/task-form.tsx — Client Component\\n'use client';\\nimport { useState } from 'react';\\nexport function TaskForm() {\\n  const [title, setTitle] = useState('');\\n  return <form><input value={title} onChange={e => setTitle(e.target.value)} /></form>;\\n}",
+      "syntaxNotes": [
+        [
+          "app/tasks/page.tsx",
+          "The file location maps to the /tasks route in the App Router."
+        ],
+        [
+          "async function TasksPage()",
+          "A Server Component can be async and await server-side data access."
+        ],
+        [
+          "'use client'",
+          "Marks a module as a Client Component entry point; place it before imports in that file."
+        ],
+        [
+          "tasks.map(... key={task.id})",
+          "Maps records to UI and supplies a stable key so React can track list items across updates."
+        ]
+      ],
+      "workedExample": {
+        "title": "Validate and revalidate after a server mutation",
+        "code": "'use server';\\nimport { revalidatePath } from 'next/cache';\\n\\nexport async function createTask(formData: FormData) {\\n  const title = String(formData.get('title') ?? '').trim();\\n  if (!title || title.length > 120) throw new Error('Invalid title');\\n  // Authenticate, authorize, and persist the task here.\\n  revalidatePath('/tasks');\\n}",
+        "explanation": [
+          "The server directive marks the exported function as a Server Action.",
+          "Input is normalized and checked before the persistence step; production code should return a user-safe validation result rather than expose raw exceptions.",
+          "Authentication and authorization belong on the server near the operation, not only in the UI.",
+          "revalidatePath requests refreshed data for the route after a successful write."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "Does importing a server-only database module into a Client Component make it safe?",
+          "answer": "No. Keep database access server-side and pass only the data the client needs."
+        },
+        {
+          "question": "When is revalidation useful?",
+          "answer": "After a mutation changes data used by a cached route or data tag, revalidation helps subsequent reads show the updated state."
+        }
+      ],
+      "practice": "Create an App Router task route with a shared layout, server-rendered task list, small controlled client form, and validated Server Action. Add loading and error states, then document whether the list should be cached and how it is refreshed.",
+      "sources": [
+        "https://nextjs.org/docs/app",
+        "https://nextjs.org/docs/app/building-your-application/rendering/server-components",
+        "https://nextjs.org/docs/app/building-your-application/caching"
+      ]
+    },
+    {
+      "title": "Node.js APIs: routing, validation and dependency injection",
+      "lead": "Design a maintainable HTTP API by separating transport concerns, validation, application logic, and infrastructure dependencies.",
+      "highlight": "A request body is untrusted input. Validate it at the boundary, authorize the requested operation, and return deliberate status codes and safe error messages.",
+      "keyPoints": [
+        "Middleware runs in a defined order and can handle cross-cutting concerns.",
+        "Keep route handlers thin; move business rules into service functions.",
+        "Validate request parameters and bodies at runtime.",
+        "Use dependency injection to make services testable and replaceable."
+      ],
+      "sections": [
+        [
+          "HTTP request lifecycle",
+          "A client sends a method, path, headers, and possibly a body. The server matches a route, runs middleware, invokes the handler, and returns a status, headers, and response body. Middleware ordering matters: parsing must happen before validation, and error middleware must be able to catch downstream failures."
+        ],
+        [
+          "REST resource design",
+          "Model endpoints around resources and use HTTP methods consistently: GET reads, POST creates or invokes a non-idempotent operation, PUT replaces, PATCH partially updates, and DELETE removes. Choose status codes deliberately, such as 201 for creation, 400 for invalid input, 401 for missing authentication, 403 for forbidden access, and 404 for missing resources."
+        ],
+        [
+          "Runtime validation and errors",
+          "Static TypeScript types disappear at runtime. A schema validator such as Zod can parse incoming JSON and provide a typed result. Keep validation errors distinct from unexpected server failures; log diagnostic details internally while returning a stable, non-sensitive error shape."
+        ],
+        [
+          "Dependency injection and tests",
+          "Pass repositories, clocks, and external clients into service constructors or functions rather than importing global singletons everywhere. This makes behavior easier to test with fakes and helps isolate domain logic from Express or Nest transport details."
+        ]
+      ],
+      "code": "import express from 'express';\\nimport { z } from 'zod';\\n\\nconst app = express();\\napp.use(express.json());\\nconst CreateTask = z.object({ title: z.string().trim().min(1).max(120) });\\n\\napp.post('/api/tasks', async (req, res, next) => {\\n  try {\\n    const input = CreateTask.parse(req.body);\\n    // Authenticate and authorize before writing.\\n    const task = await taskService.create(input);\\n    res.status(201).json({ data: task });\\n  } catch (error) { next(error); }\\n});",
+      "syntaxNotes": [
+        [
+          "app.use(express.json())",
+          "Registers middleware that parses JSON request bodies before route handlers."
+        ],
+        [
+          "z.object({ ... })",
+          "Defines a runtime schema for an object payload."
+        ],
+        [
+          "CreateTask.parse(req.body)",
+          "Validates the runtime value and returns parsed, typed data; invalid input throws a validation error."
+        ],
+        [
+          "next(error)",
+          "Passes an error to Express error-handling middleware."
+        ],
+        [
+          "res.status(201).json(...)",
+          "Sends an HTTP response with a creation status and JSON body."
+        ]
+      ],
+      "workedExample": {
+        "title": "Keep the route thin with an injected service",
+        "code": "function makeCreateTaskHandler(taskService) {\\n  return async (req, res, next) => {\\n    try {\\n      const input = CreateTask.parse(req.body);\\n      const created = await taskService.create(input);\\n      res.status(201).json({ data: created });\\n    } catch (error) { next(error); }\\n  };\\n}",
+        "explanation": [
+          "The handler receives its service as a parameter rather than reaching into a global dependency.",
+          "A test can supply a fake taskService and assert the call and response without connecting to a database.",
+          "The production route still needs authentication, authorization, and centralized error mapping."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "Why isn't a TypeScript interface enough to validate req.body?",
+          "answer": "Interfaces are erased at runtime. Incoming JSON needs runtime validation before it is trusted."
+        },
+        {
+          "question": "What does dependency injection improve here?",
+          "answer": "It separates business behavior from infrastructure and allows tests to supply controlled fake dependencies."
+        }
+      ],
+      "practice": "Build GET /api/tasks and POST /api/tasks. Add a runtime schema, centralized error handler, and a service that accepts an injected repository. Test valid input, empty title, oversized title, and repository failure.",
+      "sources": [
+        "https://expressjs.com/en/guide/using-middleware.html",
+        "https://zod.dev/"
+      ]
+    },
+    {
+      "title": "PostgreSQL data modeling and ORM workflows",
+      "lead": "Translate application requirements into relational tables, constraints, indexes, and safe transactions, then use an ORM without losing sight of the SQL it generates.",
+      "highlight": "A schema is an integrity contract, not just a storage layout. Put durable invariants in database constraints and use transactions for multi-step changes that must succeed or fail together.",
+      "keyPoints": [
+        "Normalize repeated facts and model relationships with keys.",
+        "Use constraints to protect data integrity even when application code has bugs.",
+        "Indexes speed selected reads but add write and storage costs.",
+        "Transactions provide atomicity and isolation boundaries for related operations."
+      ],
+      "sections": [
+        [
+          "Relational modeling",
+          "Represent entities as tables, rows as records, and columns as attributes. A primary key identifies a row; a foreign key enforces a relationship. A many-to-many relationship usually needs a junction table whose foreign keys point to each side. Normalize to avoid update anomalies, then denormalize only when measured needs justify it."
+        ],
+        [
+          "Constraints and transactions",
+          "NOT NULL, UNIQUE, CHECK, and foreign-key constraints encode rules close to the data. A transaction groups statements into one atomic unit. Choose isolation behavior based on concurrency risks; retry serialization failures where appropriate and keep transactions short to reduce lock contention."
+        ],
+        [
+          "Indexes and query behavior",
+          "B-tree indexes support many equality and range predicates, but PostgreSQL chooses plans based on statistics and estimated cost. An index is not automatically used for every query. Inspect EXPLAIN (and EXPLAIN ANALYZE in safe environments) and measure representative workloads before adding indexes."
+        ],
+        [
+          "ORMs and migrations",
+          "Prisma and Drizzle can improve type-safe access and migration workflows, but the database remains the source of truth for constraints and query performance. Review generated SQL for joins, pagination, and bulk operations. Migrations should be versioned, reviewed, and deployed in a sequence compatible with running application versions."
+        ]
+      ],
+      "code": "CREATE TABLE users (\\n  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,\\n  email TEXT NOT NULL UNIQUE\\n);\\n\\nCREATE TABLE tasks (\\n  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,\\n  owner_id BIGINT NOT NULL REFERENCES users(id),\\n  title TEXT NOT NULL CHECK (length(trim(title)) BETWEEN 1 AND 120),\\n  created_at TIMESTAMPTZ NOT NULL DEFAULT now()\\n);\\n\\nCREATE INDEX tasks_owner_created_idx ON tasks(owner_id, created_at DESC);",
+      "syntaxNotes": [
+        [
+          "PRIMARY KEY",
+          "Uniquely identifies each row and implies NOT NULL."
+        ],
+        [
+          "REFERENCES users(id)",
+          "Creates a foreign-key relationship that prevents an owner_id from referring to a nonexistent user."
+        ],
+        [
+          "UNIQUE",
+          "Prevents duplicate values in the constrained column or column set."
+        ],
+        [
+          "CHECK (...)",
+          "Rejects rows that violate the declared Boolean condition."
+        ],
+        [
+          "INDEX ... (owner_id, created_at DESC)",
+          "Supports queries filtering by owner and ordering by creation time, subject to planner choice and data distribution."
+        ]
+      ],
+      "workedExample": {
+        "title": "Make a multi-step operation atomic",
+        "code": "BEGIN;\\nUPDATE inventory SET quantity = quantity - 1\\nWHERE sku = 'A-17' AND quantity > 0;\\n-- Application checks that exactly one row was updated.\\nINSERT INTO orders (sku, quantity) VALUES ('A-17', 1);\\nCOMMIT;",
+        "explanation": [
+          "BEGIN starts a transaction; the changes are not committed independently.",
+          "The guarded update prevents decrementing an already-empty inventory row. The application must check the affected-row count and roll back if it is not exactly one.",
+          "The insert and inventory decrement commit together, preventing an order from being recorded without the corresponding stock change.",
+          "In production, handle rollback on errors and consider concurrent requests and appropriate constraints."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "Why add an index on owner_id and created_at together?",
+          "answer": "It may support a common access pattern that filters by owner and sorts newest-first; confirm with a representative query plan."
+        },
+        {
+          "question": "Does an ORM remove the need to understand SQL?",
+          "answer": "No. You still need to reason about joins, transactions, constraints, query plans, and generated SQL."
+        }
+      ],
+      "practice": "Design users, tasks, and task_labels tables for a task app with tags. Add primary/foreign keys, uniqueness rules, and one composite index for a stated query. Write a transaction for creating a task and its tags, and explain what should happen if one tag is invalid.",
+      "sources": [
+        "https://www.postgresql.org/docs/current/ddl-constraints.html",
+        "https://www.postgresql.org/docs/current/indexes.html",
+        "https://www.postgresql.org/docs/current/tutorial-transactions.html"
+      ]
+    }
+  ]
+};
+
 function openPhaseStudy(track, phase, index) {
   studyTitle.textContent = `Phase ${index + 1} · ${phase.title}`;
   studyDescription.textContent = `${track.name} · Study focus`;
@@ -388,9 +777,9 @@ document.querySelector("#back-to-roadmap").addEventListener("click", () => {
 
 function openGuidedLesson(topicIndex = 0, track, phase = track?.phases?.[0], phaseIndex = 0) {
   if (!track || !track.id || !phase) return;
-  const authoredLesson = phaseIndex === 0
-    ? (track.id === "fullstack" ? guidedLessons[topicIndex] : foundationLessons[track.id]?.[topicIndex])
-    : null;
+  const authoredLesson = track.id === "fullstack"
+    ? (phaseIndex === 0 ? guidedLessons[topicIndex] : fullStackPhaseLessons[phaseIndex - 1]?.[topicIndex])
+    : (phaseIndex === 0 ? foundationLessons[track.id]?.[topicIndex] : null);
   const lesson = authoredLesson || {
     title: phase.topics[topicIndex] || "Course topic",
     lead: `Study this topic within ${phase.title}. Use the syllabus checkpoints and applied project to connect the concept to a working implementation.`,
