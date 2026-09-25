@@ -419,6 +419,75 @@ for (const trackId of ["python", "excel", "powerbi"]) {
   });
 }
 
+
+guidedLessons[1].syntaxNotes = [
+ ["box-sizing: border-box","Includes padding and border in declared width and height."],
+ ["display: flex","Arranges children along a main axis and cross axis."],
+ ["display: grid","Creates a two-dimensional row/column layout."],
+ ["gap","Sets consistent gutters between layout items."],
+ ["min-width: 0","Allows a flex/grid child to shrink below its min-content width."]
+];
+guidedLessons[1].workedExample = {
+ title:"Build a responsive card gallery",
+ code:"*, *::before, *::after {\\n  box-sizing: border-box;\\n}\\n.gallery {\\n  display: grid;\\n  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));\\n  gap: 1rem;\\n}\\n.card { min-width: 0; }",
+ explanation:["The universal rule makes sizing include padding and borders.","Grid adapts the number of columns to available space.","The minmax/min combination avoids forcing cards wider than a narrow container.","min-width: 0 helps long content shrink; test long strings and images too."]
+};
+guidedLessons[1].knowledgeCheck = [
+ {question:"When is Flexbox a natural fit compared with Grid?",answer:"Flexbox arranges items primarily along one axis; Grid manages rows and columns together."},
+ {question:"What does border-box include in the declared width?",answer:"Content, padding and border."},
+ {question:"What can min-width: 0 prevent?",answer:"A flex/grid child being held wider than its available space by its automatic min-content size."}
+];
+guidedLessons[1].practice += " Add a long unbroken title and a wide image to a card. Test at 320px, tablet and desktop widths, then explain the sizing rules that prevent overflow.";
+
+guidedLessons[2].sections.push(
+ ["7. Prototype chains","Objects can delegate property lookup to a prototype. If a property is not found on the object itself, JavaScript checks its prototype and continues until null. Classes are syntax built on this prototype model. Use Object.hasOwn(obj, key) to distinguish own properties from inherited ones."],
+ ["8. ES modules","Use export to expose bindings and import to consume them in another file. Named exports are imported by name; a default export is imported under a local name. Modules have their own scope and run in strict mode. In browsers, load the entry script with type=\"module\" and use a development server."],
+ ["9. Map and Set","Map stores key-value entries with keys of any type and methods such as set, get, has and size. Set stores unique values and supports membership checks and de-duplication. Use Map for dynamic keyed collections and Set when uniqueness is the main requirement."]
+);
+guidedLessons[2].syntaxNotes.push(
+ ["Object.hasOwn(obj, key)","Returns true only if the property belongs directly to obj, not its prototype."],
+ ["export / import","Defines and consumes explicit module bindings."],
+ ["new Map() / new Set()","Creates keyed or unique-value collections; use their methods rather than bracket lookup."]
+);
+guidedLessons[2].workedExample = {
+ title:"Closure state, Map lookup and module exports",
+ code:"const makeCounter = () => {\\n  let count = 0;\\n  return () => ++count;\\n};\\nconst next = makeCounter();\\nconsole.log(next(), next()); // 1 2\\n\\nconst cache = new Map();\\ncache.set(\"user-7\", { name: \"Ari\" });\\nconsole.log(cache.has(\"user-7\")); // true\\n\\n// math.js: export const double = n => n * 2;\\n// app.js: import { double } from \"./math.js\";",
+ explanation:["The returned inner function closes over count after makeCounter returns.","Each makeCounter call creates a separate lexical environment.","Map entries are managed through set/get/has methods, not ordinary object property access.","The comments show a named export and its matching import in separate files."]
+};
+guidedLessons[2].knowledgeCheck.push(
+ {question:"How does lookup work when an object lacks a property?",answer:"The runtime follows its prototype chain until the property is found or the chain ends at null."},
+ {question:"When is Map a better fit than a plain object?",answer:"For dynamic key-value collections with arbitrary key types and collection methods."},
+ {question:"What do export and import do?",answer:"They define and consume a module's public bindings."}
+);
+guidedLessons[2].practice += " Add a Map cache and split one function into a separate ES module with a named export. Explain the difference between a closure's retained binding and a Map entry.";
+
+guidedLessons[3].syntaxNotes = [
+ ["Promise.all(items.map(async ...))","Waits for independent async callback results; fulfillment values preserve input order."],
+ ["for...of with await","Runs async operations sequentially when order or bounded concurrency matters."],
+ ["event.target.closest(selector)","Finds the nearest matching ancestor, useful for delegated event handling."],
+ ["addEventListener(type, handler)","Registers a listener; attach to a stable ancestor to handle dynamic descendants."],
+ ["min-width: 0","Allows a flex/grid child to shrink when content-based minimum sizing causes overflow."]
+];
+guidedLessons[3].workedExample = {
+ title:"Delegate clicks for a dynamic list",
+ code:"list.addEventListener(\"click\", event => {\\n  const button = event.target.closest(\"[data-action]\");\\n  if (!button || !list.contains(button)) return;\\n  handleAction(button.dataset.action);\\n});",
+ explanation:["One listener on the stable list container can handle items added later.","closest handles clicks on nested icons or spans inside an action button.","contains ensures the matching element belongs to this list.","Validate the action before it triggers sensitive behavior."]
+};
+guidedLessons[3].knowledgeCheck = [
+ {question:"What does map(async callback) return?",answer:"An array of Promises; use Promise.all for independent operations or for...of with await for sequential work."},
+ {question:"Why use event delegation for dynamic list items?",answer:"A stable ancestor listener can handle events from current and future matching descendants."},
+ {question:"What are the main event propagation phases?",answer:"Capture travels toward the target, then target handling occurs, and bubbling travels back through ancestors when the event bubbles."}
+];
+guidedLessons[3].practice += " Add an async action to a dynamically created list item. Choose concurrent or sequential execution, add an error path and test clicks on a nested icon.";
+
+const pbiExamples=[
+ "Source: governed SQL tables\\nConnect: select connector and configure credentials\\nCompare: Import refresh cadence vs DirectQuery freshness/source load\\nValidate: row counts, types and refresh behavior",
+ "Source → Promote Headers → Rename Columns → Set Types → Remove Blank Rows → Filter Invalid Records → Load\\nInspect each step and compare row counts before and after transformations.",
+ "Weekly sales trend → line chart with ordered week axis\\nCompare regions → sorted bar chart\\nPeriod total → KPI card with date context\\nInspect transactions → detail table and slicer",
+ "MonthName | MonthNumber\\nJan | 1\\nFeb | 2\\n... | ...\\nDec | 12\\nSelect MonthName → Sort by column → MonthNumber"
+];
+foundationLessons.powerbi.forEach((lesson,i)=>{ lesson.code=pbiExamples[i]; });
+
 guidedLessons[0].sources = ["https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Accessibility/HTML"];
 guidedLessons[1].sources = ["https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_flexible_box_layout/Basic_concepts_of_flexbox"];
 guidedLessons[2].sources = ["https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises"];
