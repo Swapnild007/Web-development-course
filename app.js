@@ -360,9 +360,9 @@ document.querySelector("#back-to-roadmap").addEventListener("click", () => {
   phaseList.scrollTop = 0;
 });
 
-function openGuidedLesson(topicIndex = 0) {
+function openGuidedLesson(topicIndex = 0, track) {
   const lesson = guidedLessons[topicIndex];
-  if (!lesson) return;
+  if (!lesson || !track || !track.id) return;
   lessonReader.replaceChildren();
   const eyebrow = makeElement("p", "eyebrow", `GUIDED LESSON · ${track?.name || "FOUNDATIONS"}`);
   const heading = makeElement("h4", "", lesson.title);
