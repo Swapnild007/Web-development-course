@@ -8,10 +8,73 @@
       "tint": "#edf2ff",
       "description": "Create accessible, responsive web applications and take them to production.",
       "phases": [
-        "Foundations & Core Mechanics",
-        "Intermediate Architecture & Applied Workflows",
-        "Advanced Internals, Systems Design & Edge Cases",
-        "Production Mastery & Capstone"
+        {
+          "title": "Foundations & Core Mechanics",
+          "topics": [
+            "Semantic HTML5, ARIA, accessible forms, WCAG 2.1 AA contrast and focus",
+            "CSS architecture, box model, cascade layers, Flexbox, Grid, Tailwind methodology, container queries",
+            "JavaScript ESNext: scope, TDZ, closures, prototypes, this, event loop, promises, modules, Map and Set",
+            "Common pitfalls: async map, event-loop ordering, flex min-width: 0, event propagation and delegation"
+          ],
+          "project": "Build a responsive, no-framework portfolio/blog with a dynamic gallery; target Lighthouse accessibility score of at least 95.",
+          "checkpoints": [
+            "Explain microtask versus macrotask ordering",
+            "Diagnose async map behavior",
+            "Explain bubbling, capturing, and event delegation"
+          ]
+        },
+        {
+          "title": "Intermediate Architecture & Applied Workflows",
+          "topics": [
+            "TypeScript: types, generics, utility types, narrowing",
+            "React hooks, custom hooks, controlled inputs, context, state tools, React Query",
+            "Next.js App Router, server/client components, SSR, SSG, ISR, Server Actions, fetching and cache",
+            "Node backend with Express/Nest, middleware, REST, Zod and dependency injection",
+            "PostgreSQL normalization, indexes, transactions, Prisma/Drizzle"
+          ],
+          "project": "Build a CRUD task app with Next.js, Prisma and PostgreSQL, auth-gated routes, optimistic updates and validated Server Actions.",
+          "checkpoints": [
+            "Implement generic useFetch",
+            "Explain Next caching and revalidatePath",
+            "Design normalized many-to-many schema",
+            "Debug an effect loop"
+          ]
+        },
+        {
+          "title": "Advanced Internals, Systems Design & Edge Cases",
+          "topics": [
+            "V8 internals, garbage collection and memory leaks",
+            "React Fiber, concurrency, Suspense and error boundaries; advanced TypeScript",
+            "Scalable APIs: rate limiting, idempotency, webhooks and versioning",
+            "Database query plans, indexes, pooling, replicas and N+1 queries",
+            "JWT, OAuth2 PKCE, CSRF, XSS, SQL injection and secrets management"
+          ],
+          "project": "Add realtime features and Redis rate limiting, fix N+1 queries, and architect a multi-tenant SaaS.",
+          "checkpoints": [
+            "Read EXPLAIN output",
+            "Explain Fiber interruptibility",
+            "Plan refresh-token rotation",
+            "Use heap snapshots",
+            "Discuss CAP tradeoffs"
+          ]
+        },
+        {
+          "title": "Production Mastery & Capstone",
+          "topics": [
+            "Docker and production image optimization",
+            "GitHub Actions CI/CD, cloud deployment and zero-downtime migrations",
+            "Observability, structured logging and incident debugging",
+            "Redis, sessions, caching and cache invalidation",
+            "RBAC and tenant isolation"
+          ],
+          "project": "Deliver a containerized multi-tenant SaaS with CI/CD, caching, RBAC, tenant isolation, logging, a public URL and monitoring.",
+          "checkpoints": [
+            "Keep Docker image below 150 MB",
+            "Plan zero-downtime migrations",
+            "Explain cache invalidation",
+            "Diagnose a production incident"
+          ]
+        }
       ]
     },
     {
@@ -22,10 +85,70 @@
       "tint": "#e7f6f2",
       "description": "Learn Python fundamentals, concurrency, testing, and package delivery.",
       "phases": [
-        "Foundations & Core Mechanics",
-        "Intermediate Architecture & Applied Workflows",
-        "Advanced Internals, Systems Design & Edge Cases",
-        "Production Mastery & Capstone"
+        {
+          "title": "Foundations & Core Mechanics",
+          "topics": [
+            "Core syntax, truthiness and mutability",
+            "Built-in data structures, algorithmic complexity and memory",
+            "Strings and encoding",
+            "Functions, default arguments, *args/**kwargs and LEGB scope"
+          ],
+          "project": "Create a CLI finance tracker that reads and writes CSV files and produces reports.",
+          "checkpoints": [
+            "Explain the mutable-default-argument trap",
+            "Trace aliasing and object identity with id()",
+            "Compare list operation complexities",
+            "Build a Counter manually"
+          ]
+        },
+        {
+          "title": "Intermediate Architecture & Applied Workflows",
+          "topics": [
+            "Generators and iterators",
+            "Decorators and context managers",
+            "OOP, dunder methods, dataclasses and abstract base classes",
+            "Functional patterns, type hints, Protocol and mypy"
+          ],
+          "project": "Build a library-management system using dataclasses, context managers, decorators and type hints; run strict mypy.",
+          "checkpoints": [
+            "Implement a retry decorator",
+            "Write context managers in both styles",
+            "Explain hash/eq consistency",
+            "Create a generator pipeline"
+          ]
+        },
+        {
+          "title": "Advanced Internals, Systems Design & Edge Cases",
+          "topics": [
+            "GIL and Python memory management",
+            "Metaclasses",
+            "Threading, multiprocessing and asyncio",
+            "Race conditions, locks, bounded concurrency and cancellation"
+          ],
+          "project": "Build an async scraper with bounded concurrency and cancellation, with multiprocessing fallback where appropriate.",
+          "checkpoints": [
+            "Compare threads and processes for CPU-bound work",
+            "Resolve a race condition with a lock",
+            "Explain slots",
+            "Handle exceptions from asyncio.gather"
+          ]
+        },
+        {
+          "title": "Production Mastery & Capstone",
+          "topics": [
+            "Virtual environments and Poetry/uv",
+            "pytest fixtures, mocking, coverage and Hypothesis",
+            "Packaging, PyPI and pyproject.toml",
+            "pathlib, logging, dataclasses, cache and argparse"
+          ],
+          "project": "Package the async scraper as a CLI with pytest coverage above 85%, mocked network calls and structured logs; make it publish-ready.",
+          "checkpoints": [
+            "Design fixtures and mocks",
+            "Distinguish dependency freeze from lockfile",
+            "Detect order-dependent tests",
+            "Configure logging handlers"
+          ]
+        }
       ]
     },
     {
@@ -36,10 +159,68 @@
       "tint": "#e9f6ed",
       "description": "Build reliable workbooks, dynamic models, and executive dashboards.",
       "phases": [
-        "Foundations & Core Mechanics",
-        "Intermediate Architecture & Applied Workflows",
-        "Advanced Internals, Systems Design & Edge Cases",
-        "Production Mastery & Capstone"
+        {
+          "title": "Foundations & Core Mechanics",
+          "topics": [
+            "Calculation engine, relative/absolute/mixed references, dependency graph and circular references",
+            "Tables, structured references and named ranges",
+            "SUMIFS, COUNTIFS, AVERAGEIFS, IF/IFS, IFERROR and VLOOKUP limitations",
+            "Conditional formatting, custom number formats and data validation"
+          ],
+          "project": "Build an expense workbook using Tables, SUMIFS, dropdowns and conditional formatting.",
+          "checkpoints": [
+            "Explain how inserted columns can affect VLOOKUP",
+            "Diagnose circular references",
+            "Write SUMIFS with three criteria"
+          ]
+        },
+        {
+          "title": "Intermediate Architecture & Applied Workflows",
+          "topics": [
+            "Dynamic arrays: UNIQUE, SORT, FILTER, spill behavior and SEQUENCE",
+            "XLOOKUP, INDEX/MATCH, CHOOSECOLS and CHOOSEROWS",
+            "LET and LAMBDA",
+            "Data Tables, Goal Seek and Scenario Manager"
+          ],
+          "project": "Build a dynamic sales dashboard with cascading dropdowns, LAMBDA and sensitivity analysis.",
+          "checkpoints": [
+            "Write a recursive LAMBDA",
+            "Refactor a formula with LET",
+            "Compare XLOOKUP and INDEX/MATCH",
+            "Use a spill range in a dropdown"
+          ]
+        },
+        {
+          "title": "Advanced Internals, Systems Design & Edge Cases",
+          "topics": [
+            "Power Query: merge, append, unpivot, pivot, group by, Applied Steps and M basics",
+            "Query folding, parameters and custom functions",
+            "Power Pivot star schema, relationships and calculated columns versus measures",
+            "Introductory DAX: SUM, CALCULATE, RELATED and TOTALYTD"
+          ],
+          "project": "Build a multi-source Power Query pipeline, unpivot messy data, create a star schema and write 3–5 measures.",
+          "checkpoints": [
+            "Explain query folding",
+            "Create a parameterized M function",
+            "Distinguish calculated columns from measures",
+            "Diagnose incorrect relationships"
+          ]
+        },
+        {
+          "title": "Production Mastery & Capstone",
+          "topics": [
+            "Dynamic dashboards and executive reporting",
+            "Formula auditing and #N/A, #SPILL and #CALC errors",
+            "Workbook performance and volatile functions",
+            "Documented audit trail and scenario analysis"
+          ],
+          "project": "Deliver an executive dashboard workbook with a Power Query-fed star schema, dynamic KPI cards, slicers, charts, scenario analysis and an audit trail.",
+          "checkpoints": [
+            "Use Evaluate Formula with LET/LAMBDA",
+            "Reduce volatile functions",
+            "Handle formula errors systematically"
+          ]
+        }
       ]
     },
     {
@@ -50,12 +231,73 @@
       "tint": "#fff6df",
       "description": "Transform data, model it, build DAX measures, and deliver governed BI.",
       "phases": [
-        "Foundations & Core Mechanics",
-        "Intermediate Architecture & Applied Workflows",
-        "Advanced Internals, Systems Design & Edge Cases",
-        "Production Mastery & Capstone"
+        {
+          "title": "Foundations & Core Mechanics",
+          "topics": [
+            "Connect to SQL, Excel, web and folder sources",
+            "Power Query ETL and incremental refresh",
+            "Report visuals, slicers and filters",
+            "Data types, data categorization and sort by column"
+          ],
+          "project": "Load a multi-table sample dataset, transform it and build a multi-page report.",
+          "checkpoints": [
+            "Describe a three-layer architecture",
+            "Explain incremental refresh",
+            "Set up sort-by-column correctly"
+          ]
+        },
+        {
+          "title": "Intermediate Architecture & Applied Workflows",
+          "topics": [
+            "Kimball dimensional modeling: star versus snowflake, facts, dimensions, grain and surrogate keys",
+            "Relationships: cardinality, filter direction, bridge tables and role-playing dimensions",
+            "Introductory DAX: CALCULATE, FILTER and time intelligence",
+            "Excel Power Query/data-modeling prerequisite: complete Excel Phase 3 first"
+          ],
+          "project": "Create a star-schema sales model and at least five DAX measures.",
+          "checkpoints": [
+            "Choose an appropriate schema",
+            "Model a role-playing date dimension",
+            "Build a many-to-many bridge",
+            "Explain bidirectional filtering"
+          ]
+        },
+        {
+          "title": "Advanced Internals, Systems Design & Edge Cases",
+          "topics": [
+            "DAX row context, filter context and context transition",
+            "CALCULATE filter modifiers and evaluation order",
+            "Semi-additive measures, time intelligence and custom calendars",
+            "Iterators: SUMX, AVERAGEX and RANKX",
+            "Report UX: bookmarks, drillthrough, tooltips and accessibility"
+          ],
+          "project": "Build a financial report with balances, Top-N analysis, drillthrough and bookmarks.",
+          "checkpoints": [
+            "Explain context transition",
+            "Diagnose totals affected by ALL",
+            "Calculate ending balance",
+            "Consider RANKX performance"
+          ]
+        },
+        {
+          "title": "Production Mastery & Capstone",
+          "topics": [
+            "Performance Analyzer, DAX Studio query plans and server timings",
+            "VertiPaq compression and cardinality",
+            "Static and dynamic row-level security with USERPRINCIPALNAME",
+            "Governance: refresh, workspaces, pipelines and dataflows"
+          ],
+          "project": "Deliver a governed BI solution with star schema, 10+ optimized measures, dynamic RLS, three slow visuals optimized with before/after timings, Dev/Test/Prod pipeline and scheduled refresh.",
+          "checkpoints": [
+            "Distinguish Storage Engine and Formula Engine",
+            "Implement dynamic RLS",
+            "Explain cardinality and compression",
+            "Diagnose slow visuals"
+          ]
+        }
       ]
     }
   ],
-  "note": "Phase names follow the supplied Master Syllabus. Detailed lesson blocks and activities are to be authored against the PDF."
+  "sequenceNote": "Excel Track Phase 3 introduces Power Query and data modeling that scaffold Power BI Track Phase 2. Complete Excel Phase 3 before beginning Power BI Phase 2. Full-stack and Python can be studied in parallel from day one.",
+  "sourceNote": "Curriculum topics and projects are mapped from the supplied Master Syllabus. Lesson-by-lesson explanations, practice prompts, quizzes, and downloadable assets are not yet authored."
 }
