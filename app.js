@@ -13,12 +13,9 @@ const studyTopics = document.querySelector("#study-topics");
 const studyProject = document.querySelector("#study-project");
 const studyCheckpoints = document.querySelector("#study-checkpoints");
 const lessonReader = document.querySelector("#lesson-reader");
-let lessonNotes = document.querySelector("#lesson-notes");
 let lessonFeedback = document.querySelector("#lesson-feedback");
-let saveLessonNotesButton = document.querySelector("#save-lesson-notes");
 let completeLessonButton = document.querySelector("#complete-lesson");
 let activeLessonKey = "learning-studio.lesson.fullstack.phase1.topic0";
-let activeNotesKey = activeLessonKey + ".notes";
 const trackCount = document.querySelector("#track-count");
 const views = [...document.querySelectorAll(".view")];
 const navButtons = [...document.querySelectorAll(".nav-item")];
@@ -71,23 +68,12 @@ function makeElement(tag, className, textContent) {
 }
 
 
-// Create lesson controls in JavaScript so the reader works even when the
-// HTML shell only provides an empty lesson-reader container.
-if (!lessonNotes) {
-  lessonNotes = makeElement("textarea", "");
-  lessonNotes.id = "lesson-notes";
-  lessonNotes.rows = 5;
-  lessonNotes.placeholder = "Write your notes for this lesson…";
-}
+// Create the completion feedback and control in JavaScript so the reader
+// works even when the HTML shell provides only an empty lesson-reader container.
 if (!lessonFeedback) {
   lessonFeedback = makeElement("p", "lesson-feedback");
   lessonFeedback.id = "lesson-feedback";
   lessonFeedback.setAttribute("aria-live", "polite");
-}
-if (!saveLessonNotesButton) {
-  saveLessonNotesButton = makeElement("button", "secondary-action", "Save notes");
-  saveLessonNotesButton.id = "save-lesson-notes";
-  saveLessonNotesButton.type = "button";
 }
 if (!completeLessonButton) {
   completeLessonButton = makeElement("button", "phase-start-action", "Mark lesson complete");
@@ -451,16 +437,11 @@ function openGuidedLesson(topicIndex = 0, track) {
     sourceBlock.append(sourceList);
     lessonReader.append(sourceBlock);
   }
-  const notesLabel = makeElement("label", "lesson-notes-label", "My notes");
-  notesLabel.htmlFor = "lesson-notes";
-  lessonReader.append(notesLabel, lessonNotes);
   const actions = makeElement("div", "lesson-actions");
-  actions.append(saveLessonNotesButton, completeLessonButton);
+  actions.append(completeLessonButton);
   lessonReader.append(actions, lessonFeedback);
   lessonReader.hidden = false;
   activeLessonKey = `learning-studio.lesson.${track.id}.phase${1}.topic${topicIndex}`;
-  activeNotesKey = activeLessonKey + ".notes";
-  lessonNotes.value = readSaved(activeNotesKey);
   lessonFeedback.textContent = "";
   const completed = readSaved(activeLessonKey) === "complete";
   completeLessonButton.textContent = completed ? "Lesson completed ✓" : "Mark lesson complete";
@@ -476,14 +457,6 @@ document.querySelector("#back-to-phase").addEventListener("click", () => {
   lessonReader.hidden = true;
   phaseStudy.scrollTop = 0;
   showView("phase");
-});
-saveLessonNotesButton.addEventListener("click", () => {
-  try {
-    window.localStorage.setItem(activeNotesKey, lessonNotes.value);
-    lessonFeedback.textContent = "Notes saved on this device.";
-  } catch (error) {
-    lessonFeedback.textContent = "Could not save notes in this browser. You can copy them before leaving.";
-  }
 });
 completeLessonButton.addEventListener("click", event => {
   try {
