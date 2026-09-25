@@ -1771,7 +1771,7 @@ function openGuidedLesson(topicIndex = 0, track, phase = track?.phases?.[0], pha
     lessonReader.append(points);
   }
   lesson.sections.forEach(([sectionTitle, sectionBody], index) => {
-    const cleanSectionTitle = String(sectionTitle).replace(/^\\s*\\d+(?:\\.\\d+)*[.)]?\\s*/, "");
+    const cleanSectionTitle = String(sectionTitle).replace(/^\s*\d+(?:\.\d+)*[.)]?\s*/, "");
     lessonReader.append(makeElement("h5", "", `${index + 1}. ${cleanSectionTitle}`));
     lessonReader.append(makeElement("p", "", sectionBody));
   });
