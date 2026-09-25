@@ -341,6 +341,10 @@ function openPhaseStudy(track, phase, index) {
   phase.checkpoints.forEach(checkpoint => studyCheckpoints.append(makeElement("li", "", checkpoint)));
   phaseList.hidden = true;
   phaseStudy.hidden = false;
+  const studyNote = phaseStudy.querySelector(".study-note");
+  if (studyNote) studyNote.textContent = index === 0
+    ? "Open a topic to read its detailed lesson, guided practice, and official references."
+    : "This phase is currently a syllabus outline. Detailed lessons, guided practice, and references are still being authored.";
   phaseStudy.scrollTop = 0;
 }
 
