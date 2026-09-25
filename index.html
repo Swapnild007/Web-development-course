@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f7fb">
+  <meta name="description" content="A guided learning studio for Full-stack Web Development, Python, Excel, and Power BI.">
+  <title>Learning Studio</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Learning Studio home"><span class="brand-mark">L</span><span>Learning Studio<small>Learn with a clear path</small></span></a>
+      <span class="status-pill"><span class="status-dot"></span> Your learning space</span>
+    </header>
+    <main>
+      <section class="hero">
+        <p class="eyebrow">YOUR PERSONAL LEARNING STUDIO</p>
+        <h1>Build skills.<br><span>One clear step at a time.</span></h1>
+        <p class="hero-copy">Choose a track, follow its phases, and grow from foundations to production-level practice.</p>
+        <label class="search-wrap"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search tracks or skills…" aria-label="Search tracks or skills"></label>
+      </section>
+      <section class="section-head"><div><p class="eyebrow">CURRICULUM</p><h2>Choose your learning track</h2></div><span class="muted" id="track-count">4 tracks</span></section>
+      <section id="tracks" class="track-grid" aria-live="polite"></section>
+      <section class="note"><span class="note-icon">✦</span><div><strong>Designed for steady progress</strong><p>Each track is organized into four phases, from core mechanics to a production capstone.</p></div></section>
+    </main>
+    <nav class="floating-nav" aria-label="Main navigation">
+      <a class="nav-item active" href="#tracks"><span>⌂</span><small>Learn</small></a>
+      <a class="nav-item" href="#tracks"><span>▤</span><small>Curriculum</small></a>
+      <a class="nav-item" href="#tracks"><span>◷</span><small>Progress</small></a>
+      <a class="nav-item" href="#tracks"><span>☻</span><small>Profile</small></a>
+    </nav>
+  </div>
+  <dialog id="phase-dialog" aria-labelledby="dialog-title">
+    <div class="dialog-top"><div><p class="eyebrow">TRACK ROADMAP</p><h2 id="dialog-title"></h2></div><button class="close" type="button" aria-label="Close dialog">×</button></div>
+    <p id="dialog-description" class="muted"></p><div id="phase-list" class="phase-list"></div>
+  </dialog>
+</body>
+</html>
