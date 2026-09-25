@@ -285,3 +285,14 @@ main{height:auto;min-height:0;overflow:visible}
 .progress-lesson strong{font-size:12px;color:#344960}
 .progress-state{font-size:10px;font-weight:700;color:#7283a0;white-space:nowrap}
 @media(max-width:650px){.progress-summary{padding:18px;border-radius:16px}.progress-metrics strong{font-size:21px}}
+
+
+/* Dedicated, flat lesson page, separate from the phase overview */
+.lesson-page{max-width:900px;margin:0 auto;padding:24px 28px 150px;min-height:calc(100vh - 76px)}
+.lesson-page-top{padding-bottom:17px;border-bottom:1px solid #e3e9ee;margin-bottom:18px}
+.lesson-page-top .back-action{margin-bottom:12px}
+.lesson-page-top h2{font:750 clamp(22px,3vw,30px)/1.3 Manrope,sans-serif;letter-spacing:-.7px;margin:0;color:#203550}
+.lesson-page .lesson-reader{margin:0;padding:0;border:0;overflow:visible;max-height:none;height:auto}
+.lesson-page .lesson-reader>.back-action{display:none}
+.lesson-page .lesson-reader>.eyebrow{margin-top:0}
+@media(max-width:650px){.lesson-page{padding:18px 17px 160px;min-height:calc(100vh - 68px)}.lesson-page-top h2{font-size:23px}}
