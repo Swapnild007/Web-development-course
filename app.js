@@ -244,8 +244,7 @@ document.querySelector("#back-to-roadmap").addEventListener("click", () => {
 function openGuidedLesson(topicIndex = 0) {
   const lesson = guidedLessons[topicIndex];
   if (!lesson) return;
-  const backButton = document.querySelector("#back-to-phase");
-  lessonReader.replaceChildren(backButton);
+  lessonReader.replaceChildren();
   const eyebrow = makeElement("p", "eyebrow", "GUIDED LESSON · FULL-STACK FOUNDATIONS");
   const heading = makeElement("h4", "", lesson.title);
   heading.id = "lesson-title";
