@@ -46,3 +46,50 @@
  .page-intro{padding:34px 0 29px}
  .page-intro h1{letter-spacing:-1.5px}
 }
+
+/* Learning Studio course identity refresh */
+:root{--ink:#172b45;--muted:#718096;--paper:#f7f8f5;--line:#e3e9ee;--blue:#5879c5;--mint:#4c978b}
+body{background:radial-gradient(ellipse at 8% 0%,#e7efff 0,transparent 36%),radial-gradient(ellipse at 92% 20%,#e5f3ef 0,transparent 31%),#f7f8f5;color:var(--ink)}
+.app-shell{max-width:1120px}
+.topbar{height:76px}
+.brand{gap:10px;font:800 14px Manrope,sans-serif;letter-spacing:-.25px}
+.brand-mark{width:42px;height:42px;border-radius:14px;background:linear-gradient(145deg,#fff,#e8efff);color:#5275c3;box-shadow:0 5px 18px #526e9e1c;display:grid;place-items:center}
+.brand-mark svg{width:32px;height:32px}
+.brand small{font:500 10px 'DM Sans',sans-serif;color:#8491a3;letter-spacing:.1px}
+.status-pill{background:#ffffffb0;border-color:#ffffffd9}
+.home-hero{position:relative;max-width:740px;padding:clamp(50px,10vh,104px) 0 30px}
+.home-hero:after{content:"";position:absolute;z-index:-1;right:-90px;top:60px;width:230px;height:230px;border-radius:50%;background:linear-gradient(145deg,#e9efff99,#e1f2eb99);filter:blur(1px)}
+.home-hero h1,.page-intro h1{color:#182c46}
+.home-hero h1 span{color:#5e7fc7}
+.eyebrow{color:#6d82ad;letter-spacing:2px}
+.hero-copy{color:#78879a}
+.primary-action{background:#203c63;color:#fff;box-shadow:0 8px 22px #203c6326;padding:14px 18px}
+.primary-action:hover{background:#294b79;filter:none}
+.welcome-panel{background:#ffffffb8;border-color:#fff;box-shadow:0 14px 36px #4159770c}
+.welcome-icon{background:#eaf0ff;color:#5879c5}
+.welcome-panel h2{color:#1c304b}
+.page-intro{padding:40px 0 32px}
+.search-wrap{border:1px solid #e5ebf1;background:#ffffffd4;box-shadow:0 8px 24px #4159770a}
+.section-head h2{color:#1c304b}
+.track-card{border-color:#e8edf1;background:linear-gradient(145deg,#ffffffed,#f9fbfcd9);box-shadow:0 10px 30px #3d58740d,inset 0 1px #fff}
+.track-card:hover{box-shadow:0 16px 34px #3d587418}
+.phase-count{background:#f1f4f7;color:#78879b}
+.open-track{border:1px solid color-mix(in srgb,var(--accent) 15%,white);background:var(--tint)}
+.note{border-color:#e8edf0;background:#ffffffa8}
+.floating-nav{border-color:#ffffffed;background:#ffffffd9;box-shadow:0 12px 38px #2e46621e}
+.nav-item.active{background:#e9effd;color:#5275c3}
+dialog{background:#f8fafc;border-color:#fff;box-shadow:0 28px 90px #1e344d40}
+.dialog-top{position:sticky;top:-24px;z-index:3;margin:-24px -24px 14px;padding:22px 24px 12px;background:#f8fafcf2;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:24px 24px 0 0}
+.phase-detail{border-color:#e5ebf0;box-shadow:0 3px 12px #3d587407}
+.phase-detail[open]{border-color:#dce5f0}
+.project-block{background:#f0f5ff;border-color:#e2eaf9}
+@media(max-width:650px){
+ .home-hero{padding:clamp(48px,9vh,84px) 0 26px}
+ .home-hero:after{width:150px;height:150px;right:-38px;top:44px;opacity:.8}
+ .brand-mark{width:38px;height:38px}
+ .brand-mark svg{width:29px;height:29px}
+ .page-intro{padding:30px 0 26px}
+ dialog{padding:18px;border-radius:22px}
+ .dialog-top{top:-18px;margin:-18px -18px 12px;padding:18px 18px 10px;border-radius:22px 22px 0 0}
+}
+@media(prefers-reduced-motion:reduce){.track-card,.primary-action{transition:none}}
