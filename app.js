@@ -12,6 +12,11 @@ const studyDescription = document.querySelector("#study-phase-description");
 const studyTopics = document.querySelector("#study-topics");
 const studyProject = document.querySelector("#study-project");
 const studyCheckpoints = document.querySelector("#study-checkpoints");
+const lessonReader = document.querySelector("#lesson-reader");
+const lessonNotes = document.querySelector("#lesson-notes");
+const lessonFeedback = document.querySelector("#lesson-feedback");
+const lessonKey = "learning-studio.lesson.fullstack.phase1.semantic-html";
+const notesKey = lessonKey + ".notes";
 const trackCount = document.querySelector("#track-count");
 const views = [...document.querySelectorAll(".view")];
 const navButtons = [...document.querySelectorAll(".nav-item")];
@@ -112,6 +117,7 @@ function openRoadmap(track) {
   description.textContent = track.description;
   phaseList.hidden = false;
   phaseStudy.hidden = true;
+  lessonReader.hidden = true;
   phaseList.replaceChildren();
 
   track.phases.forEach((phase, index) => {
@@ -161,6 +167,14 @@ function openPhaseStudy(track, phase, index) {
     const item = makeElement("article", "study-topic");
     item.append(makeElement("span", "study-topic-number", `TOPIC GROUP ${String(topicIndex + 1).padStart(2, "0")}`));
     item.append(makeElement("p", "study-topic-copy", topic));
+    if (track.id === "fullstack" && index === 0 && topicIndex === 0) {
+      const lessonButton = makeElement("button", "topic-lesson-action", "Open guided lesson →");
+      lessonButton.type = "button";
+      lessonButton.addEventListener("click", openGuidedLesson);
+      item.append(lessonButton);
+    } else {
+      item.append(makeElement("small", "lesson-pending", "Detailed lesson content not authored yet"));
+    }
     studyTopics.append(item);
   });
   studyProject.textContent = phase.project;
@@ -175,6 +189,42 @@ document.querySelector("#back-to-roadmap").addEventListener("click", () => {
   phaseStudy.hidden = true;
   phaseList.hidden = false;
   phaseList.scrollTop = 0;
+});
+
+function openGuidedLesson() {
+  lessonReader.hidden = false;
+  lessonNotes.value = readSaved(notesKey);
+  lessonFeedback.textContent = "";
+  const completed = readSaved(lessonKey) === "complete";
+  document.querySelector("#complete-lesson").textContent = completed ? "Lesson completed ✓" : "Mark lesson complete";
+  lessonReader.scrollIntoView({ block: "start", behavior: "auto" });
+}
+
+function readSaved(key) {
+  try { return window.localStorage.getItem(key) || ""; }
+  catch (error) { return ""; }
+}
+
+document.querySelector("#back-to-phase").addEventListener("click", () => {
+  lessonReader.hidden = true;
+  phaseStudy.scrollTop = 0;
+});
+document.querySelector("#save-lesson-notes").addEventListener("click", () => {
+  try {
+    window.localStorage.setItem(notesKey, lessonNotes.value);
+    lessonFeedback.textContent = "Notes saved on this device.";
+  } catch (error) {
+    lessonFeedback.textContent = "Could not save notes in this browser. You can copy them before leaving.";
+  }
+});
+document.querySelector("#complete-lesson").addEventListener("click", event => {
+  try {
+    window.localStorage.setItem(lessonKey, "complete");
+    event.currentTarget.textContent = "Lesson completed ✓";
+    lessonFeedback.textContent = "Completion saved on this device.";
+  } catch (error) {
+    lessonFeedback.textContent = "Could not save completion in this browser.";
+  }
 });
 
 function getSequenceNote() {
