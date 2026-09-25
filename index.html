@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#f4f7fb">
   <meta name="description" content="A guided learning studio for Full-stack Web Development, Python, Excel, and Power BI.">
   <title>Learning Studio</title>
-  <link rel="stylesheet" href="style.css?v=20260925-guided-lesson">
-  <script src="app.js?v=20260925-phase-study" defer></script>
+  <link rel="stylesheet" href="style.css?v=20260925-flat-learning-page">
+  <script src="app.js?v=20260925-flat-learning-page" defer></script>
 </head>
 <body>
   <div class="app-shell">
@@ -58,7 +58,7 @@
       <button class="nav-item" type="button" data-view="profile"><span aria-hidden="true">☻</span><small>Profile</small></button>
     </nav>
   </div>
-  <dialog id="phase-dialog" aria-labelledby="dialog-title">
+  <section class="view phase-page" id="phase-page" aria-labelledby="dialog-title" hidden>
     <div class="dialog-top"><div><p class="eyebrow">TRACK ROADMAP</p><h2 id="dialog-title"></h2></div><button class="close" type="button" aria-label="Close dialog">×</button></div>
     <p id="dialog-description" class="muted"></p><p class="roadmap-hint">Open a phase to review its topics, applied project, and knowledge checkpoints.</p><div id="phase-list" class="phase-list"></div>
     <section id="phase-study" class="phase-study" hidden aria-live="polite">
@@ -83,6 +83,6 @@
   &lt;/article&gt;
 &lt;/main&gt;</code></pre><h5>3. Accessibility check</h5><p>Ask whether the element’s purpose is clear without relying on its visual styling. Links should describe their destination, form controls need programmatic labels, and keyboard focus must remain visible.</p><div class="lesson-practice"><strong>Try it</strong><p>Sketch a simple article page with a site header, a navigation area, a main region, and one article. Choose semantic elements for each part and explain why you chose them.</p></div><label class="lesson-notes-label" for="lesson-notes">My notes</label><textarea id="lesson-notes" rows="4" placeholder="Write a takeaway or question to revisit…"></textarea><div class="lesson-actions"><button id="save-lesson-notes" class="secondary-action" type="button">Save notes</button><button id="complete-lesson" class="phase-start-action" type="button">Mark lesson complete</button></div><p id="lesson-feedback" class="lesson-feedback" aria-live="polite"></p></section>
     </section>
-  </dialog>
+  </section>
 </body>
 </html>
