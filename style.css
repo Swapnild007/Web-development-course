@@ -222,7 +222,7 @@ dialog{background:#f8fafc;border-color:#fff;box-shadow:0 28px 90px #1e344d40}
 .lesson-practice strong{font-size:12px;color:#506d9e}
 .lesson-practice p{font-size:12px;line-height:1.6;color:#52657e;margin:7px 0 0}
 .lesson-notes-label{display:block;font-size:12px;font-weight:700;color:#4c6389;margin:16px 0 7px}
-#lesson-notes{width:100%;box-sizing:border-box;resize:vertical;border:1px solid #dce4ee;border-radius:12px;padding:12px;background:#fff;color:#273b53;font:12px/1.6 inherit}
+#lesson-notes{width:100%;box-sizing:border-box;resize:vertical;border:1px solid #dce4ee;border-radius:12px;padding:12px;background:#fff;color:#273b53;font:12px/1.6 sans-serif}
 .topic-lesson-action{display:block;margin-top:12px;border:0;border-radius:10px;padding:10px 13px;background:#eaf0ff;color:#4f70b4;font-size:11px;font-weight:700;cursor:pointer}
 .lesson-pending{display:block;margin-top:9px;font-size:10px;color:#9aa4b1}
 .lesson-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
