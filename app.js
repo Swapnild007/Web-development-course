@@ -24,7 +24,7 @@ const navButtons = [...document.querySelectorAll(".nav-item")];
 let tracks = [];
 
 function showView(viewName) {
-  const navViewName = viewName === "phase" ? "curriculum" : viewName;
+  const navViewName = (viewName === "phase" || viewName === "lesson") ? "curriculum" : viewName;
   views.forEach(view => {
     const isActive = view.id === (viewName === "phase" ? "phase-page" : `${viewName}-view`);
     view.hidden = !isActive;
@@ -276,6 +276,7 @@ function openGuidedLesson(topicIndex = 0) {
   lessonFeedback.textContent = "";
   const completed = readSaved(lessonKey + "." + topicIndex) === "complete";
   document.querySelector("#complete-lesson").textContent = completed ? "Lesson completed ✓" : "Mark lesson complete";
+  showView("lesson");
   lessonReader.scrollIntoView({ block: "start", behavior: "auto" });
 }
 function readSaved(key) {
@@ -286,6 +287,7 @@ function readSaved(key) {
 document.querySelector("#back-to-phase").addEventListener("click", () => {
   lessonReader.hidden = true;
   phaseStudy.scrollTop = 0;
+  showView("phase");
 });
 document.querySelector("#save-lesson-notes").addEventListener("click", () => {
   try {
