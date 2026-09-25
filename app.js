@@ -2,7 +2,7 @@
 
 const trackRoot = document.querySelector("#tracks");
 const searchInput = document.querySelector("#search");
-const dialog = document.querySelector("#phase-dialog");
+const dialog = document.querySelector("#phase-page");
 const title = document.querySelector("#dialog-title");
 const description = document.querySelector("#dialog-description");
 const phaseList = document.querySelector("#phase-list");
@@ -35,7 +35,6 @@ function showView(viewName) {
     if (isActive) button.setAttribute("aria-current", "page");
     else button.removeAttribute("aria-current");
   });
-  if (viewName !== "curriculum" && dialog.open) dialog.close();
   window.scrollTo({ top: 0, behavior: "auto" });
 }
 
@@ -156,7 +155,7 @@ function openRoadmap(track) {
     phaseList.prepend(makeElement("p", "sequence-note", "Learning sequence: " + getSequenceNote()));
   }
   phaseList.scrollTop = 0;
-  dialog.showModal();
+  showView("phase");
 }
 
 function openPhaseStudy(track, phase, index) {
@@ -231,10 +230,7 @@ function getSequenceNote() {
   return "Complete Excel Phase 3 before Power BI Phase 2. Full-stack and Python can be studied in parallel from day one.";
 }
 
-document.querySelector(".close").addEventListener("click", () => dialog.close());
-dialog.addEventListener("click", event => {
-  if (event.target === dialog) dialog.close();
-});
+document.querySelector(".close").addEventListener("click", () => showView("curriculum"));
 searchInput.addEventListener("input", event => renderTracks(event.target.value));
 
 fetch("./data/curriculum.json")
