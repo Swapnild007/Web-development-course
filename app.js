@@ -1771,7 +1771,8 @@ function openGuidedLesson(topicIndex = 0, track, phase = track?.phases?.[0], pha
     lessonReader.append(points);
   }
   lesson.sections.forEach(([sectionTitle, sectionBody], index) => {
-    lessonReader.append(makeElement("h5", "", `${index + 1}. ${sectionTitle}`));
+    const cleanSectionTitle = String(sectionTitle).replace(/^\\s*\\d+(?:\\.\\d+)*[.)]?\\s*/, "");
+    lessonReader.append(makeElement("h5", "", `${index + 1}. ${cleanSectionTitle}`));
     lessonReader.append(makeElement("p", "", sectionBody));
   });
   if (lesson.code) {
@@ -1840,7 +1841,7 @@ function openGuidedLesson(topicIndex = 0, track, phase = track?.phases?.[0], pha
   actions.append(completeLessonButton);
   lessonReader.append(actions, lessonFeedback);
   lessonReader.hidden = false;
-  activeLessonKey = `learning-studio.lesson.${track.id}.phase${1}.topic${topicIndex}`;
+  activeLessonKey = `learning-studio.lesson.${track.id}.phase${phaseIndex + 1}.topic${topicIndex}`;
   lessonFeedback.textContent = "";
   const completed = readSaved(activeLessonKey) === "complete";
   completeLessonButton.textContent = completed ? "Lesson completed ✓" : "Mark lesson complete";
