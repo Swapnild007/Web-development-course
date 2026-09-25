@@ -12,25 +12,47 @@
 <body>
   <div class="app-shell">
     <header class="topbar">
-      <a class="brand" href="#" aria-label="Learning Studio home"><span class="brand-mark">L</span><span>Learning Studio<small>Learn with a clear path</small></span></a>
+      <a class="brand" href="#" id="home-link" aria-label="Learning Studio home"><span class="brand-mark">L</span><span>Learning Studio<small>Learn with a clear path</small></span></a>
       <span class="status-pill"><span class="status-dot"></span> Your learning space</span>
     </header>
     <main>
-      <section class="hero">
-        <p class="eyebrow">YOUR PERSONAL LEARNING STUDIO</p>
-        <h1>Build skills.<br><span>One clear step at a time.</span></h1>
-        <p class="hero-copy">Choose a track, follow its phases, and grow from foundations to production-level practice.</p>
-        <label class="search-wrap"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search tracks or skills…" aria-label="Search tracks or skills"></label>
+      <section class="view active" id="learn-view" aria-labelledby="home-title">
+        <div class="home-hero">
+          <p class="eyebrow">YOUR PERSONAL LEARNING STUDIO</p>
+          <h1 id="home-title">Build skills.<br><span>One clear step at a time.</span></h1>
+          <p class="hero-copy">A guided space to learn, practice, and build real-world skills at your own pace.</p>
+          <button class="primary-action" id="browse-curriculum" type="button">Explore curriculum <span aria-hidden="true">→</span></button>
+        </div>
+        <section class="welcome-panel">
+          <div class="welcome-icon">✦</div>
+          <div><p class="eyebrow">START HERE</p><h2>Choose a path when you're ready</h2><p>Browse the curriculum to see what each track covers, its projects, and the checkpoints you’ll work toward.</p></div>
+        </section>
       </section>
-      <section class="section-head"><div><p class="eyebrow">CURRICULUM</p><h2>Choose your learning track</h2></div><span class="muted" id="track-count">4 tracks</span></section>
-      <section id="tracks" class="track-grid" aria-live="polite"></section>
-      <section class="note"><span class="note-icon">✦</span><div><strong>Designed for steady progress</strong><p>Each track is organized into four phases, from core mechanics to a production capstone.</p></div></section>
+
+      <section class="view" id="curriculum-view" aria-labelledby="curriculum-title" hidden>
+        <div class="page-intro">
+          <p class="eyebrow">YOUR LEARNING PATHS</p>
+          <h1 id="curriculum-title">Curriculum</h1>
+          <p class="hero-copy">Explore the four tracks and open a roadmap to review phase topics, projects, and knowledge checkpoints.</p>
+          <label class="search-wrap"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search tracks or skills…" aria-label="Search tracks or skills"></label>
+        </div>
+        <section class="section-head"><div><p class="eyebrow">FOUR COMPLETE TRACKS</p><h2>Choose your learning track</h2></div><span class="muted" id="track-count">4 tracks</span></section>
+        <section id="tracks" class="track-grid" aria-live="polite"></section>
+        <section class="note"><span class="note-icon">✦</span><div><strong>Recommended sequence</strong><p>Complete Excel Phase 3 before starting Power BI Phase 2. Full-stack and Python can be studied in parallel.</p></div></section>
+      </section>
+
+      <section class="view" id="progress-view" aria-labelledby="progress-title" hidden>
+        <div class="page-intro"><p class="eyebrow">YOUR LEARNING JOURNEY</p><h1 id="progress-title">Progress</h1><p class="hero-copy">Progress tracking will be added in a later update. For now, use the curriculum roadmaps to review the phases and checkpoints.</p><button class="secondary-action" type="button" data-view="curriculum">Open curriculum →</button></div>
+      </section>
+      <section class="view" id="profile-view" aria-labelledby="profile-title" hidden>
+        <div class="page-intro"><p class="eyebrow">LEARNING STUDIO</p><h1 id="profile-title">Profile</h1><p class="hero-copy">Personal profile and learning preferences are not configured in this starter version.</p><button class="secondary-action" type="button" data-view="curriculum">Browse curriculum →</button></div>
+      </section>
     </main>
     <nav class="floating-nav" aria-label="Main navigation">
-      <a class="nav-item active" href="#tracks"><span>⌂</span><small>Learn</small></a>
-      <a class="nav-item" href="#tracks"><span>▤</span><small>Curriculum</small></a>
-      <a class="nav-item" href="#tracks"><span>◷</span><small>Progress</small></a>
-      <a class="nav-item" href="#tracks"><span>☻</span><small>Profile</small></a>
+      <button class="nav-item active" type="button" data-view="learn" aria-current="page"><span aria-hidden="true">⌂</span><small>Learn</small></button>
+      <button class="nav-item" type="button" data-view="curriculum"><span aria-hidden="true">▤</span><small>Curriculum</small></button>
+      <button class="nav-item" type="button" data-view="progress"><span aria-hidden="true">◷</span><small>Progress</small></button>
+      <button class="nav-item" type="button" data-view="profile"><span aria-hidden="true">☻</span><small>Profile</small></button>
     </nav>
   </div>
   <dialog id="phase-dialog" aria-labelledby="dialog-title">
