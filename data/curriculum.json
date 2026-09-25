@@ -1,0 +1,61 @@
+{
+  "tracks": [
+    {
+      "id": "fullstack",
+      "name": "Full-stack Web Development",
+      "icon": "⌘",
+      "accent": "#5577c7",
+      "tint": "#edf2ff",
+      "description": "Create accessible, responsive web applications and take them to production.",
+      "phases": [
+        "Foundations & Core Mechanics",
+        "Intermediate Architecture & Applied Workflows",
+        "Advanced Internals, Systems Design & Edge Cases",
+        "Production Mastery & Capstone"
+      ]
+    },
+    {
+      "id": "python",
+      "name": "Python",
+      "icon": "Py",
+      "accent": "#328a81",
+      "tint": "#e7f6f2",
+      "description": "Learn Python fundamentals, concurrency, testing, and package delivery.",
+      "phases": [
+        "Foundations & Core Mechanics",
+        "Intermediate Architecture & Applied Workflows",
+        "Advanced Internals, Systems Design & Edge Cases",
+        "Production Mastery & Capstone"
+      ]
+    },
+    {
+      "id": "excel",
+      "name": "Excel",
+      "icon": "▦",
+      "accent": "#39845c",
+      "tint": "#e9f6ed",
+      "description": "Build reliable workbooks, dynamic models, and executive dashboards.",
+      "phases": [
+        "Foundations & Core Mechanics",
+        "Intermediate Architecture & Applied Workflows",
+        "Advanced Internals, Systems Design & Edge Cases",
+        "Production Mastery & Capstone"
+      ]
+    },
+    {
+      "id": "powerbi",
+      "name": "Power BI",
+      "icon": "▥",
+      "accent": "#b58b31",
+      "tint": "#fff6df",
+      "description": "Transform data, model it, build DAX measures, and deliver governed BI.",
+      "phases": [
+        "Foundations & Core Mechanics",
+        "Intermediate Architecture & Applied Workflows",
+        "Advanced Internals, Systems Design & Edge Cases",
+        "Production Mastery & Capstone"
+      ]
+    }
+  ],
+  "note": "Phase names follow the supplied Master Syllabus. Detailed lesson blocks and activities are to be authored against the PDF."
+}
