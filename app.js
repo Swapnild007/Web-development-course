@@ -216,7 +216,31 @@ const guidedLessons = {
       ["Worked example: a small article page", "The example uses a page header, a named navigation region, one main landmark, an article with a heading, and a footer. Notice that the article heading is h2 because the page title is h1. The nav label names the purpose of that navigation region. This is a starting structure, not a complete production site: a real page still needs responsive styling, meaningful content, and manual accessibility checks."]
     ],
     code: '<!doctype html>\\n<html lang="en">\\n<head>\\n  <meta charset="utf-8">\\n  <meta name="viewport" content="width=device-width, initial-scale=1">\\n  <title>Field Notes</title>\\n</head>\\n<body>\\n  <header>\\n    <h1>Field Notes</h1>\\n  </header>\\n  <nav aria-label="Primary">\\n    <a href="#articles">Articles</a>\\n    <a href="#about">About</a>\\n  </nav>\\n  <main id="articles">\\n    <article>\\n      <h2>Starting with structure</h2>\\n      <p>Meaningful markup helps people navigate content.</p>\\n      <a href="#about">Learn about this project</a>\\n    </article>\\n  </main>\\n  <footer id="about">\\n    <p>Field Notes learning project</p>\\n  </footer>\\n</body>\\n</html>',
-    practice: "Build a one-page article with a page title, primary navigation, main region, article, and footer. Then add a short contact form with a visible label, email input, and submit button. Explain why each element was chosen. Finally, use only the keyboard to visit every control and confirm focus is visible. As a self-check, list the page landmarks and read the headings in order."
+    practice: "Build a one-page article with a page title, primary navigation, main region, article, and footer. Then add a short contact form with a visible label, email input, and submit button. Explain why each element was chosen. Finally, use only the keyboard to visit every control and confirm focus is visible. As a self-check, list the page landmarks and read the headings in order.",
+    workedExample: {
+      title: "Label a form field correctly",
+      code: '<label for="email">Email address</label>\\n<input id="email" name="email" type="email" autocomplete="email">\\n<button type="submit">Join newsletter</button>',
+      explanation: [
+        "The label's for value and the input's id are both email, so the label is programmatically associated with that input.",
+        "The name attribute is the key used when form data is submitted; id identifies the element in the document and connects the label.",
+        "type=email gives the browser an email-oriented input control and basic format validation. It does not prove that the address exists.",
+        "The button is a real button, so it supports native keyboard activation. In a complete form, place these controls inside a form element."
+      ]
+    },
+    knowledgeCheck: [
+      {
+        question: "Which element should you use for an action such as opening a dialog?",
+        answer: "Use a <button> because it performs an action. Use an <a href> when the user is navigating to a URL or in-page destination."
+      },
+      {
+        question: "What makes a visible label associated with an input in this example?",
+        answer: "The label's for attribute must exactly match the input's id. The text merely being nearby is not enough to guarantee a programmatic association."
+      },
+      {
+        question: "Why is a div with a click handler usually not a good substitute for a button?",
+        answer: "A native button already provides interactive semantics, keyboard behavior, and focus handling. A clickable div requires you to recreate those behaviors and expose its role and state correctly."
+      }
+    ]
   },
   1: {
     title: "CSS layout: box model, Flexbox and Grid",
@@ -416,6 +440,30 @@ function openGuidedLesson(topicIndex = 0, track) {
       syntax.append(noteList);
       lessonReader.append(syntax);
     }
+  }
+  if (lesson.workedExample) {
+    const example = makeElement("section", "lesson-worked-example");
+    example.append(makeElement("h5", "", lesson.workedExample.title));
+    example.append(makeElement("p", "worked-example-label", "Worked example"));
+    const exampleCode = makeElement("pre", "lesson-code");
+    exampleCode.append(makeElement("code", "", lesson.workedExample.code.replace(/\\n/g, "\n")));
+    example.append(exampleCode);
+    const explanationList = makeElement("ul", "detail-list");
+    lesson.workedExample.explanation.forEach(line => explanationList.append(makeElement("li", "", line)));
+    example.append(explanationList);
+    lessonReader.append(example);
+  }
+  if (Array.isArray(lesson.knowledgeCheck) && lesson.knowledgeCheck.length) {
+    const check = makeElement("section", "lesson-knowledge-check");
+    check.append(makeElement("h5", "", "Quick knowledge check"));
+    check.append(makeElement("p", "muted", "Try answering each question before revealing its explanation."));
+    lesson.knowledgeCheck.forEach((item, index) => {
+      const details = makeElement("details", "knowledge-check-item");
+      const summary = makeElement("summary", "", `Question ${index + 1}: ${item.question}`);
+      details.append(summary, makeElement("p", "knowledge-check-answer", item.answer));
+      check.append(details);
+    });
+    lessonReader.append(check);
   }
   const practice = makeElement("div", "lesson-practice");
   practice.append(makeElement("strong", "", "Try it"));
