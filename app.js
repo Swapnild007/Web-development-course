@@ -396,7 +396,9 @@ function openGuidedLesson(topicIndex = 0) {
   actions.append(saveLessonNotesButton, completeLessonButton);
   lessonReader.append(actions, lessonFeedback);
   lessonReader.hidden = false;
-  activeLessonKey = `learning-studio.lesson.${track.id}.phase${1}.topic${topicIndex}`;\n  activeNotesKey = activeLessonKey + ".notes";\n  lessonNotes.value = readSaved(activeNotesKey);
+  activeLessonKey = `learning-studio.lesson.${track.id}.phase${1}.topic${topicIndex}`;
+  activeNotesKey = activeLessonKey + ".notes";
+  lessonNotes.value = readSaved(activeNotesKey);
   lessonFeedback.textContent = "";
   const completed = readSaved(activeLessonKey) === "complete";
   completeLessonButton.textContent = completed ? "Lesson completed ✓" : "Mark lesson complete";
