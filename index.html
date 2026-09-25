@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f4f7fb">
   <meta name="description" content="A guided learning studio for Full-stack Web Development, Python, Excel, and Power BI.">
   <title>Learning Studio</title>
-  <link rel="stylesheet" href="style.css?v=20260925-phase-study">
+  <link rel="stylesheet" href="style.css?v=20260925-guided-lesson">
   <script src="app.js?v=20260925-phase-study" defer></script>
 </head>
 <body>
@@ -70,6 +70,18 @@
       <section class="study-reader-block"><h4>Applied project</h4><p id="study-project"></p></section>
       <section class="study-reader-block"><h4>Knowledge checkpoints</h4><ul id="study-checkpoints"></ul></section>
       <p class="study-note">This view organizes the syllabus for study. Detailed lesson explanations and guided exercises will be added in the lesson-authoring stage.</p>
+      <section id="lesson-reader" class="lesson-reader" hidden aria-live="polite"><button id="back-to-phase" class="back-action" type="button">← Back to phase</button><p class="eyebrow">GUIDED LESSON · FULL-STACK FOUNDATIONS</p><h4 id="lesson-title">Semantic HTML and accessible structure</h4><p class="lesson-lead">Learn how to give web content meaning before styling it.</p><h5>1. What is semantic HTML?</h5><p>Semantic HTML uses elements that describe the role of their content. A page heading belongs in a heading element, navigation belongs in a navigation landmark, and the main content belongs in the main landmark. This helps browsers, assistive technologies, and other developers understand the page structure.</p><h5>2. Start with a meaningful page outline</h5><p>Use one main content area for the page’s primary content. Use headings in a logical order, and choose elements for their meaning rather than their default appearance.</p><pre class="lesson-code"><code>&lt;header&gt;
+  &lt;h1&gt;Field Notes&lt;/h1&gt;
+&lt;/header&gt;
+&lt;nav aria-label="Main"&gt;
+  &lt;a href="#articles"&gt;Articles&lt;/a&gt;
+&lt;/nav&gt;
+&lt;main id="articles"&gt;
+  &lt;article&gt;
+    &lt;h2&gt;First article&lt;/h2&gt;
+    &lt;p&gt;A short introduction.&lt;/p&gt;
+  &lt;/article&gt;
+&lt;/main&gt;</code></pre><h5>3. Accessibility check</h5><p>Ask whether the element’s purpose is clear without relying on its visual styling. Links should describe their destination, form controls need programmatic labels, and keyboard focus must remain visible.</p><div class="lesson-practice"><strong>Try it</strong><p>Sketch a simple article page with a site header, a navigation area, a main region, and one article. Choose semantic elements for each part and explain why you chose them.</p></div><label class="lesson-notes-label" for="lesson-notes">My notes</label><textarea id="lesson-notes" rows="4" placeholder="Write a takeaway or question to revisit…"></textarea><div class="lesson-actions"><button id="save-lesson-notes" class="secondary-action" type="button">Save notes</button><button id="complete-lesson" class="phase-start-action" type="button">Mark lesson complete</button></div><p id="lesson-feedback" class="lesson-feedback" aria-live="polite"></p></section>
     </section>
   </dialog>
 </body>
