@@ -253,3 +253,20 @@ dialog{background:#f8fafc;border-color:#fff;box-shadow:0 28px 90px #1e344d40}
  .phase-page .phase-content{padding:0 13px 15px}
  .phase-page .phase-study{margin-top:15px}
 }
+
+/* Mobile lesson reading: use the document as the only vertical scroll container */
+html,body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto}
+body{overscroll-behavior-y:auto}
+.app-shell{min-height:100vh;height:auto;overflow:visible}
+main{height:auto;min-height:0;overflow:visible}
+.phase-page{height:auto;max-height:none;overflow:visible}
+#phase-study{display:block;height:auto;max-height:none;min-height:0;overflow:visible;flex:none;overscroll-behavior:auto;padding-bottom:24px}
+.lesson-reader{height:auto;max-height:none;overflow:visible;scroll-margin-top:20px;padding-bottom:24px}
+.lesson-code{max-width:100%;white-space:pre;overflow-x:auto}
+@media(max-width:650px){
+ .app-shell{padding-bottom:150px}
+ .phase-page{padding-bottom:160px}
+ #phase-study{overflow:visible;padding-bottom:34px}
+ .lesson-reader{padding-bottom:32px}
+ .floating-nav{bottom:10px}
+}
