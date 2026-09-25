@@ -361,8 +361,11 @@ document.querySelector("#back-to-roadmap").addEventListener("click", () => {
 });
 
 function openGuidedLesson(topicIndex = 0, track) {
-  const lesson = guidedLessons[topicIndex];
-  if (!lesson || !track || !track.id) return;
+  if (!track || !track.id) return;
+  const lesson = track.id === "fullstack"
+    ? guidedLessons[topicIndex]
+    : foundationLessons[track.id]?.[topicIndex];
+  if (!lesson) return;
   lessonReader.replaceChildren();
   const eyebrow = makeElement("p", "eyebrow", `GUIDED LESSON · ${track?.name || "FOUNDATIONS"}`);
   const heading = makeElement("h4", "", lesson.title);
