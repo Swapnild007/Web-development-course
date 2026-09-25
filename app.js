@@ -24,13 +24,14 @@ const navButtons = [...document.querySelectorAll(".nav-item")];
 let tracks = [];
 
 function showView(viewName) {
+  const navViewName = viewName === "phase" ? "curriculum" : viewName;
   views.forEach(view => {
-    const isActive = view.id === `${viewName}-view`;
+    const isActive = view.id === (viewName === "phase" ? "phase-page" : `${viewName}-view`);
     view.hidden = !isActive;
     view.classList.toggle("active", isActive);
   });
   navButtons.forEach(button => {
-    const isActive = button.dataset.view === viewName;
+    const isActive = button.dataset.view === navViewName;
     button.classList.toggle("active", isActive);
     if (isActive) button.setAttribute("aria-current", "page");
     else button.removeAttribute("aria-current");
