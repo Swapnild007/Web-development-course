@@ -13,8 +13,10 @@ const studyTopics = document.querySelector("#study-topics");
 const studyProject = document.querySelector("#study-project");
 const studyCheckpoints = document.querySelector("#study-checkpoints");
 const lessonReader = document.querySelector("#lesson-reader");
-const lessonNotes = document.querySelector("#lesson-notes");
-const lessonFeedback = document.querySelector("#lesson-feedback");
+let lessonNotes = document.querySelector("#lesson-notes");
+let lessonFeedback = document.querySelector("#lesson-feedback");
+let saveLessonNotesButton = document.querySelector("#save-lesson-notes");
+let completeLessonButton = document.querySelector("#complete-lesson");
 const lessonKey = "learning-studio.lesson.fullstack.phase1";
 const notesKey = lessonKey + ".notes";
 const trackCount = document.querySelector("#track-count");
@@ -66,6 +68,31 @@ function makeElement(tag, className, textContent) {
   if (className) element.className = className;
   if (textContent !== undefined) element.textContent = textContent;
   return element;
+}
+
+
+// Create lesson controls in JavaScript so the reader works even when the
+// HTML shell only provides an empty lesson-reader container.
+if (!lessonNotes) {
+  lessonNotes = makeElement("textarea", "");
+  lessonNotes.id = "lesson-notes";
+  lessonNotes.rows = 5;
+  lessonNotes.placeholder = "Write your notes for this lesson…";
+}
+if (!lessonFeedback) {
+  lessonFeedback = makeElement("p", "lesson-feedback");
+  lessonFeedback.id = "lesson-feedback";
+  lessonFeedback.setAttribute("aria-live", "polite");
+}
+if (!saveLessonNotesButton) {
+  saveLessonNotesButton = makeElement("button", "secondary-action", "Save notes");
+  saveLessonNotesButton.id = "save-lesson-notes";
+  saveLessonNotesButton.type = "button";
+}
+if (!completeLessonButton) {
+  completeLessonButton = makeElement("button", "phase-start-action", "Mark lesson complete");
+  completeLessonButton.id = "complete-lesson";
+  completeLessonButton.type = "button";
 }
 
 function renderTracks(filter = "") {
@@ -280,13 +307,13 @@ function openGuidedLesson(topicIndex = 0) {
   notesLabel.htmlFor = "lesson-notes";
   lessonReader.append(notesLabel, lessonNotes);
   const actions = makeElement("div", "lesson-actions");
-  actions.append(document.querySelector("#save-lesson-notes"), document.querySelector("#complete-lesson"));
+  actions.append(saveLessonNotesButton, completeLessonButton);
   lessonReader.append(actions, lessonFeedback);
   lessonReader.hidden = false;
   lessonNotes.value = readSaved(notesKey);
   lessonFeedback.textContent = "";
   const completed = readSaved(lessonKey + "." + topicIndex) === "complete";
-  document.querySelector("#complete-lesson").textContent = completed ? "Lesson completed ✓" : "Mark lesson complete";
+  completeLessonButton.textContent = completed ? "Lesson completed ✓" : "Mark lesson complete";
   showView("lesson");
   lessonReader.scrollIntoView({ block: "start", behavior: "auto" });
 }
@@ -300,7 +327,7 @@ document.querySelector("#back-to-phase").addEventListener("click", () => {
   phaseStudy.scrollTop = 0;
   showView("phase");
 });
-document.querySelector("#save-lesson-notes").addEventListener("click", () => {
+saveLessonNotesButton.addEventListener("click", () => {
   try {
     window.localStorage.setItem(notesKey, lessonNotes.value);
     lessonFeedback.textContent = "Notes saved on this device.";
@@ -308,7 +335,7 @@ document.querySelector("#save-lesson-notes").addEventListener("click", () => {
     lessonFeedback.textContent = "Could not save notes in this browser. You can copy them before leaving.";
   }
 });
-document.querySelector("#complete-lesson").addEventListener("click", event => {
+completeLessonButton.addEventListener("click", event => {
   try {
     window.localStorage.setItem(lessonKey + "." + (document.querySelector("#lesson-title")?.dataset.topicIndex || "0"), "complete");
     event.currentTarget.textContent = "Lesson completed ✓";
@@ -353,7 +380,7 @@ document.querySelector("#phase-page").prepend(roadmapBack);
 searchInput.addEventListener("input", event => renderTracks(event.target.value));
 renderProgress();
 
-fetch("/Web-development-course/data/curriculum.json", { cache: "no-store" })
+fetch(new URL("data/curriculum.json", document.baseURI), { cache: "no-store" })
   .then(response => {
     if (!response.ok) throw new Error("Curriculum could not be loaded.");
     return response.json();
