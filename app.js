@@ -486,7 +486,7 @@ const pbiExamples=[
  "Weekly sales trend → line chart with ordered week axis\\nCompare regions → sorted bar chart\\nPeriod total → KPI card with date context\\nInspect transactions → detail table and slicer",
  "MonthName | MonthNumber\\nJan | 1\\nFeb | 2\\n... | ...\\nDec | 12\\nSelect MonthName → Sort by column → MonthNumber"
 ];
-foundationLessons.powerbi.forEach((lesson,i)=>{ lesson.code=pbiExamples[i]; });
+foundationLessons.powerbi.forEach((lesson,i)=>{ lesson.code=pbiExamples[i]; lesson.workedExample.code=pbiExamples[i]; });
 
 guidedLessons[0].sources = ["https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Accessibility/HTML"];
 guidedLessons[1].sources = ["https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_flexible_box_layout/Basic_concepts_of_flexbox"];
@@ -968,7 +968,7 @@ function openGuidedLesson(topicIndex = 0, track, phase = track?.phases?.[0], pha
     lessonReader.append(pre);
     if (Array.isArray(lesson.syntaxNotes) && lesson.syntaxNotes.length) {
       const syntax = makeElement("section", "lesson-syntax-notes");
-      syntax.append(makeElement("h5", "", "Syntax explained, step by step"));
+      syntax.append(makeElement("h5", "", "Key syntax and concepts explained"));
       const noteList = makeElement("div", "syntax-note-list");
       lesson.syntaxNotes.forEach(([syntaxToken, explanation]) => {
         const note = makeElement("article", "syntax-note");
