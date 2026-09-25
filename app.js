@@ -1779,19 +1779,19 @@ function openGuidedLesson(topicIndex = 0, track, phase = track?.phases?.[0], pha
     const pre = makeElement("pre", "lesson-code");
     pre.append(makeElement("code", "", lesson.code.replace(/\\n/g, "\n")));
     lessonReader.append(pre);
-    if (Array.isArray(lesson.syntaxNotes) && lesson.syntaxNotes.length) {
-      const syntax = makeElement("section", "lesson-syntax-notes");
-      syntax.append(makeElement("h5", "", "Key syntax and concepts explained"));
-      const noteList = makeElement("div", "syntax-note-list");
-      lesson.syntaxNotes.forEach(([syntaxToken, explanation]) => {
-        const note = makeElement("article", "syntax-note");
-        note.append(makeElement("code", "syntax-token", syntaxToken));
-        note.append(makeElement("p", "", explanation));
-        noteList.append(note);
-      });
-      syntax.append(noteList);
-      lessonReader.append(syntax);
-    }
+  }
+  if (Array.isArray(lesson.syntaxNotes) && lesson.syntaxNotes.length) {
+    const syntax = makeElement("section", "lesson-syntax-notes");
+    syntax.append(makeElement("h5", "", "Key syntax and concepts explained"));
+    const noteList = makeElement("div", "syntax-note-list");
+    lesson.syntaxNotes.forEach(([syntaxToken, explanation]) => {
+      const note = makeElement("article", "syntax-note");
+      note.append(makeElement("code", "syntax-token", syntaxToken));
+      note.append(makeElement("p", "", explanation));
+      noteList.append(note);
+    });
+    syntax.append(noteList);
+    lessonReader.append(syntax);
   }
   if (lesson.workedExample) {
     const example = makeElement("section", "lesson-worked-example");
