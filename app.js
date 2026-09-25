@@ -373,6 +373,22 @@ function openGuidedLesson(topicIndex = 0) {
   practice.append(makeElement("strong", "", "Try it"));
   practice.append(makeElement("p", "", lesson.practice));
   lessonReader.append(practice);
+  if (Array.isArray(lesson.sources) && lesson.sources.length) {
+    const sourceBlock = makeElement("section", "lesson-sources");
+    sourceBlock.append(makeElement("h5", "", "Official reference reading"));
+    const sourceList = makeElement("ul", "detail-list");
+    lesson.sources.forEach(url => {
+      const item = makeElement("li", "");
+      const link = makeElement("a", "", new URL(url).hostname.replace(/^www\\./, ""));
+      link.href = url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      item.append(link);
+      sourceList.append(item);
+    });
+    sourceBlock.append(sourceList);
+    lessonReader.append(sourceBlock);
+  }
   const notesLabel = makeElement("label", "lesson-notes-label", "My notes");
   notesLabel.htmlFor = "lesson-notes";
   lessonReader.append(notesLabel, lessonNotes);
