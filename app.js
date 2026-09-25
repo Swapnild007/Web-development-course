@@ -24,9 +24,19 @@ const navButtons = [...document.querySelectorAll(".nav-item")];
 let tracks = [];
 
 function showView(viewName) {
+  const viewIds = {
+    learn: "learn-view",
+    curriculum: "curriculum-view",
+    progress: "progress-view",
+    profile: "profile-view",
+    phase: "phase-page",
+    lesson: "lesson-view"
+  };
+  const targetId = viewIds[viewName];
+  if (!targetId) return;
   const navViewName = (viewName === "phase" || viewName === "lesson") ? "curriculum" : viewName;
   views.forEach(view => {
-    const isActive = view.id === (viewName === "phase" ? "phase-page" : `${viewName}-view`);
+    const isActive = view.id === targetId;
     view.hidden = !isActive;
     view.classList.toggle("active", isActive);
   });
@@ -113,6 +123,8 @@ function appendBulletList(parent, headingText, entries) {
 }
 
 function openRoadmap(track) {
+  const roadmapBack = document.querySelector("#back-to-curriculum");
+  if (roadmapBack) roadmapBack.hidden = false;
   title.textContent = track.name;
   description.textContent = track.description;
   phaseList.hidden = false;
@@ -333,6 +345,11 @@ function getSequenceNote() {
 }
 
 document.querySelector(".close").addEventListener("click", () => showView("curriculum"));
+const roadmapBack = makeElement("button", "back-action", "← All learning tracks");
+roadmapBack.id = "back-to-curriculum";
+roadmapBack.type = "button";
+roadmapBack.addEventListener("click", () => showView("curriculum"));
+document.querySelector("#phase-page").prepend(roadmapBack);
 searchInput.addEventListener("input", event => renderTracks(event.target.value));
 renderProgress();
 
