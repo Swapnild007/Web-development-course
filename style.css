@@ -296,3 +296,20 @@ main{height:auto;min-height:0;overflow:visible}
 .lesson-page .lesson-reader>.back-action{display:none}
 .lesson-page .lesson-reader>.eyebrow{margin-top:0}
 @media(max-width:650px){.lesson-page{padding:18px 17px 160px;min-height:calc(100vh - 68px)}.lesson-page-top h2{font-size:23px}}
+
+
+/* Lesson learning aids: highlight, recap, and syntax walkthrough */
+.lesson-highlight{margin:16px 0;padding:15px 16px;border:1px solid #cbdcf8;border-left:4px solid #6388d0;border-radius:12px;background:#f2f6ff}
+.lesson-highlight strong{display:block;margin-bottom:6px;font:750 12px Manrope,sans-serif;color:#3e6099}
+.lesson-highlight p{margin:0;color:#405775;font-size:12px;line-height:1.7}
+.lesson-key-points{margin:17px 0;padding:15px 16px;border:1px solid #dce7df;border-radius:12px;background:#f5faf6}
+.lesson-key-points h5,.lesson-syntax-notes h5{margin:0 0 10px;color:#315a48;font:750 13px Manrope,sans-serif}
+.lesson-key-points .detail-list{margin:0;padding-left:19px}
+.lesson-key-points .detail-list li{font-size:12px;line-height:1.65;color:#526b5d;margin:5px 0}
+.lesson-syntax-notes{margin:17px 0;padding:15px 16px;border:1px solid #e0e7f0;border-radius:12px;background:#fbfcfe}
+.lesson-syntax-notes h5{color:#304b70}
+.syntax-note-list{display:grid;gap:9px}
+.syntax-note{display:grid;grid-template-columns:minmax(130px, .8fr) minmax(0,2fr);gap:12px;align-items:start;padding:10px 0;border-top:1px solid #e8edf3}
+.syntax-token{display:block;overflow-wrap:anywhere;padding:5px 7px;border-radius:7px;background:#edf2fa;color:#38577f;font:11px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}
+.syntax-note p{margin:0;color:#5f6f82;font-size:12px;line-height:1.65}
+@media(max-width:520px){.syntax-note{grid-template-columns:1fr;gap:5px}.lesson-highlight,.lesson-key-points,.lesson-syntax-notes{padding:13px}}
