@@ -2233,10 +2233,14 @@ document.querySelector("#phase-page").prepend(roadmapBack);
 searchInput.addEventListener("input", event => renderTracks(event.target.value));
 renderProgress();
 
-fetch(new URL("data/curriculum.json?v=20260926-python-zero-start", document.baseURI), { cache: "no-store" })
-  .then(response => {
-    if (!response.ok) throw new Error("Curriculum could not be loaded.");
-    return response.json();
+Promise.resolve().then(() => {
+    const embedded = document.querySelector("#curriculum-data");
+    if (embedded) return JSON.parse(embedded.textContent);
+    return fetch(new URL("data/curriculum.json?v=20260926-python-zero-start", document.baseURI), { cache: "no-store" })
+      .then(response => {
+        if (!response.ok) throw new Error("Curriculum could not be loaded.");
+        return response.json();
+      });
   })
   .then(async data => {
     if (!Array.isArray(data.tracks) || data.tracks.length !== 4) throw new Error("Curriculum data is incomplete or invalid.");
