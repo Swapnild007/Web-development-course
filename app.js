@@ -387,7 +387,7 @@ const foundationLessons = {
         ["Predict before running", "Before pressing Run, write down exactly what you think will appear. Then run the saved file and compare the actual output with your prediction. If the result differs, look carefully at spelling, quotation marks, and whether the file was saved."],
         ["Code versus output", "The instruction you typed is called code. The line displayed after running it is output. Code describes what to do; output is the result you can observe. A program can also do work without printing anything, but for now we use visible output to make the first run easy to verify."]
       ],
-      code: "print(\\"Hello, Python!\\")",
+      code: "print(\"Hello, Python!\")",
       practice: "Create a file named first_steps.py and enter one print instruction that displays your first name or a neutral greeting. Save and run it. Write down the exact output. Then change the displayed message, save again, and run it a second time.",
       knowledgeCheck: [
         {question:"What is output?",answer:"The result displayed by the program when it runs. It is not the same as the code you wrote."},
