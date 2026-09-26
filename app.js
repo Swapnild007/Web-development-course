@@ -2056,6 +2056,9 @@ completeLessonButton.addEventListener("click", event => {
     lessonFeedback.textContent = "Could not save completion in this browser.";
   }
   renderProgress();
+  renderTracks(searchInput?.value || "");
+  renderHomePaths();
+  renderResumeCard();
 });
 
 function renderProgress() {
