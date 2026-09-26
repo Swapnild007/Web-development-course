@@ -1925,12 +1925,13 @@ completeLessonButton.addEventListener("click", event => {
 function renderProgress() {
   const lessonIds = ["fullstack", "python", "excel", "powerbi"].flatMap(trackId => {
     const track = tracks.find(item => item.id === trackId);
-    const phaseOneCount = track?.phases?.[0]?.topics?.length || 4;
-    const phaseTwoCount = track?.phases?.[1]?.topics?.length || (trackId === "fullstack" ? 5 : 4);
-    return [
-      ...Array.from({ length: phaseOneCount }, (_, i) => `learning-studio.lesson.${trackId}.phase1.topic${i}`),
-      ...Array.from({ length: phaseTwoCount }, (_, i) => `learning-studio.lesson.${trackId}.phase2.topic${i}`)
-    ];
+    const phaseIndexes = trackId === "fullstack" ? [0, 1, 2, 3] : [0, 1];
+    return phaseIndexes.flatMap(phaseIndex => {
+      const count = track?.phases?.[phaseIndex]?.topics?.length || 0;
+      return Array.from({ length: count }, (_, topicIndex) =>
+        `learning-studio.lesson.${trackId}.phase${phaseIndex + 1}.topic${topicIndex}`
+      );
+    });
   });
   const completedCount = lessonIds.filter(id => readSaved(id) === "complete").length;
   const completed = document.querySelector("#progress-completed");
@@ -1947,8 +1948,8 @@ function renderProgress() {
   fill.style.width = `${lessonIds.length ? (completedCount / lessonIds.length) * 100 : 0}%`;
   lessonState.textContent = readSaved(lessonIds[0]) === "complete" ? "Completed ✓" : "Not started";
   status.textContent = completedCount === lessonIds.length
-    ? "All available Phase 01 and Phase 02 lessons are complete."
-    : `${completedCount} of ${lessonIds.length} available Phase 01 and Phase 02 lessons completed.`;
+    ? "All available guided lessons are complete."
+    : `${completedCount} of ${lessonIds.length} available guided lessons completed.`;
 }
 function getSequenceNote() {
   return "Complete Excel Phase 3 before Power BI Phase 2. Full-stack and Python can be studied in parallel from day one.";
