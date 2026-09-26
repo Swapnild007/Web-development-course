@@ -1734,6 +1734,9 @@ fullStackPhaseLessons[1][2].code = "// app/tasks/page.tsx — Server Component\n
 fullStackPhaseLessons[1][2].sections.push(["Expected errors belong in form state","For expected validation or authorization outcomes, return a safe result that the form can render instead of throwing an exception whose message may leak details. React's useActionState connects a Server Action's returned state to the form. Authentication and authorization must be checked inside every Server Action, and database reads must be scoped to the signed-in owner."]);
 fullStackPhaseLessons[1][2].knowledgeCheck.push({question:"Why is the 'use client' directive shown at the top of a separate task-form.tsx file?",answer:"It defines a client module boundary. The page remains a Server Component, while the interactive form is a Client Component. The directive must be at the top of the client module."});
 fullStackPhaseLessons[1][2].sources = [...new Set([...(fullStackPhaseLessons[1][2].sources || []),"https://nextjs.org/docs/app/getting-started/mutating-data","https://nextjs.org/docs/app/getting-started/error-handling"])];
+
+// Complete the reference list for the introductory accessibility lesson.
+guidedLessons[0].sources = ["https://www.w3.org/WAI/fundamentals/accessibility-intro/","https://www.w3.org/WAI/tutorials/page-structure/","https://developer.mozilla.org/en-US/docs/Learn/Accessibility/HTML"];
 function openPhaseStudy(track, phase, index) {
   studyTitle.textContent = `Phase ${index + 1} · ${phase.title}`;
   studyDescription.textContent = `${track.name} · Study focus`;
