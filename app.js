@@ -1872,9 +1872,15 @@ completeLessonButton.addEventListener("click", event => {
 });
 
 function renderProgress() {
-  const lessonIds = ["fullstack", "python", "excel", "powerbi"]
-    .flatMap(trackId => [0, 1, 2, 3].map(topicIndex =>
-      `learning-studio.lesson.${trackId}.phase1.topic${topicIndex}`));
+  const lessonIds = ["fullstack", "python", "excel", "powerbi"].flatMap(trackId => {
+    const track = tracks.find(item => item.id === trackId);
+    const phaseOneCount = track?.phases?.[0]?.topics?.length || 4;
+    const phaseTwoCount = track?.phases?.[1]?.topics?.length || (trackId === "fullstack" ? 5 : 4);
+    return [
+      ...Array.from({ length: phaseOneCount }, (_, i) => `learning-studio.lesson.${trackId}.phase1.topic${i}`),
+      ...Array.from({ length: phaseTwoCount }, (_, i) => `learning-studio.lesson.${trackId}.phase2.topic${i}`)
+    ];
+  });
   const completedCount = lessonIds.filter(id => readSaved(id) === "complete").length;
   const completed = document.querySelector("#progress-completed");
   const available = document.querySelector("#progress-available");
@@ -1890,8 +1896,8 @@ function renderProgress() {
   fill.style.width = `${lessonIds.length ? (completedCount / lessonIds.length) * 100 : 0}%`;
   lessonState.textContent = readSaved(lessonIds[0]) === "complete" ? "Completed ✓" : "Not started";
   status.textContent = completedCount === lessonIds.length
-    ? "All 16 authored foundation lessons are complete."
-    : `${completedCount} of ${lessonIds.length} authored foundation lessons completed.`;
+    ? "All available Phase 01 and Phase 02 lessons are complete."
+    : `${completedCount} of ${lessonIds.length} available Phase 01 and Phase 02 lessons completed.`;
 }
 function getSequenceNote() {
   return "Complete Excel Phase 3 before Power BI Phase 2. Full-stack and Python can be studied in parallel from day one.";
@@ -1911,12 +1917,20 @@ fetch(new URL("data/curriculum.json", document.baseURI), { cache: "no-store" })
     if (!response.ok) throw new Error("Curriculum could not be loaded.");
     return response.json();
   })
-  .then(data => {
-    if (!Array.isArray(data.tracks) || data.tracks.length !== 4) {
-      throw new Error("Curriculum data is incomplete or invalid.");
+  .then(async data => {
+    if (!Array.isArray(data.tracks) || data.tracks.length !== 4) throw new Error("Curriculum data is incomplete or invalid.");
+    const response = await fetch(new URL("data/phase2-lessons.json", document.baseURI), { cache: "no-store" });
+    if (!response.ok) throw new Error("Phase 02 lessons could not be loaded.");
+    const lessonData = await response.json();
+    for (const trackId of ["python", "excel", "powerbi"]) {
+      const expected = data.tracks.find(track => track.id === trackId)?.phases?.[1]?.topics?.length;
+      const authored = lessonData.tracks?.[trackId];
+      if (!Array.isArray(authored) || authored.length !== expected) throw new Error("Phase 02 lesson count is invalid for " + trackId + ".");
+      phaseTwoLessons[trackId] = authored;
     }
     tracks = data.tracks;
     renderTracks();
+    renderProgress();
   })
   .catch(error => {
     trackRoot.textContent = `${error.message} Please refresh or check the published curriculum file.`;
