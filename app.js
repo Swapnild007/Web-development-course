@@ -637,584 +637,638 @@ for (const [index, content] of Object.entries({"1":{"sections":[["Cascade layers
 const phase1TutorRebuild = {
   "python": [
     {
-      "highlight": "Names bind to objects. Mutability is a property of the object, not the name; this distinction explains aliasing and many beginner bugs.",
+      "highlight": "Programming starts with a clear problem and a sequence of steps, not with memorizing punctuation. You can plan your first program in ordinary language.",
       "sections": [
         [
-          "Trace a statement precisely",
-          "For each statement, identify the expression evaluated, the object produced or retrieved, and the name binding or mutation that follows. Python evaluates expressions before assigning the result. Use type(x), repr(x), and id(x) as inspection tools while learning; id identifies object identity during that object's lifetime, not a permanent business identifier."
+          "What counts as an instruction?",
+          "An instruction tells someone or something what to do. A computer needs instructions to be precise: “make a snack” leaves too many choices, while “take one apple, wash it, place it on a plate” names observable actions."
         ],
         [
-          "Truthiness is a language rule, not a data-quality test",
-          "if value: asks whether the value is truthy. Zero, None, False and empty built-in containers are falsey; a non-empty string such as \"0\" is truthy. Do not use truthiness to decide whether a numeric value is valid unless zero truly means absent. For missingness, prefer `is None`; for a non-empty string, test the stripped string explicitly."
+          "Algorithm: a plan anyone can follow",
+          "An algorithm is a finite, ordered set of steps for a task. Write steps in plain language first. A useful algorithm states what it needs, what it does, and what result should happen."
         ],
         [
-          "Mutability, aliasing and copying",
-          "Assignment does not clone a list. If a and b refer to the same list, mutating through either name is visible through both. A shallow copy creates a new outer container but still shares nested objects. Make the data ownership decision explicit: mutate in place, copy before editing, or construct a new value."
+          "Practice making steps precise",
+          "Try describing how to find the largest of three numbers without using code. Decide how to compare them, what to do when two are equal, and what result to report. If another person can follow the steps and get the same result, your plan is becoming precise."
         ],
         [
-          "Control flow and boundary cases",
-          "A branch is chosen from the current condition at runtime. Test boundary values such as 0, negative values, empty collections and None. For real inputs, validate type and allowed range before using a value in a calculation; readable code should make invalid-input behavior deliberate."
+          "The learning loop",
+          "For each new idea in this course: predict what should happen, try a small example, observe the result, explain it in your own words, and practice with a changed example. This is more reliable than copying code without understanding it."
         ]
       ],
       "syntaxNotes": [
         [
-          "name = expression",
-          "Evaluates the expression, then binds the name to the resulting object; it does not necessarily copy it."
-        ],
-        [
-          "if value:",
-          "Branches on truthiness; use explicit checks when zero, empty or missing values have different meanings."
-        ],
-        [
-          "value is None",
-          "Identity comparison for the singleton None; use this to check a missing optional value."
-        ],
-        [
-          "items.copy()",
-          "Creates a shallow copy of a list; nested mutable members remain shared."
-        ],
-        [
-          "id(value)",
-          "Returns an identity integer for the object's lifetime, useful for demonstrating aliasing."
-        ]
-      ],
-      "workedExample": {
-        "title": "Predict, inspect, then mutate",
-        "code": "source = [10, 20]\nalias = source\nsnapshot = source.copy()\nalias.append(30)\n\nprint(source)    # [10, 20, 30]\nprint(alias)     # [10, 20, 30]\nprint(snapshot)  # [10, 20]\nprint(source is alias)  # True\nprint(source is snapshot)  # False",
-        "explanation": [
-          "Before running the code, predict each printed line. `alias = source` creates a second name for the same list object.",
-          "append mutates that one shared list, so both source and alias display the appended value.",
-          "copy creates a different outer list, so snapshot keeps its original three? No: it keeps the two original values because the copy happened before append.",
-          "The `is` operator tests identity, while `==` tests value equality. These answer different questions."
-        ]
-      },
-      "knowledgeCheck": [
-        {
-          "question": "After `b = a`, what must be true if a is a list?",
-          "answer": "Both names refer to the same list object unless a later assignment rebinds one name."
-        },
-        {
-          "question": "Why can `if amount:` be wrong for checking whether an amount was supplied?",
-          "answer": "Zero is falsey but may be a valid amount. Use `amount is not None` when distinguishing missing from zero."
-        },
-        {
-          "question": "Does `list.copy()` recursively copy nested lists?",
-          "answer": "No. It makes a shallow copy of the outer list; nested objects remain shared."
-        }
-      ],
-      "practice": "Create a function that receives a list of expense amounts and returns a new list with a 10% fee added to each amount. Do not mutate the caller's list. Demonstrate this with id() and an empty input; explain why your output is independent."
-    },
-    {
-      "highlight": "Choose a collection from its invariants and access pattern. Big-O is a model for growth, not a stopwatch prediction.",
-      "sections": [
-        [
-          "Define the collection contract",
-          "A list preserves order and allows duplicates; a tuple is an immutable sequence; a set enforces uniqueness; a dict maps unique hashable keys to values. Before selecting one, write down the operations required: positional access, append, membership, uniqueness, or key-based retrieval."
-        ],
-        [
-          "Complexity with the reason attached",
-          "List indexing is O(1), while membership search is O(n) because a general list may need to inspect each element. Appending is amortized O(1): occasional resizing is more expensive, but averaged across many appends the cost is constant. Inserting at index zero is O(n) because existing elements shift. Dict/set membership is average O(1) under ordinary hashing assumptions, not an unconditional worst-case guarantee."
-        ],
-        [
-          "Specialized structures solve specific workloads",
-          "Use collections.Counter for frequency counts, defaultdict for grouped accumulation, and deque for efficient additions/removals at both ends. These are not automatically better for every task: first state the required operation, then choose the abstraction that makes the invariant clear."
-        ],
-        [
-          "Measure memory and benchmark carefully",
-          "sys.getsizeof reports an object's shallow size and does not include all objects it refers to. Compare realistic datasets and include construction plus access costs. Avoid optimizing based on a tiny sample or assuming one implementation's layout is a language guarantee."
-        ]
-      ],
-      "syntaxNotes": [
-        [
-          "items[i]",
-          "Indexed access to a list or tuple; list/tuple indexing is O(1)."
-        ],
-        [
-          "value in items",
-          "Membership test; O(n) for a list, average O(1) for a set/dict key lookup."
-        ],
-        [
-          "dict.get(key, default)",
-          "Returns a value or default without raising KeyError when the key is absent."
-        ],
-        [
-          "collections.Counter(values)",
-          "Counts hashable values and provides a purpose-built frequency mapping."
-        ],
-        [
-          "collections.deque()",
-          "Double-ended queue; efficient append/pop operations at either end."
-        ]
-      ],
-      "workedExample": {
-        "title": "Count categories without repeated scans",
-        "code": "from collections import Counter\n\ncategories = [\"food\", \"travel\", \"food\", \"supplies\", \"food\"]\ncounts = Counter(categories)\nprint(counts[\"food\"])       # 3\nprint(counts.most_common(2)) # [('food', 3), ('travel', 1)]\n\n# Equivalent core idea, written manually:\nmanual = {}\nfor category in categories:\n    manual[category] = manual.get(category, 0) + 1\nprint(manual[\"food\"])       # 3",
-        "explanation": [
-          "The Counter approach directly expresses the task: frequency counting.",
-          "The manual version reveals the underlying algorithm: one pass, updating one key per item.",
-          "For n categories in the input, the loop performs n updates; dictionary updates are average constant-time, giving expected O(n) work under normal hashing assumptions.",
-          "Counter is a standard-library tool, not magic: understanding the manual version helps debug and adapt it."
-        ]
-      },
-      "knowledgeCheck": [
-        {
-          "question": "Why is `item in a_list` generally O(n)?",
-          "answer": "In the general case Python may have to compare the target with each list element until it finds a match or reaches the end."
-        },
-        {
-          "question": "What does amortized O(1) append mean?",
-          "answer": "Most appends are constant-time and occasional resizing is more expensive; averaged across a long sequence of appends, the cost per append is constant."
-        },
-        {
-          "question": "When is deque a better fit than a list?",
-          "answer": "When the workload frequently adds or removes items from both ends, such as a queue."
-        }
-      ],
-      "practice": "Implement a category counter manually from 100 sample transactions, then refactor it to Counter. Compare the results, add a category that never appears, and explain list membership versus set membership for a repeated lookup workload."
-    },
-    {
-      "highlight": "A Python str is text; bytes are encoded data. Crossing that boundary requires an explicit encoding decision.",
-      "sections": [
-        [
-          "Unicode text and encoded bytes",
-          "A Python str contains Unicode text. A bytes value is a sequence of byte values. Encoding maps text to bytes using a codec such as UTF-8; decoding interprets bytes using a codec. The same text can produce different bytes under different encodings, and malformed bytes may fail decoding."
-        ],
-        [
-          "Characters, code points and visible glyphs",
-          "len(str) counts Python string elements (Unicode code points in typical use), not necessarily user-perceived grapheme clusters. A visible character can be made from a base character plus combining marks. UTF-8 byte length is a separate count; never assume len(text) equals len(text.encode('utf-8'))."
-        ],
-        [
-          "File boundaries and error policy",
-          "When reading a text file, specify encoding where the format is known. If data may be malformed, decide whether to reject it, replace invalid sequences, or report it for correction. Silent replacement can be acceptable for some display-only pipelines but is risky for identifiers and audit data."
-        ],
-        [
-          "Normalize only when the domain requires it",
-          "Visually identical strings can have different Unicode representations. Normalization can help comparisons, but it is a domain decision: preserve original text for display/audit and normalize comparison keys consistently where appropriate."
-        ]
-      ],
-      "syntaxNotes": [
-        [
-          "str",
-          "Unicode text object; not a byte array."
-        ],
-        [
-          "bytes",
-          "Immutable sequence of byte values, often used for encoded files and network payloads."
-        ],
-        [
-          "text.encode('utf-8')",
-          "Encodes Unicode text into UTF-8 bytes."
-        ],
-        [
-          "payload.decode('utf-8')",
-          "Decodes bytes as UTF-8; invalid sequences can raise UnicodeDecodeError."
-        ],
-        [
-          "open(path, encoding='utf-8')",
-          "Opens a text file using an explicit codec, avoiding dependence on a platform default."
-        ]
-      ],
-      "workedExample": {
-        "title": "Round-trip a non-ASCII value",
-        "code": "label = \"café\"\npayload = label.encode(\"utf-8\")\nrestored = payload.decode(\"utf-8\")\n\nprint(type(label).__name__)       # str\nprint(type(payload).__name__)     # bytes\nprint(len(label))                 # 4\nprint(len(payload))               # 5\nprint(restored == label)          # True",
-        "explanation": [
-          "The accented é is one Python string element in this example, so the text length is four.",
-          "UTF-8 encodes é using more than one byte, so the payload length is five.",
-          "Decoding with the matching codec reconstructs the original text.",
-          "A successful round trip checks this sample, but robust file handling should also test invalid byte sequences and define an error policy."
-        ]
-      },
-      "knowledgeCheck": [
-        {
-          "question": "What does encode do, and what does decode do?",
-          "answer": "encode converts text (str) into bytes using a codec; decode interprets bytes as text using a codec."
-        },
-        {
-          "question": "Why can UTF-8 byte length exceed len(text)?",
-          "answer": "UTF-8 uses a variable number of bytes per code point; non-ASCII code points often require multiple bytes."
-        },
-        {
-          "question": "Should malformed bytes always be silently replaced?",
-          "answer": "No. Choose a policy based on the data's purpose; rejecting or logging malformed identifiers may be safer than silently changing them."
-        }
-      ],
-      "practice": "Read a UTF-8 text file containing accented names. Print both its decoded text and encoded byte length. Add a malformed-byte test and document whether your program rejects, replaces, or reports it."
-    },
-    {
-      "highlight": "A function has an input/output contract and a scope. Defaults are evaluated once when the function is defined.",
-      "sections": [
-        [
-          "Function contract and return values",
-          "A function should state what inputs it accepts, what it returns, and what side effects it performs. `return` exits the function and passes a value to the caller; falling off the end returns None. Distinguish printing a result from returning it: printed text is for a human or console, while a returned value can be reused by other code."
-        ],
-        [
-          "Arguments and parameter binding",
-          "Positional arguments bind by position; keyword arguments bind by parameter name. Use keyword-only parameters when optional settings would be ambiguous. *args gathers extra positional arguments into a tuple; **kwargs gathers extra keyword arguments into a dict. These are collection mechanisms, not a substitute for a clear function signature."
-        ],
-        [
-          "Mutable default trap",
-          "Default expressions are evaluated when the def statement runs, not freshly for each call. A default list can therefore be shared across calls. Use None as the sentinel and create a fresh list inside the function when the caller omitted the argument."
-        ],
-        [
-          "LEGB scope and closures",
-          "A name is resolved through Local, Enclosing, Global, then Built-in scopes. Assignment inside a function normally binds a local name unless declared global/nonlocal. Passing values explicitly often makes dependencies easier to test than relying on global state."
-        ]
-      ],
-      "syntaxNotes": [
-        [
-          "def name(arg):",
-          "Defines a function; its indented body runs when called."
-        ],
-        [
-          "return value",
-          "Ends the current function call and provides a result to the caller."
-        ],
-        [
-          "parameter=None",
-          "Common sentinel pattern for optional mutable inputs; create the fresh mutable object inside."
-        ],
-        [
-          "*args / **kwargs",
-          "Collect extra positional arguments into a tuple and extra keyword arguments into a dictionary."
-        ],
-        [
-          "nonlocal name",
-          "Declares that assignment should rebind a name in the nearest enclosing function scope."
-        ]
-      ],
-      "workedExample": {
-        "title": "Make independent defaults and return a value",
-        "code": "def add_tag(tag, tags=None):\n    if tags is None:\n        tags = []\n    tags.append(tag)\n    return tags\n\nfirst = add_tag(\"urgent\")\nsecond = add_tag(\"later\")\nprint(first)   # ['urgent']\nprint(second)  # ['later']\n\n# The caller can also pass an existing list:\nshared = [\"finance\"]\nresult = add_tag(\"review\", shared)\nprint(shared)  # ['finance', 'review']",
-        "explanation": [
-          "None marks the absence of a supplied list; it is not used as the working list itself.",
-          "The function creates a fresh list for each omitted argument, so the first two calls do not share state.",
-          "When the caller explicitly passes a list, this implementation mutates that list. That side effect is part of the function contract and should be documented or redesigned if mutation is not intended.",
-          "The function returns the list rather than printing it, allowing callers to store, test or transform the result."
-        ]
-      },
-      "knowledgeCheck": [
-        {
-          "question": "What does a function return if it has no explicit return statement?",
-          "answer": "None."
-        },
-        {
-          "question": "Why is `def f(items=[])` often a bug?",
-          "answer": "The list default is created once at function definition time and reused by calls that omit the argument."
-        },
-        {
-          "question": "What is the difference between print and return?",
-          "answer": "print writes a representation to an output stream; return provides a value to the caller and ends the function."
-        }
-      ],
-      "practice": "Write `summarize_expenses(records, threshold=...)` to return total and count without printing. Add an optional category list safely, call it twice without that list, and test empty records, zero amount and a missing category. State the function's contract."
-    }
-  ,
-    {
-      "highlight": "A computer works with data it receives, follows a defined process, and produces a result. This input → process → output model is a useful way to describe almost any small program.",
-      "sections": [
-        [
-          "Start with a familiar task",
-          "Imagine a snack kiosk. Someone chooses a snack (input), the kiosk checks the choice and calculates a price (process), then displays the price (output). A program can be understood the same way. The model is not Python-specific and does not require you to know code yet."
-        ],
-        [
-          "Name the three parts",
-          "Input is information coming into a system. Processing is the rule or transformation applied to it. Output is the result a person or another system can use. Some programs also store information or repeat a process, but the three-part model is a dependable starting point."
-        ],
-        [
-          "Walk through a small example",
-          "Task: calculate the total cost for 3 notebooks at 20 rupees each. Input: quantity 3 and unit price 20. Process: multiply quantity by price. Output: total 60 rupees. Before writing code, state what each input means and what output you expect."
-        ],
-        [
-          "Make the steps testable",
-          "Try the same task with quantity 0, quantity 1, and quantity 3. Write down expected results before calculating. This habit catches misunderstandings early and becomes the basis of software testing."
-        ]
-      ],
-      "syntaxNotes": [
-        [
-          "Input → process → output",
-          "Describe the data entering a task, the transformation, and the useful result. You can plan this in plain language before writing Python."
+          "Problem",
+          "The task or question you want the program to solve."
         ],
         [
           "Algorithm",
-          "A finite sequence of clear steps for solving a task. A good algorithm states important assumptions and handles relevant edge cases."
+          "A clear sequence of steps that solves the task."
+        ],
+        [
+          "Program",
+          "Instructions written in a programming language so a computer can execute them."
         ]
       ],
       "workedExample": {
-        "title": "Plan a price calculator without code",
-        "code": "INPUT: quantity = 3 notebooks; unit price = ₹20\nPROCESS: quantity × unit price\nOUTPUT: total = ₹60",
+        "title": "Turn a vague request into a plan",
+        "code": "Goal: decide whether a learner passed.\n1. Get the learner's score.\n2. Confirm the score is between 0 and 100.\n3. If the score is 50 or higher, report “Pass”.\n4. Otherwise, report “Try again”.",
         "explanation": [
-          "The inputs are the two facts the task needs.",
-          "The process is the multiplication rule, not a guess.",
-          "The output is a value with a clear meaning and unit."
+          "The goal is clear and the input is named.",
+          "A range check handles invalid scores before the pass/fail rule.",
+          "The threshold is an explicit rule; the computer does not invent it."
         ]
       },
       "knowledgeCheck": [
         {
-          "question": "In a price calculator, what is the processing step?",
-          "answer": "Multiplying the quantity by the unit price."
+          "question": "What is an algorithm?",
+          "answer": "A finite, ordered set of clear steps for solving a task."
         },
         {
-          "question": "Why should you write an expected result before running a program?",
-          "answer": "It gives you an independent prediction to compare with the program's output."
+          "question": "Why write a plan before coding?",
+          "answer": "It clarifies the goal, required information, order of actions and expected result before syntax becomes a distraction."
         },
         {
-          "question": "Is input always typed by a person?",
-          "answer": "No. Input can come from a file, another program, a device, or a person."
+          "question": "What does it mean for an instruction to be precise?",
+          "answer": "It is specific enough that the executor does not need to guess what action or choice was intended."
         }
       ],
-      "practice": "Plan a simple weekly-hours calculator using plain language only. List its inputs, processing rule, and output. Work through examples for 0 hours, 8 hours, and 40 hours. Add one assumption (for example, whether breaks are included) and explain how that assumption affects the result."
+      "practice": "Write a plain-language algorithm for planning a bus trip from home to a destination. Include starting information, at least five ordered steps, and the final result. Add one case where a bus is delayed and describe how your steps should respond. Ask another person to follow the plan and note any step they found ambiguous."
     },
     {
-      "highlight": "Python is the language; the editor helps you write a file; the Python interpreter runs it. These are different tools with different jobs.",
+      "highlight": "Your first setup is just a few tools: Python to run code, an editor to write it, and a terminal to launch it. Keep the setup small and confirm each part works.",
       "sections": [
         [
-          "Know the three pieces",
-          "Python is the programming language you will learn. A code editor is an application for writing and saving text files. The Python interpreter is the program that reads and executes Python code. A terminal is a place to enter commands that start programs."
+          "Separate the tools",
+          "Python is the language and the interpreter is the program that executes it. Your editor is where you write and save source text. A terminal accepts commands that launch Python or other programs. Installing an editor alone does not guarantee Python is installed."
         ],
         [
-          "Choose a beginner setup",
-          "Use a supported Python 3 release from python.org and an editor you are comfortable with. A simple setup is enough: do not install multiple toolchains or extensions before you can run one file. On some systems Python may already be installed; check which version the terminal finds before installing another."
+          "Install or find Python",
+          "Use the official Python downloads page and follow the instructions for your operating system. If Python is already available, you may not need another installation. Avoid installing several versions until you understand which command your computer uses."
         ],
         [
-          "Check the setup calmly",
-          "Open a terminal and try `python --version`. If that command is not recognized, try `python3 --version` on macOS/Linux or `py --version` on Windows. These commands ask the system to report a version; they do not run your course program. If none works, follow the official installation instructions for your operating system."
+          "Check the interpreter",
+          "Open a terminal and try `python --version`. If that is not recognized, try `python3 --version` on macOS/Linux or `py --version` on Windows. Record the exact command and version that works. If none works, check the official installation steps and reopen the terminal after installation."
         ],
         [
-          "Save your first file",
-          "Create a folder for practice. In your editor, make a plain-text file named `hello.py`. The `.py` ending helps identify it as a Python source file. Save it somewhere easy to find, and avoid naming it `python.py` because that can confuse imports later."
+          "Create a safe practice space",
+          "Make a folder named `python-practice`. Open it in your editor and create a plain-text file called `hello.py`. Save the file before trying to run it. Avoid naming your own files `python.py`, `random.py`, or `json.py`, since names like these can interfere with Python's standard modules later."
         ],
         [
-          "Avoid setup rabbit holes",
-          "If the editor has a Run button, it may need to be configured to use the interpreter you installed. When a run fails, note the exact command and error, the operating system, and the version command's output. Change one setup detail at a time."
+          "Check one thing at a time",
+          "If something fails, copy the exact message and note what you did immediately before it appeared. Check the command, folder, and file name before reinstalling. Change one thing, retry, and keep the successful steps as a repeatable setup checklist."
         ]
       ],
       "syntaxNotes": [
         [
           "Interpreter",
-          "The installed Python program that executes your source code."
+          "The installed Python program that reads and executes Python source."
         ],
         [
           "Editor",
-          "A tool for creating and editing source files. It does not automatically mean Python is installed."
+          "An application used to write and save source files."
         ],
         [
           "Terminal",
-          "A text interface where you can run commands such as checking the Python version or starting a script."
+          "A command-line interface for running commands."
+        ],
+        [
+          "`.py` file",
+          "A conventional filename ending used for Python source files."
         ]
       ],
       "workedExample": {
-        "title": "Setup checklist",
-        "code": "1. Install a supported Python 3 version if needed.\n2. Open a terminal.\n3. Run: python --version\n4. If needed, try: python3 --version\n5. Create a practice folder.\n6. Save a plain-text file named hello.py",
+        "title": "Setup verification checklist",
+        "code": "Terminal command to try:\npython --version\n\nAlternatives if needed:\npython3 --version   # macOS/Linux\npy --version       # Windows\n\nPractice folder:\npython-practice/\n  hello.py",
         "explanation": [
-          "The version command confirms that a Python interpreter can be found by that command name.",
-          "A file is not the same thing as a running program; you will execute it in the next lesson.",
-          "If your computer uses a different command, record it so you can repeat the same workflow."
+          "Use the command that works on your machine; do not assume every operating system uses the same command.",
+          "The version command checks whether the interpreter can be launched.",
+          "The empty `hello.py` file is a place to save your first instructions in the next lesson."
         ]
       },
       "knowledgeCheck": [
         {
-          "question": "Does installing a code editor necessarily install Python?",
-          "answer": "No. The editor and interpreter are separate tools."
+          "question": "What is the difference between an editor and the Python interpreter?",
+          "answer": "The editor helps you write source files; the interpreter executes Python code."
         },
         {
-          "question": "What does `python --version` check?",
-          "answer": "It reports the version of the Python interpreter found by that command."
+          "question": "What should you record when checking your setup?",
+          "answer": "The exact command that worked and the Python version it reported."
         },
         {
-          "question": "Why should your practice file not be named `python.py`?",
-          "answer": "It can shadow the Python module name and cause confusing import behavior."
+          "question": "If `python` is not recognized, what is a sensible next step?",
+          "answer": "Try the appropriate alternative command for the operating system and check the official installation instructions if needed."
         }
       ],
-      "practice": "Complete the setup checklist and write down your operating system, the exact version command that worked, and the reported Python version. Create a folder named `python-practice` and save an empty `hello.py` file inside it. If a step fails, capture the exact message and document the single change that resolved it."
+      "practice": "Create the `python-practice` folder and `hello.py` file. Run the version check and record your OS, working command, and reported version. If setup is incomplete, follow the official installation guide and record the precise step that fixed it. Reference: https://www.python.org/downloads/"
     },
     {
-      "highlight": "A program is source text saved in a file. Running it asks the Python interpreter to execute its instructions; the output you see is the program's observable behavior.",
+      "highlight": "A Python program can begin with one readable instruction. Learn to connect the text you wrote, the action Python performs, and the output you observe.",
       "sections": [
         [
-          "Read the tiny program",
-          "Open `hello.py` and enter the two-line example below. The first line tells Python to display a piece of text. The quoted words are text data. The parentheses group the value being passed to the display operation."
+          "First instruction",
+          "In `hello.py`, type the example below exactly and save it. The word `print` names a built-in operation that displays information. The quoted phrase is text. The parentheses show which text to display."
         ],
         [
-          "Predict, then run",
-          "Before running, write down exactly what you expect to appear. In the terminal, move to the folder containing the file and run `python hello.py` (or the command that worked on your setup). Compare the actual output with your prediction."
+          "Predict before pressing Run",
+          "Write down what you think will appear in the terminal. Then run the file from the folder where it is saved. Compare the actual output with your prediction. This small habit is the beginning of testing."
         ],
         [
-          "Understand source and output",
-          "The source file contains instructions. The interpreter executes them. The terminal displays the output. The output is not automatically saved back into the source file. This distinction helps you identify whether a problem is in the instructions, the run command, or the result you expected."
+          "Source, execution, output",
+          "The source is the saved text in your file. Execution is Python following those instructions. Output is what the program produces, often displayed in the terminal. They are related but not the same thing."
         ],
         [
-          "Change one thing at a time",
-          "Change the greeting text and run the file again. Then add a second display instruction on a new line. Predict the order of the two lines before running. Keeping each experiment small makes cause and effect easier to see."
-        ],
-        [
-          "Build a tiny success test",
-          "A test can be a simple check: did the exact expected text appear, once, and in the expected order? You are not expected to use a testing library yet. You are practicing how to define correct behavior."
+          "Make one small change",
+          "Replace the greeting with a message of your own, save, and run again. Next, add another `print` instruction on a new line. Predict the order of the lines. Do not add variables, loops, or functions yet; the goal is to understand one instruction at a time."
         ]
       ],
       "syntaxNotes": [
         [
-          "print(...)",
-          "A built-in function that writes a readable representation of its arguments to the output stream, usually the terminal."
+          "`print(...)`",
+          "Displays the value or values supplied to it, usually in the terminal."
         ],
         [
-          "Quoted text",
-          "Text such as `\"Hello, world!\"` is called a string. Keep the opening and closing quote paired."
+          "String",
+          "A piece of text written between matching quote marks, such as `\"Hello!\"`."
         ],
         [
-          "Line order",
-          "Python normally executes top-level statements in the order they appear, from top to bottom."
+          "Save before running",
+          "The interpreter runs the saved file; unsaved editor changes may not be included."
         ]
       ],
       "workedExample": {
-        "title": "Your first running Python file",
-        "code": "print(\"Hello, world!\")\nprint(\"I ran my first Python program.\")",
+        "title": "A first program",
+        "code": "print(\"Hello, Python!\")\nprint(\"I can run a program.\")",
         "explanation": [
-          "The first instruction displays `Hello, world!`.",
-          "The second instruction runs after the first and displays its own text on the next line.",
-          "Expected terminal output:\nHello, world!\nI ran my first Python program."
+          "The first instruction displays `Hello, Python!`.",
+          "Python then moves to the next top-level instruction and displays the second message.",
+          "Expected output:\nHello, Python!\nI can run a program."
         ]
       },
       "knowledgeCheck": [
         {
-          "question": "Where do you type the program's instructions?",
-          "answer": "In the source file in your code editor."
+          "question": "What does `print` do in this example?",
+          "answer": "It displays the supplied text in the program's output."
         },
         {
-          "question": "What should happen if two print instructions appear one after the other?",
-          "answer": "Their output appears in the same order, on separate lines."
+          "question": "What is the difference between source and output?",
+          "answer": "Source is the saved instructions; output is the result displayed when those instructions run."
         },
         {
-          "question": "What is the purpose of predicting output before running?",
-          "answer": "It makes a clear comparison possible and helps you notice misunderstandings."
+          "question": "What should you do before comparing actual and expected output?",
+          "answer": "Predict and write down the expected result first."
         }
       ],
-      "practice": "Create `hello.py` with a greeting, your chosen learning goal, and one question you want Python to help answer. Predict the three output lines, run the file, and compare. Then change only the greeting and rerun. Submit the source text, the output, and a short note describing what changed."
+      "practice": "Write a three-line program: a greeting, one sentence about why you are learning, and a question you want to explore with code. Predict all three lines before running it. Change only the greeting and rerun. Save the source and record both outputs with one sentence explaining the difference."
     },
     {
-      "highlight": "Debugging is a disciplined investigation, not random editing. Read the exact error, find the location it points to, form one hypothesis, make one small change, and rerun.",
+      "highlight": "An error is information about what Python could not understand or do. Debugging means using that evidence to find and verify a specific fix.",
       "sections": [
         [
-          "A deliberate first mistake",
-          "In your practice file, temporarily remove the closing quote from a print instruction. Run the file and observe the error. This is a safe, reversible experiment. Restore the quote after you have read the message."
+          "Make a reversible mistake",
+          "Temporarily remove the closing quote from your greeting. Save and run. Read the error rather than immediately changing several things. Restore the quote once you understand the message."
         ],
         [
-          "Read the message in layers",
-          "An error often includes a type/name, a message, a file name, and a line number. The final line usually tells you the immediate problem. A caret or highlighted location points near where Python noticed it, which may be slightly after where the underlying mistake began."
+          "Find the useful clues",
+          "Look for the error type, the short description, the file name and the line number. Python reports where it detected a problem; the original cause can sometimes be just before the highlighted position."
         ],
         [
-          "Separate observation from guess",
-          "Observation: the message says a string was never closed. Guess: the missing closing quote caused it. Test the guess by restoring the quote and rerunning. If the error remains, revise the hypothesis using the new evidence instead of making several unrelated edits."
+          "Debug with a simple loop",
+          "Reproduce the problem, read the message, form one explanation, make one targeted change, and run again. If the result is still wrong, use the new evidence to form a better explanation. Avoid random edits."
         ],
         [
-          "Use a four-step routine",
-          "1. Reproduce the issue. 2. Read the full message and note the file/line. 3. Change one likely cause. 4. Run again and compare with the expected behavior. Keep a short record of the original error and the verified fix."
+          "Different failure, different cause",
+          "If the terminal says the Python command cannot be found, the shell may not know where the interpreter is. If it says the file cannot be found, check the folder and spelling. Those are different from a typo inside the Python source."
         ],
         [
-          "Know when it is not your code",
-          "A command-not-found message can mean the terminal cannot find Python or the file path, rather than a mistake in the Python instructions. Check the command, current folder, and exact file name before changing source code."
+          "Keep a tiny log",
+          "Write down what you expected, what happened, the exact error, the change you made, and whether the rerun passed. A concise record makes it easier to ask for help and prevents repeating failed guesses."
         ]
       ],
       "syntaxNotes": [
         [
           "Syntax error",
-          "Python cannot parse the source as valid Python instructions, often because punctuation or structure is incomplete."
+          "The source text does not follow Python's grammar, so Python cannot parse it."
         ],
         [
           "Runtime error",
-          "The source was accepted, but execution encountered a problem while the program was running."
+          "Python understood the source but encountered a problem while executing it."
         ],
         [
-          "Traceback",
-          "A report that shows the chain of calls leading to an error; later lessons will teach you to read it in more detail."
+          "Debugging",
+          "A repeatable process of reproducing, investigating, changing one cause, and verifying the result."
         ]
       ],
       "workedExample": {
-        "title": "Debug the missing quote",
-        "code": "print(\"Hello, world!)  # missing closing quote\n\n# Corrected:\nprint(\"Hello, world!\")",
+        "title": "A missing quote",
+        "code": "# Incorrect\nprint(\"Hello, Python!)\n\n# Correct\nprint(\"Hello, Python!\")",
         "explanation": [
-          "The first line has an opening quote but no matching closing quote.",
-          "Python cannot understand the intended end of the text, so it reports a syntax problem.",
-          "The corrected line pairs the quotes. Run it to verify the expected greeting appears."
+          "The incorrect line starts a quoted string but never closes it.",
+          "Python cannot determine where the text ends, so it reports a syntax problem.",
+          "The corrected line pairs the quotes. Rerun it and confirm the greeting appears."
         ]
       },
       "knowledgeCheck": [
         {
-          "question": "What is a useful first step when a program fails?",
-          "answer": "Reproduce the issue and read the full error message before editing."
+          "question": "What should you do before editing after an error?",
+          "answer": "Reproduce the issue and read the full error message, including its location."
         },
         {
-          "question": "Why change only one likely cause at a time?",
-          "answer": "So you can tell which change affected the result and avoid introducing unrelated errors."
+          "question": "Why make one targeted change at a time?",
+          "answer": "It helps identify which change fixed the issue and avoids adding unrelated problems."
         },
         {
-          "question": "Does every terminal error mean your Python source code is wrong?",
-          "answer": "No. It may be a command, file-location, or environment problem."
+          "question": "Does a missing interpreter command prove the Python source is wrong?",
+          "answer": "No. It points to a command or environment issue, not necessarily a source-code error."
         }
       ],
-      "practice": "Make one intentional syntax mistake in your own tiny program, run it, and record the exact error and line reference. Correct only that issue and rerun. Then create a second experiment by using a file name that does not exist in the run command; compare the type of failure. Restore the correct file and submit a short observation-versus-hypothesis debugging log."
+      "practice": "Create one intentional typo in your greeting, run the file, and record the exact message and line reference. State one hypothesis, correct the likely cause, and rerun. Then run a misspelled filename from the terminal and compare the failure. Restore the working file and submit a short debug log separating observations from guesses."
     },
     {
-      "highlight": "Python reads instructions in a defined order. The interpreter evaluates expressions, uses values, and performs operations; later lessons will teach you to express those operations in code.",
+      "highlight": "The input → process → output model helps you describe what a program does before learning more syntax. It makes requirements and expected results visible.",
       "sections": [
         [
-          "A machine follows rules, not intentions",
-          "A computer does not infer a missing step the way a person might. If a task says “make the total,” it still needs to know which values to combine and which operation to use. Clear instructions remove ambiguity."
+          "Use a familiar example",
+          "Imagine calculating the price of several notebooks. The quantity and unit price are inputs. Multiplying them is the processing step. The total cost is the output. Describe each part in plain language before writing code."
         ],
         [
-          "Trace a task on paper",
-          "Suppose a vending machine begins with a balance of 100 points. A user selects an item costing 35 points. The steps are: start with 100, subtract 35, display 65. Write the current value after every step before trying to express it in code."
+          "Make the process explicit",
+          "For three notebooks at ₹20 each: quantity is 3, unit price is ₹20, and the rule is quantity multiplied by unit price. The expected total is ₹60. Units matter: this is a cost in rupees, not a count of notebooks."
         ],
         [
-          "Order matters",
-          "If you subtract 35 from 100, the result is 65. If you subtract 100 from 35, the result is -65. The same numbers and operation can produce a different result when the order changes."
+          "Trace values through the steps",
+          "A trace is a written record of the values as each step happens. Write down the inputs, apply the rule, and record the output. Try quantity 0 and quantity 1 too. Predicting edge cases exposes missing assumptions."
         ],
         [
-          "State assumptions",
-          "What if the item costs more than the available balance? A real design must decide whether to reject the purchase, allow a negative balance, or ask for more points. The computer cannot choose the business rule for you. Write the rule before implementing it."
+          "Decide what to do with unusual input",
+          "What if quantity is negative? What if price is missing? A real program needs a rule for invalid or missing information. The computer will follow the rule you give it, so requirements must make those choices explicit."
         ],
         [
-          "From plan to program",
-          "An algorithm is the plan. Code is the plan written in a language the computer can execute. A trace is a record of the values and decisions as the plan runs. Tracing helps explain what happened without relying on intuition."
+          "Later, map the plan to code",
+          "Python will give you ways to represent values and perform operations. For now, focus on naming the inputs, explaining the transformation, and stating what a correct result should look like."
         ]
       ],
       "syntaxNotes": [
         [
-          "Step-by-step execution",
-          "At a basic level, Python executes top-level instructions in order. Expressions are evaluated to produce values, and statements use those values to perform an action."
+          "Input",
+          "Information supplied to a process, such as a quantity or price."
         ],
         [
-          "State",
-          "The information a program currently holds, such as the balance in the vending-machine example."
+          "Processing",
+          "The transformation or decision applied to the input."
         ],
         [
-          "Trace",
-          "A written or observed record of how values change as instructions execute."
+          "Output",
+          "The result produced for a person or another system."
+        ],
+        [
+          "Edge case",
+          "An unusual but relevant situation, such as zero quantity or missing data."
         ]
       ],
       "workedExample": {
-        "title": "Trace the balance by hand",
-        "code": "Starting balance: 100 points\nItem cost:       35 points\nOperation:       100 - 35\nNew balance:     65 points\n\nIf cost > balance: reject the purchase",
+        "title": "Trace a price calculation",
+        "code": "Input: quantity = 3 notebooks\nInput: price each = ₹20\nProcess: 3 × 20\nOutput: ₹60 total",
         "explanation": [
-          "The current balance is the state before the operation.",
-          "The subtraction is the processing step.",
-          "The final line is a business rule for an edge case, not a Python syntax requirement."
+          "The example names two inputs and their units.",
+          "The process is a clear arithmetic rule.",
+          "The output is predictable and can be checked independently."
         ]
       },
       "knowledgeCheck": [
         {
-          "question": "Why must instructions be explicit?",
-          "answer": "The computer follows the stated rules and does not reliably fill in missing assumptions."
+          "question": "What are the three parts of the model?",
+          "answer": "Input, processing, and output."
         },
         {
-          "question": "What does a trace show?",
-          "answer": "The values and decisions as a sequence of steps executes."
+          "question": "Why name units when planning a calculation?",
+          "answer": "Units make the meaning of values and results clear and help catch mismatched quantities."
         },
         {
-          "question": "What should you do if the requirements do not say what happens when funds are insufficient?",
-          "answer": "Clarify and document the intended rule before implementing it."
+          "question": "What is an edge case for the notebook calculator?",
+          "answer": "Examples include zero or negative quantity, a missing price, or a price that is not a valid number."
         }
       ],
-      "practice": "Write an algorithm in plain English for checking whether a learner can borrow a library book. Include at least three inputs or facts, the order of checks, and what output should be shown. Add edge cases such as an overdue book and an unavailable copy. Trace two sample cases manually and explain why each step occurs."
+      "practice": "Plan a weekly study-time calculator in plain language. Name its inputs, processing rule, and output. Trace 0, 8, and 40 hours. Add rules for negative hours and a missing value. Do not write Python yet; submit the plan and expected results."
+    },
+    {
+      "highlight": "Programming languages provide rules for expressing instructions. Python's interpreter executes your program within a runtime environment; knowing the roles helps you troubleshoot setup and execution.",
+      "sections": [
+        [
+          "A translation analogy",
+          "A recipe is written in a language a cook understands. A program is written in a programming language whose rules a computer tool can process. Different languages offer different syntax and libraries, but all require precise instructions."
+        ],
+        [
+          "Interpreter and compiler, simply",
+          "An interpreter is commonly described as executing a program through an implementation that reads or processes it. A compiler translates source or an intermediate form into another representation before execution. Real language implementations can combine techniques, so these words describe approaches rather than a strict either/or split."
+        ],
+        [
+          "What Python does when you run it",
+          "In a typical CPython installation, source is parsed, compiled to bytecode, and executed by the Python virtual machine. You do not need to memorize internals now. The important beginner model is: write a source file, launch the interpreter, observe behavior."
+        ],
+        [
+          "Runtime means the running environment",
+          "The runtime includes the interpreter and the environment in which the program executes, including available libraries and operating-system resources. A program can be syntactically correct but still fail at runtime if it expects a missing file or invalid data."
+        ],
+        [
+          "Keep the terms useful",
+          "When something fails, ask whether the source is invalid, the interpreter command is unavailable, or the running program encountered a problem. These questions point to different fixes."
+        ]
+      ],
+      "syntaxNotes": [
+        [
+          "Programming language",
+          "A formal system for expressing instructions and computations."
+        ],
+        [
+          "Interpreter",
+          "A program that executes code, often by processing it as it runs."
+        ],
+        [
+          "Compiler",
+          "A tool or stage that translates source or an intermediate representation into another form."
+        ],
+        [
+          "Runtime",
+          "The interpreter and supporting environment while a program is executing."
+        ]
+      ],
+      "workedExample": {
+        "title": "The roles in a simple run",
+        "code": "You edit:       hello.py (source text)\nYou launch:     Python interpreter\nPython runs:    the instructions in the file\nYou observe:    output or an error in the terminal",
+        "explanation": [
+          "The editor creates the source file but does not define the language rules.",
+          "The interpreter runs the source in a runtime environment.",
+          "The terminal is where you issue the launch command and usually see output."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "Is Python itself the same thing as the editor?",
+          "answer": "No. Python is the language; an editor is a tool for writing files."
+        },
+        {
+          "question": "What is the runtime in beginner terms?",
+          "answer": "The interpreter and supporting environment in which the program is executing."
+        },
+        {
+          "question": "Can valid source code still fail while running?",
+          "answer": "Yes. For example, it may try to open a file that does not exist."
+        }
+      ],
+      "practice": "Draw or write the journey from editing `hello.py` to seeing its output. Label source, editor, terminal, interpreter, runtime, and output. Then describe one example of a source syntax problem and one example of a runtime problem, and identify which part of the journey each affects."
+    },
+    {
+      "highlight": "Python has versions and multiple implementations. For a beginner, choose a currently supported Python 3 release from the official downloads page and make sure your tools run that same installation.",
+      "sections": [
+        [
+          "Version numbers are labels",
+          "A version number identifies a release of Python. Features and fixes can differ between releases, so a course, workplace, or project may specify a supported version. Do not assume a tutorial written for an older release exactly matches your installation."
+        ],
+        [
+          "What CPython means",
+          "CPython is the reference implementation most people install from python.org. Other implementations exist for different goals and environments. You do not need to compare them to start learning; just know that “Python” can refer to the language or, casually, to a particular implementation."
+        ],
+        [
+          "Choose a supported version deliberately",
+          "Use the official Python downloads page and follow the supported release guidance for your operating system. If a project or course gives a version requirement, follow that requirement. Avoid relying on unofficial download sites."
+        ],
+        [
+          "Verify the interpreter your command finds",
+          "Run the version command that worked in the setup lesson. If you have more than one installation, a terminal may launch a different one than your editor. When behavior or package installation seems inconsistent, compare the interpreter path and version used by each tool."
+        ],
+        [
+          "Keep notes reproducible",
+          "Record the version and the command you used. Later, virtual environments will help keep each project's dependencies separate, but first make sure you can identify the interpreter you are running."
+        ]
+      ],
+      "syntaxNotes": [
+        [
+          "Python 3",
+          "The modern major version family used for current Python development."
+        ],
+        [
+          "CPython",
+          "A widely used implementation of the Python language, distributed by python.org."
+        ],
+        [
+          "Supported release",
+          "A version that still receives the relevant maintenance or security updates; consult official release information rather than guessing."
+        ]
+      ],
+      "workedExample": {
+        "title": "A repeatable version check",
+        "code": "python --version\n# or, depending on your system:\npython3 --version\npy --version",
+        "explanation": [
+          "Run only the command appropriate to your setup and record its output.",
+          "If several commands work, they may point to different installations; do not mix them unknowingly.",
+          "Official downloads and release information: https://www.python.org/downloads/"
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "What is CPython?",
+          "answer": "A widely used implementation of the Python language."
+        },
+        {
+          "question": "Where should you get Python for a normal beginner installation?",
+          "answer": "Use the official Python downloads page and its operating-system-specific instructions."
+        },
+        {
+          "question": "Why record the version and command you used?",
+          "answer": "It makes your setup reproducible and helps diagnose cases where different tools launch different installations."
+        }
+      ],
+      "practice": "Check the version of the interpreter you will use for this course. Record the exact command, output, operating system, and whether your editor uses the same interpreter. Consult https://www.python.org/downloads/ and https://www.python.org/downloads/release/ if you need to check supported releases. Do not install a second version unless you have a specific reason."
+    },
+    {
+      "highlight": "A saved script is repeatable and shareable; the interactive shell is useful for quick experiments. Both use Python, but they serve different learning and work habits.",
+      "sections": [
+        [
+          "Run a saved script",
+          "A script is a source file containing instructions. From the terminal, move to the folder containing `hello.py` and run it with the interpreter command that worked for your setup, such as `python hello.py`. The script can be saved, edited, rerun, and shared."
+        ],
+        [
+          "Try the interactive shell",
+          "Start the interpreter without a filename. You should see a prompt, often `>>>`. Type a simple expression or `print(\"Hi\")` and press Enter. The shell responds immediately. To leave, use `exit()` or the operating system's usual keyboard shortcut."
+        ],
+        [
+          "Choose the right tool",
+          "Use the shell to test a small idea or inspect a value. Use a script when you want a sequence you can save, rerun, and build on. Work you do only in the shell may disappear when you exit, so save useful work in a file."
+        ],
+        [
+          "Understand the command parts",
+          "In `python hello.py`, `python` launches the interpreter and `hello.py` tells it which file to run. Later you will pass arguments to programs; for now, recognize that the filename is an instruction to the interpreter about what to execute."
+        ],
+        [
+          "Common beginner slips",
+          "If Python cannot find the file, check the terminal's current folder and the spelling of the filename. If the shell shows `>>>`, you are inside Python, not at the normal system command prompt. Do not type terminal commands into the Python prompt."
+        ]
+      ],
+      "syntaxNotes": [
+        [
+          "Script",
+          "A saved source file that can be executed again."
+        ],
+        [
+          "Interactive shell / REPL",
+          "A prompt that reads an instruction, evaluates it, prints a result, and repeats."
+        ],
+        [
+          "Command-line argument",
+          "A piece of information supplied after the program name when launching a program; deeper use comes later."
+        ]
+      ],
+      "workedExample": {
+        "title": "Script versus shell",
+        "code": "# In hello.py, save:\nprint(\"Running from a saved file\")\n\n# In the terminal, run:\npython hello.py\n\n# To start the interactive shell, run:\npython",
+        "explanation": [
+          "The saved file keeps your instructions between runs.",
+          "The terminal command starts Python and passes the filename to execute.",
+          "Starting Python without a filename usually opens the interactive prompt, where you can experiment line by line."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "When is a saved script more useful than the interactive shell?",
+          "answer": "When you want to preserve, rerun, share, or build on a sequence of instructions."
+        },
+        {
+          "question": "What does `>>>` usually indicate?",
+          "answer": "The interactive Python prompt."
+        },
+        {
+          "question": "If `python hello.py` cannot find the file, what should you check first?",
+          "answer": "The current terminal folder and the exact filename/path."
+        }
+      ],
+      "practice": "Run your greeting once as a saved script and once by typing its simple print instruction into the interactive shell. Record what was saved and what was temporary. Then deliberately run the script from a different folder, observe the file-not-found message, return to the correct folder, and rerun successfully."
+    },
+    {
+      "highlight": "Syntax errors stop Python from understanding the source; runtime errors happen after execution begins. A traceback is a map of where an exception traveled, not a reason to panic.",
+      "sections": [
+        [
+          "Source file basics",
+          "A source file is plain text containing the program's instructions. Python reads the file when you run it. Save your changes before rerunning so you are testing the version you intended."
+        ],
+        [
+          "Syntax error: the instructions cannot be parsed",
+          "A missing quote or unmatched parenthesis can make the source invalid. Python reports a syntax error and usually points near the place it became unable to continue. Fix the structure first; do not change unrelated logic."
+        ],
+        [
+          "Runtime error: execution hits a problem",
+          "A program can be valid Python and still fail while running. For example, dividing by zero raises an exception. This is different from a missing quote: Python understood the instruction but could not complete the operation."
+        ],
+        [
+          "Read a traceback from the bottom",
+          "A traceback often lists the sequence of calls and ends with the exception type and message. Start at the last line to identify the exception, then inspect the relevant file and line shown above it. If the program calls other functions, read upward to understand how execution reached that point."
+        ],
+        [
+          "Use a safe investigation routine",
+          "Reproduce the error, preserve the complete message, locate the indicated source line, inspect the nearby values or instruction, form a hypothesis, change one cause, and rerun. Confirm both that the error is gone and that the intended result is correct."
+        ]
+      ],
+      "syntaxNotes": [
+        [
+          "SyntaxError",
+          "Raised when Python cannot parse the source text as valid Python syntax."
+        ],
+        [
+          "Exception",
+          "An event raised during execution to report a problem or special condition."
+        ],
+        [
+          "Traceback",
+          "The report showing the active call sequence and location information for an exception."
+        ]
+      ],
+      "workedExample": {
+        "title": "Compare two different errors",
+        "code": "# Syntax error: missing closing quote\nprint(\"Hello)\n\n# Runtime error: valid syntax, impossible operation\nprint(10 / 0)",
+        "explanation": [
+          "The first example cannot be parsed because the string is not closed.",
+          "The second line is valid syntax, but running the division raises `ZeroDivisionError`.",
+          "Use one example at a time in your file so the first error does not prevent you from observing the second."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "What is the key difference between a syntax error and a runtime error?",
+          "answer": "A syntax error prevents parsing; a runtime error occurs during execution after the source has been understood."
+        },
+        {
+          "question": "Which part of a traceback is a useful starting point for identifying the exception?",
+          "answer": "The final line, which usually names the exception type and message."
+        },
+        {
+          "question": "After an error disappears, what else should you verify?",
+          "answer": "That the program now produces the intended output, not merely that it runs without an exception."
+        }
+      ],
+      "practice": "In separate runs, create one syntax error and one runtime error using the examples. Save the complete error messages, identify the type and relevant line, and explain the difference in your own words. Correct each problem and verify the expected output. Submit the two error notes plus the final working source."
+    },
+    {
+      "highlight": "Official documentation is the reference for exact behavior. A useful technical question includes what you tried, what you expected, what happened, and a small reproducible example.",
+      "sections": [
+        [
+          "Start with official sources",
+          "Use the official Python tutorial for a guided explanation and the language/library reference when you need exact details. Search results, videos, and forum posts can help you discover terms, but check important claims against documentation for the version you are using."
+        ],
+        [
+          "Read the page with a question in mind",
+          "Before searching, state the specific thing you need to know. Look for the relevant heading, example, and version context. Do not try to read the entire documentation from the beginning; use the table of contents and search within the page."
+        ],
+        [
+          "Make a minimal reproducible example",
+          "A good example is the smallest source and input that still demonstrates the problem. Remove unrelated code and private data. Include the exact command, Python version, expected behavior, actual behavior, and complete error message when there is one."
+        ],
+        [
+          "Ask a precise question",
+          "Instead of “Python doesn't work,” say: “I am using Python [version] on [OS]. I ran [command] from [folder]. I expected [result], but got [exact error]. Here is the smallest relevant code: [code]. I already checked [steps]. What should I inspect next?” Do not include passwords, API keys, personal records, or other secrets."
+        ],
+        [
+          "Check whether the answer applies",
+          "A solution may depend on the Python version, operating system, installed package, or current folder. Verify those assumptions before copying a fix. Test the solution on your minimal example, then return to the larger task."
+        ]
+      ],
+      "syntaxNotes": [
+        [
+          "Official tutorial",
+          "https://docs.python.org/3/tutorial/"
+        ],
+        [
+          "Language and library reference",
+          "https://docs.python.org/3/reference/ and https://docs.python.org/3/library/"
+        ],
+        [
+          "Minimal reproducible example",
+          "A small, self-contained example that demonstrates the issue without unrelated complexity or sensitive data."
+        ]
+      ],
+      "workedExample": {
+        "title": "A useful help request template",
+        "code": "Environment: Python [version], [operating system]\nCommand: [exact command]\n\nExpected: [what I thought would happen]\nActual: [what happened]\n\nSmallest relevant code:\n[paste code without secrets]\n\nExact error:\n[paste full error]\n\nAlready tried:\n[one or two checks]",
+        "explanation": [
+          "This format gives another person enough context to reproduce the problem.",
+          "The expected-versus-actual comparison helps distinguish a bug from a misunderstanding of the requirement.",
+          "Remove secrets and private data before sharing code or logs."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "Why prefer official documentation for exact language behavior?",
+          "answer": "It is the authoritative reference and provides version context for the language and standard library."
+        },
+        {
+          "question": "What makes a help request actionable?",
+          "answer": "It includes the environment, exact command, expected and actual behavior, minimal code, and complete error when relevant."
+        },
+        {
+          "question": "What should you remove before sharing a reproducible example?",
+          "answer": "Passwords, API keys, private data, and unrelated code."
+        }
+      ],
+      "practice": "Choose one term from this phase (for example, interpreter, script, or syntax error). Find its explanation in the official Python tutorial or reference and write a three-sentence summary in your own words. Then draft a help request about a harmless issue using the template, with a tiny reproducible example and no private information. Reference: https://docs.python.org/3/tutorial/"
     }
   ],
   "excel": [
