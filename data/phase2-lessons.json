@@ -752,71 +752,79 @@
         ]
       },
       {
-        "title": "Integrated sales model and dashboard validation",
-        "lead": "Phase 02 lesson: Integrated sales model and dashboard validation. Deliver a traceable model and report.",
-        "highlight": "Deliver a traceable model and report",
+        "title": "Excel Phase 3 prerequisite: Power Query and data modeling",
+        "lead": "Prepare the same sales dataset and modeling concepts in Excel before building the Power BI semantic model.",
+        "highlight": "Power BI Phase 02 assumes familiarity with Excel Phase 03 Power Query transformations and data-modeling basics; complete that Excel phase first, as specified in the course sequence.",
         "keyPoints": [
-          "Deliver a traceable model and report",
-          "Trust depends on aligned grain, relationship paths, measure definitions and visual filters. Validate totals, subtotals, blank selections and cross-filter behavior before styling the report.",
-          "Connect this concept to the phase project and verify it with a small independent test."
+          "Excel Phase 03 is a prerequisite bridge, not an additional Power BI topic.",
+          "Practice Power Query merge, append, unpivot, group by, Applied Steps and basic M concepts in Excel.",
+          "Understand query folding and parameters at a conceptual level, then identify facts, dimensions and relationship keys.",
+          "Use consistent field names and business definitions when moving the prepared dataset into Power BI."
         ],
         "sections": [
           [
             "Learning objective",
-            "Explain and apply Integrated sales model and dashboard validation in a realistic workflow."
+            "Confirm readiness for Power BI Phase 02 by completing the Excel Phase 03 preparation and documenting the resulting dataset and model assumptions."
           ],
           [
-            "Mental model",
-            "Deliver a traceable model and report"
+            "Prerequisite workflow",
+            "In Excel, import the sales source, inspect column types and nulls, standardize keys, and use Power Query to perform repeatable transformations. Distinguish merge (join columns from related tables) from append (stack rows with compatible schemas). Unpivot cross-tabbed period columns into a normalized row structure when the analysis requires a date/period field."
           ],
           [
-            "Guided walkthrough",
-            "Trust depends on aligned grain, relationship paths, measure definitions and visual filters. Validate totals, subtotals, blank selections and cross-filter behavior before styling the report."
+            "Applied Steps and query design",
+            "Name steps by intent, keep source and transformation stages distinct, and avoid unnecessary repeated conversions. Parameters can centralize file paths or date limits. Query folding means compatible transformations may be translated and executed by the source; whether a step folds depends on connector and operation, so verify rather than assume."
           ],
           [
-            "Worked example",
-            "Measures: Net Sales, Units, Orders, Sales YTD, Sales Prior Year\nShip-date measure = CALCULATE([Net Sales], USERELATIONSHIP(FactSales[ShipDateKey],DimDate[DateKey]))"
+            "Model readiness checklist",
+            "Declare the fact grain; list candidate dimension tables and unique keys; identify date roles such as order date and ship date; check for duplicate dimension keys and orphan fact keys. Preserve raw source data separately from cleaned outputs so transformations can be audited."
           ],
           [
-            "Integration and failure modes",
-            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+            "Hand-off to Power BI",
+            "Deliver a prepared table set, a one-page data dictionary, transformation notes, and a grain statement. In Power BI Phase 02, use this as the input for the star schema, relationships and DAX measures. If Excel Phase 03 is incomplete, pause here and complete it before continuing."
           ]
         ],
         "syntaxNotes": [
           [
-            "Core pattern",
-            "Measures: Net Sales, Units, Orders, Sales YTD, Sales Prior Year\nShip-date measure = CALCULATE([Net Sales], USERELATIONSHIP(FactSales[ShipDateKey],DimDate[DateKey]))"
+            "Merge vs append",
+            "Merge joins tables horizontally using matching keys; append stacks rows vertically and requires compatible column meaning."
           ],
           [
-            "Important design rule",
-            "Trust depends on aligned grain, relationship paths, measure definitions and visual filters. Validate totals, subtotals, blank selections and cross-filter behavior before styling the report."
+            "Unpivot",
+            "Converts multiple attribute columns into attribute-value rows, often making time-period data easier to model."
+          ],
+          [
+            "Query folding",
+            "A Power Query optimization in which transformations are delegated to the source when supported; inspect the query plan/indicator for the actual connector and steps."
+          ],
+          [
+            "Grain statement",
+            "A precise sentence defining what one row in the fact dataset represents."
           ]
         ],
-        "code": "Measures: Net Sales, Units, Orders, Sales YTD, Sales Prior Year\nShip-date measure = CALCULATE([Net Sales], USERELATIONSHIP(FactSales[ShipDateKey],DimDate[DateKey]))",
-        "practice": "Build KPI cards, monthly trend, category breakdown and region slicer. Hand off a model diagram, grain statement, measure glossary and reproducible test cases.",
+        "code": "Excel Power Query hand-off checklist:\n1. Confirm data types and key uniqueness.\n2. Merge lookup attributes by stable keys.\n3. Append only schema-compatible period extracts.\n4. Unpivot period columns when periods are represented as separate fields.\n5. Record transformations and verify row counts before/after.",
+        "practice": "Complete the Excel Phase 03 Power Query and Power Pivot lessons first. Then prepare a sales dataset and hand-off package: clean tables, data dictionary, grain statement, relationship-key checks, and a reconciliation of source versus transformed row counts. Bring that exact package into Power BI Phase 02.",
         "workedExample": {
-          "title": "Study the pattern, then modify it",
-          "code": "Measures: Net Sales, Units, Orders, Sales YTD, Sales Prior Year\nShip-date measure = CALCULATE([Net Sales], USERELATIONSHIP(FactSales[ShipDateKey],DimDate[DateKey]))",
+          "title": "Turn a wide monthly extract into a model-ready table",
+          "code": "Source columns: SKU, Region, JanSales, FebSales, MarSales\nAfter unpivot: SKU, Region, Month, Sales\nModel grain: one row per SKU-region-month",
           "explanation": [
-            "Deliver a traceable model and report",
-            "Trust depends on aligned grain, relationship paths, measure definitions and visual filters. Validate totals, subtotals, blank selections and cross-filter behavior before styling the report.",
-            "Predict how one changed input affects the result, run the modified example, and explain any difference."
+            "A wide report stores each month in a separate column, which makes adding new periods awkward.",
+            "Unpivoting creates one row per SKU-region-month, so Month can relate to a date dimension and Sales can be aggregated consistently.",
+            "Validate total sales before and after the transformation and check that each SKU-region-month combination is unique if that is the declared grain."
           ]
         },
         "knowledgeCheck": [
           {
-            "question": "What is the central idea behind Integrated sales model and dashboard validation?",
-            "answer": "Deliver a traceable model and report"
+            "question": "Is the fourth Power BI Phase 02 syllabus item a new Power BI lesson?",
+            "answer": "No. It is a prerequisite instruction to complete Excel Phase 03 before starting Power BI Phase 02."
           },
           {
-            "question": "What should you validate before calling the result correct?",
-            "answer": "Check assumptions, boundary cases and a small independently verified example; document what the test proves and what it does not prove."
+            "question": "What is the key difference between merge and append?",
+            "answer": "Merge joins related columns by key; append stacks compatible rows from one table beneath another."
           }
         ],
         "sources": [
-          "https://learn.microsoft.com/en-us/power-bi/guidance/star-schema",
-          "https://learn.microsoft.com/en-us/dax/calculate-function-dax",
-          "https://learn.microsoft.com/en-us/dax/time-intelligence-functions-dax"
+          "https://learn.microsoft.com/en-us/power-query/power-query-folding",
+          "https://learn.microsoft.com/en-us/power-query/unpivot-column"
         ]
       }
     ]
