@@ -1730,7 +1730,7 @@ function openGuidedLesson(topicIndex = 0, track, phase = track?.phases?.[0], pha
   if (!track || !track.id || !phase) return;
   const authoredLesson = phaseIndex === 0
     ? (track.id === "fullstack" ? guidedLessons[topicIndex] : foundationLessons[track.id]?.[topicIndex])
-    : (phaseIndex === 1 ? phaseTwoLessons[track.id]?.[topicIndex] : null);
+    : (phaseIndex === 1 ? (track.id === "fullstack" ? (phaseTwoLessons.fullstack[topicIndex] || fullStackPhaseLessons[0]?.[topicIndex]) : phaseTwoLessons[track.id]?.[topicIndex]) : null);
   const lesson = authoredLesson || {
     title: phase.topics[topicIndex] || "Course topic",
     lead: `Study this topic within ${phase.title}. Use the syllabus checkpoints and applied project to connect the concept to a working implementation.`,
