@@ -13,10 +13,14 @@
   } catch (_) {
     status.textContent = "Preferences are available for this session; browser storage is unavailable.";
   }
+  const homeGoal = document.querySelector("#home-goal-total");
+  function syncGoal() { if (homeGoal) homeGoal.textContent = goal.value + "h"; }
+  syncGoal();
   function persist() {
     try {
       localStorage.setItem(key, JSON.stringify({weeklyGoal: goal.value, reduceMotion: motion.checked}));
       document.documentElement.classList.toggle("user-reduced-motion", motion.checked);
+      syncGoal();
       status.textContent = "Preferences saved on this device.";
     } catch (_) {
       status.textContent = "Could not save preferences in this browser.";
