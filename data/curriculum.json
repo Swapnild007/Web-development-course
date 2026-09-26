@@ -32,7 +32,7 @@
             "Node backend with Express/Nest, middleware, REST, Zod and dependency injection",
             "PostgreSQL normalization, indexes, transactions, Prisma/Drizzle"
           ],
-          "project": "Build a CRUD task app with Next.js, Prisma and PostgreSQL, auth-gated routes, optimistic updates and validated Server Actions.",
+          "project": "Build a CRUD task application with Next.js App Router, Prisma and PostgreSQL. Use Server Components for suitable reads, validated Server Actions for authenticated mutations, owner-scoped access, loading/error states and optimistic updates with rollback. Treat the Express API lesson as a separate alternative-service exercise, not a second required CRUD stack.",
           "checkpoints": [
             "Implement generic useFetch",
             "Explain Next caching and revalidatePath",
@@ -358,5 +358,5 @@
     }
   ],
   "sequenceNote": "Excel Track Phase 3 introduces Power Query and data modeling that scaffold Power BI Track Phase 2. Complete Excel Phase 3 before beginning Power BI Phase 2. Full-stack and Python can be studied in parallel from day one.",
-  "sourceNote": "The four tracks and phase outlines follow the supplied Master Syllabus. Full-stack Web Development has authored guided lessons across Phases 1–4, with expanded Phase 2 concepts and implementation labs. Python, Excel, and Power BI have authored guided lessons for Phases 1–2; their Phases 3–4 remain syllabus outlines and need lesson authoring. Topics without dedicated lesson content show a clearly identified study scaffold, not a complete tutorial."
+  "sourceNote": "The four tracks and phase outlines follow the supplied Master Syllabus. Full-stack Web Development has guided lessons across all four phases, including expanded Phase 02 concepts, project integration decisions, and acceptance-based labs. Python, Excel, and Power BI have guided lessons for Phases 1–2; Phases 3–4 are syllabus outlines awaiting full lesson authoring."
 }
