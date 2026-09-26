@@ -358,5 +358,5 @@
     }
   ],
   "sequenceNote": "Excel Track Phase 3 introduces Power Query and data modeling that scaffold Power BI Track Phase 2. Complete Excel Phase 3 before beginning Power BI Phase 2. Full-stack and Python can be studied in parallel from day one.",
-  "sourceNote": "The four tracks and phase outlines follow the supplied Master Syllabus. Guided lesson pages are authored for Full-stack Web Development Phases 1–4, including expanded Phase 2 concepts and implementation labs. Python, Excel, and Power BI currently have Phase 1 guided lessons; their Phases 2–4 are syllabus outlines, not yet complete lesson material."
+  "sourceNote": "The four tracks and phase outlines follow the supplied Master Syllabus. Full-stack Web Development has authored guided lessons across Phases 1–4, with expanded Phase 2 concepts and implementation labs. Python, Excel, and Power BI have authored guided lessons for Phases 1–2; their Phases 3–4 remain syllabus outlines and need lesson authoring. Topics without dedicated lesson content show a clearly identified study scaffold, not a complete tutorial."
 }
