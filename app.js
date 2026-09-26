@@ -119,14 +119,34 @@ function renderTracks(filter = "") {
     );
     const heading = makeElement("h3", "", track.name);
     const copy = makeElement("p", "", track.description);
+    const trackedPhases = track.id === "fullstack" ? [0, 1, 2, 3] : [0, 1];
+    const trackedKeys = [];
+    trackedPhases.forEach(phaseIndex => {
+      (track.phases[phaseIndex]?.topics || []).forEach((topic, topicIndex) => {
+        trackedKeys.push("learning-studio.lesson." + track.id + ".phase" + (phaseIndex + 1) + ".topic" + topicIndex);
+      });
+    });
+    const done = trackedKeys.filter(key => readSaved(key) === "complete").length;
+    const status = makeElement("div", "track-status-row");
+    const state = done === trackedKeys.length && trackedKeys.length > 0 ? "Completed" : (done > 0 ? "In progress" : "Ready to start");
+    status.append(makeElement("span", "track-status", state), makeElement("span", "track-progress-text", done + " / " + trackedKeys.length + " topics"));
+    const progress = makeElement("div", "track-progress", "");
+    progress.setAttribute("role", "progressbar");
+    progress.setAttribute("aria-label", track.name + " guided topic completion");
+    progress.setAttribute("aria-valuemin", "0");
+    progress.setAttribute("aria-valuemax", String(trackedKeys.length));
+    progress.setAttribute("aria-valuenow", String(done));
+    const progressFill = makeElement("span", "");
+    progressFill.style.width = (trackedKeys.length ? (done / trackedKeys.length * 100) : 0) + "%";
+    progress.append(progressFill);
     const bottom = makeElement("div", "card-bottom");
-    bottom.append(makeElement("span", "", "Beginner to advanced"));
-    const button = makeElement("button", "open-track", "View roadmap →");
+    bottom.append(makeElement("span", "", track.phases.length + " learning phases"));
+    const button = makeElement("button", "open-track", "View learning path →");
     button.type = "button";
     button.setAttribute("aria-label", `View ${track.name} roadmap`);
     button.addEventListener("click", () => openRoadmap(track));
     bottom.append(button);
-    card.append(top, heading, copy, bottom);
+    card.append(top, heading, copy, status, progress, bottom);
     trackRoot.append(card);
   });
 }
@@ -2047,6 +2067,10 @@ function renderProgress() {
   if (!completed || !meter || !fill || !status || !lessonState) return;
   if (available) available.textContent = String(lessonIds.length);
   completed.textContent = String(completedCount);
+  const homeCompleted = document.querySelector("#home-completed-total");
+  const homeTracks = document.querySelector("#home-track-total");
+  if (homeCompleted) homeCompleted.textContent = String(completedCount);
+  if (homeTracks) homeTracks.textContent = String(tracks.length || 4);
   meter.setAttribute("aria-valuemax", String(lessonIds.length));
   meter.setAttribute("aria-valuenow", String(completedCount));
   fill.style.width = `${lessonIds.length ? (completedCount / lessonIds.length) * 100 : 0}%`;
