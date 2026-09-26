@@ -371,7 +371,29 @@
   "sourceNote": "The four tracks and phase outlines follow the supplied Master Syllabus. Full-stack Web Development has guided lessons across all four phases, including expanded Phase 02 concepts, project integration decisions, and acceptance-based labs. Python, Excel, and Power BI have guided lessons for Phases 1–2; Phases 3–4 are syllabus outlines awaiting full lesson authoring."
 }
 </script>
-  <script src="app.js?v=20260926-inline-curriculum" defer></script>
+  <script>
+  (function () {
+    function showRuntimeIssue(message) {
+      var panel = document.getElementById("runtime-diagnostic");
+      if (!panel) {
+        panel = document.createElement("pre");
+        panel.id = "runtime-diagnostic";
+        panel.setAttribute("role", "alert");
+        panel.style.cssText = "position:fixed;z-index:99999;left:10px;right:10px;bottom:90px;max-height:35vh;overflow:auto;white-space:pre-wrap;padding:12px;border:2px solid #b42318;border-radius:12px;background:#fff;color:#7a271a;font:13px/1.4 monospace;box-shadow:0 8px 28px #0002";
+        document.body.appendChild(panel);
+      }
+      panel.textContent = "App diagnostic (send this message):\\n" + message;
+    }
+    window.addEventListener("error", function (event) {
+      showRuntimeIssue((event.message || "Script/resource error") + (event.filename ? "\\n" + event.filename + ":" + event.lineno + ":" + event.colno : ""));
+    });
+    window.addEventListener("unhandledrejection", function (event) {
+      var reason = event.reason;
+      showRuntimeIssue("Unhandled promise: " + (reason && reason.stack ? reason.stack : String(reason)));
+    });
+  }());
+</script>
+<script src="app.js?v=20260926-inline-curriculum" defer></script>
   <script src="preferences.js?v=20260926-lms2" defer></script>
 </head>
 <body>
