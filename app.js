@@ -413,6 +413,138 @@ const foundationLessons = {
         {question:"After changing a line to fix an error, what must you do?",answer:"Save and run the program again. A fix is not verified until the program is retested."},
         {question:"What does a syntax error usually tell you?",answer:"Python could not understand how some code was written. Use the message and indicated location as clues, then inspect and retest."}
       ]
+    },
+    {
+      title: "How a computer follows instructions",
+      lead: "Before adding more code, build a simple mental model of what a computer does: receive information, follow precise steps, and produce a result.",
+      highlight: "A computer follows the instructions it is given. It does not fill in missing human assumptions, so programmers make inputs, steps, and expected results clear.",
+      keyPoints: [
+        "Input is information a program receives.",
+        "Processing is the work performed on that information.",
+        "Output is the result produced by the program.",
+        "The same steps can produce different results when the input changes."
+      ],
+      sections: [
+        ["Use an everyday example", "Imagine a vending machine. The input could be a selected item and payment. The processing checks whether the selection is valid and enough money was provided. The output is the item, a message, or returned change. This is a useful way to think about programs without writing code yet."],
+        ["Make each step observable", "“Make the report correct” is not a precise instruction. “Read the total, compare it with the sum of the listed rows, and show a warning if they differ” gives a process and a result that can be checked. Good programs need this same clarity."],
+        ["Try a paper trace", "Choose a simple rule, such as adding two numbers. Write down the two inputs, the operation, and the output. Change one input and work through the steps again. This is called tracing: following the program’s logic with specific values."]
+      ],
+      practice: "Create a three-column table for a familiar task: Input, Processing, Output. Fill in one example row, then change the input and predict the new output. Do not write Python code for this activity.",
+      knowledgeCheck: [
+        {question:"In a calculator, what is the input when you add 4 and 7?",answer:"The numbers 4 and 7 are the inputs. The addition is the processing, and 11 is the output."},
+        {question:"Why must instructions be precise?",answer:"The computer follows the written steps and cannot reliably guess missing assumptions. Precision makes behavior predictable and testable."}
+      ]
+    },
+    {
+      title: "Programming languages, interpreters and runtimes",
+      lead: "Understand what Python is in relation to the editor and computer, using a simple translation analogy before learning more syntax.",
+      highlight: "Python is the language you write in. A Python implementation such as CPython runs your program; your editor is a separate tool for writing it.",
+      keyPoints: [
+        "A programming language gives people a structured way to express instructions.",
+        "An interpreter or runtime helps execute a program.",
+        "A compiler translates program code into another form; real language implementations can combine compilation and interpretation techniques.",
+        "The editor does not itself make Python code run."
+      ],
+      sections: [
+        ["A translation analogy", "A recipe is written in a language a cook understands. A computer needs instructions expressed in a programming language and a runtime that knows how to execute them. Python is the language used in this course; the runtime is the software that runs Python programs."],
+        ["Interpreter and compiler, simply", "An interpreter executes a program through a runtime process. A compiler translates code into another representation, such as machine code or bytecode. These are useful concepts, not rigid labels that describe every implementation perfectly. Python’s common implementation, CPython, compiles source to bytecode and executes it in a virtual machine."],
+        ["Keep the tools separate", "You may write code in a text editor or an integrated development environment (IDE). You may run it using a Run button, a terminal command, or an interactive shell. These are different interfaces to the same underlying task: asking the Python runtime to execute instructions."]
+      ],
+      practice: "Explain the roles of the language, editor, and runtime in your own words. Then draw three labeled boxes and arrows showing how your saved code gets from the editor to the runtime and how you observe the result.",
+      knowledgeCheck: [
+        {question:"Is your code editor the same thing as Python?",answer:"No. The editor helps you write and save source code. Python’s runtime executes that code."},
+        {question:"Does the interpreter/compiler distinction explain every implementation perfectly?",answer:"No. It is a helpful beginner model, but implementations can use both compilation and execution techniques."}
+      ],
+      sources: ["https://docs.python.org/3/tutorial/interpreter.html"]
+    },
+    {
+      title: "Python in the real world: versions and implementations",
+      lead: "Learn why Python has versions, what CPython means, and how to check the version installed on your own device.",
+      highlight: "Use a supported Python 3 version that matches your course tools. When troubleshooting, report the exact version rather than saying only “I have Python.”",
+      keyPoints: [
+        "Python evolves through version releases that can add features and fix issues.",
+        "CPython is the most widely used implementation, but it is not the only one.",
+        "A project may require a particular supported version or version range.",
+        "Version details help reproduce and diagnose behavior."
+      ],
+      sections: [
+        ["What a version tells you", "A version number identifies a release of the language implementation. Newer releases may introduce syntax or library features that older releases do not have. A project’s setup instructions should state its supported version range."],
+        ["What CPython means", "CPython is the reference implementation written primarily in C. Other implementations exist for different technical goals. For this beginner course, you can focus on using Python 3 and checking the implementation only when a task or troubleshooting guide asks for it."],
+        ["Check, do not guess", "Use the version-check instruction from the setup guide for your operating system. Read the complete output and record it. If the command is not recognized, it may mean Python is not installed or its executable is not available through your current command path; it does not mean you should randomly install several versions."]
+      ],
+      practice: "Run the course’s version-check command on your device and record the exact output. If you cannot run it yet, write down your operating system and mark the setup check as blocked instead of guessing a version.",
+      knowledgeCheck: [
+        {question:"Why should you include the exact Python version in a bug report?",answer:"It helps another person reproduce the environment and check whether a feature or behavior differs by version."},
+        {question:"Is CPython the only Python implementation?",answer:"No. CPython is the most widely used implementation, but alternatives exist."}
+      ],
+      sources: ["https://www.python.org/downloads/", "https://docs.python.org/3/"]
+    },
+    {
+      title: "Run a script and explore the interactive shell",
+      lead: "Compare a saved Python file with the interactive shell, and learn what it means to run a program from a command.",
+      highlight: "A script is saved for reuse. The interactive shell is a live conversation with the Python interpreter, useful for trying a small idea quickly.",
+      keyPoints: [
+        "A .py file stores Python source code.",
+        "The interactive shell runs expressions as you enter them.",
+        "A terminal is a place to enter operating-system commands.",
+        "Command-line arguments let a program receive values when it starts."
+      ],
+      sections: [
+        ["Saved script", "A script is a file containing instructions, usually saved with a .py extension. You can reopen it, edit it, and run it again. This makes scripts suitable for repeatable tasks and projects."],
+        ["Interactive shell", "The interactive shell (often called the REPL) reads an expression, evaluates it, prints a result, and waits for the next input. It is useful for short experiments, but work you want to keep should be saved in a file."],
+        ["Terminal and arguments", "A terminal accepts commands for your operating system. A command can ask Python to run a saved file. Later, command-line arguments will let you supply information such as a filename or option when starting a program. For now, just recognize that the command used to start a program is separate from the Python instructions inside the file."]
+      ],
+      practice: "If your setup is ready, run one tiny expression in the interactive shell, then run your saved greeting file again. Write one sentence explaining which result is temporary experimentation and which is stored in your file. If the terminal is new, identify where your editor’s Run action displays output.",
+      knowledgeCheck: [
+        {question:"When should you use a saved script instead of the REPL?",answer:"Use a saved script when you want to keep, edit, share, and rerun a sequence of instructions."},
+        {question:"Are terminal commands and Python statements the same?",answer:"No. Terminal commands are handled by the operating system’s command interface; Python statements are instructions in a Python program."}
+      ],
+      sources: ["https://docs.python.org/3/tutorial/interpreter.html"]
+    },
+    {
+      title: "Source files, syntax errors and runtime errors",
+      lead: "Learn the difference between the text you write, the errors that stop Python understanding it, and errors that happen while the program is running.",
+      highlight: "An error message is evidence. Read it, locate the relevant code, make one controlled change, and run the program again.",
+      keyPoints: [
+        "Source code is the human-readable text saved in a program file.",
+        "A syntax error means the code does not follow Python’s grammar.",
+        "A runtime error happens while executing a program.",
+        "A traceback shows the path of calls and details about an unhandled error."
+      ],
+      sections: [
+        ["Source file", "A source file stores the instructions you write. When you run it, Python reads the source and attempts to execute it. Make sure you know which file you edited and which file you ran; similarly named copies can cause confusing results."],
+        ["Syntax versus runtime", "A missing closing parenthesis is a syntax problem: Python cannot parse the instruction. Dividing by zero during a calculation is a runtime problem: the program starts executing, but an operation fails. The exact error text can vary with context and Python version."],
+        ["Read a traceback", "A traceback is a diagnostic report. Read from the bottom for the exception type and message, then inspect the file and line references above it. The line shown may be where the failure became visible, not necessarily where the underlying mistake began. Use the traceback as a clue, not as an automatic answer."]
+      ],
+      code: "print(\"Starting...\")\nprint(10 / 0)",
+      practice: "Run a program with the intentional missing-parenthesis mistake from the debugging lesson, then restore it. If you are ready for a second example, predict what the division-by-zero script will do before running it. Record the error type and the line number shown.",
+      knowledgeCheck: [
+        {question:"What is the key difference between a syntax error and a runtime error?",answer:"A syntax error prevents Python from understanding the source code structure. A runtime error occurs while the program is executing."},
+        {question:"Does the traceback always point to the original cause?",answer:"Not necessarily. It points to where the error was raised and shows the call path; the underlying cause may be earlier in the code or input."}
+      ],
+      sources: ["https://docs.python.org/3/tutorial/errors.html"]
+    },
+    {
+      title: "Use documentation and ask precise technical questions",
+      lead: "Build a practical learning habit: search the official documentation, test a small example, and ask for help with enough evidence to reproduce the issue.",
+      highlight: "A useful question includes what you tried, what you expected, what actually happened, and the smallest relevant example.",
+      keyPoints: [
+        "Official documentation is the primary reference for Python behavior and standard-library tools.",
+        "Search for the concept or exact error message, not just “Python not working.”",
+        "A minimal reproducible example removes unrelated details.",
+        "Never include passwords, access tokens, or private data in a help request."
+      ],
+      sections: [
+        ["Find a trustworthy reference", "Start with the official Python tutorial and library reference. The tutorial teaches core language ideas; the library reference documents built-in features and modules. Read the page title and version context so you know which documentation you are using."],
+        ["Turn a vague problem into evidence", "Instead of “my code is broken,” provide the exact error text, the smallest code sample that reproduces it, the command or Run action used, the expected result, and the actual result. Include your Python version and operating system when relevant."],
+        ["Ask safely and clearly", "Remove personal information and secrets before sharing code or screenshots. Keep the example small and preserve the exact error message. A precise question makes it easier for another learner or mentor to help you understand the cause rather than merely paste a fix."]
+      ],
+      practice: "Open the official Python tutorial. Find the page about the interpreter or errors. Write a short question template with: goal, smallest example, exact error or output, expected result, Python version, and what you already tried. Do not include any credentials or private work data.",
+      knowledgeCheck: [
+        {question:"What makes a help request reproducible?",answer:"It includes a small example, exact steps or command, expected behavior, actual behavior, and relevant environment details."},
+        {question:"What should you remove before sharing a code sample?",answer:"Passwords, API keys, tokens, personal information, and private or confidential data."}
+      ],
+      sources: ["https://docs.python.org/3/tutorial/", "https://docs.python.org/3/library/"]
     }
   ],
   excel: [
