@@ -115,18 +115,23 @@
         {
           "title": "Production Mastery & Capstone",
           "topics": [
-            "Docker and production image optimization",
-            "GitHub Actions CI/CD, cloud deployment and zero-downtime migrations",
-            "Observability, structured logging and incident debugging",
-            "Redis, sessions, caching and cache invalidation",
-            "RBAC and tenant isolation"
+            "Docker production images: multi-stage builds, layer caching, non-root runtime and .dockerignore",
+            "CI/CD with GitHub Actions: lint, typecheck, tests, build, preview environments and gated deployment",
+            "Automated PostgreSQL migrations: expand-and-contract, backfills, compatibility and recovery",
+            "Observability: structured logs, metrics, distributed traces, health/readiness checks and incident response",
+            "Cloud deployment: runtime configuration, TLS, secure networking, CDN/edge caching, rollout and rollback",
+            "Redis: session store, cache-aside, cache invalidation, TTLs, eviction and stampede control",
+            "Production capstone: multi-tenant SaaS launch, RBAC, tenant isolation, audit logging and operational handover"
           ],
-          "project": "Deliver a containerized multi-tenant SaaS with CI/CD, caching, RBAC, tenant isolation, logging, a public URL and monitoring.",
+          "project": "Ship the Phase 3 multi-tenant SaaS fully containerized with a CI/CD pipeline, safe migrations, Redis sessions/cache, RBAC and tenant isolation, structured logging/tracing, cloud deployment, public URL and monitoring dashboard. Include reproducible setup, automated tests, security review and incident runbooks.",
           "checkpoints": [
-            "Keep Docker image below 150 MB",
-            "Plan zero-downtime migrations",
-            "Explain cache invalidation",
-            "Diagnose a production incident"
+            "Build and run a multi-stage non-root Docker image; measure image size and scan it",
+            "Configure CI gates so lint, typecheck, tests, build and image checks must pass before deployment",
+            "Design and test a zero-downtime expand-and-contract migration with a resumable backfill",
+            "Diagnose a simulated 500 spike using correlated logs, metrics and traces",
+            "Set safe CDN cache policy for public static assets and private tenant responses",
+            "Demonstrate Redis invalidation, session expiry/revocation and safe outage behavior",
+            "Prove RBAC and tenant isolation with two synthetic tenants and deliver a rollback/runbook package"
           ]
         }
       ]
