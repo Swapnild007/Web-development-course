@@ -1724,11 +1724,13 @@ document.querySelector("#back-to-roadmap").addEventListener("click", () => {
   phaseList.scrollTop = 0;
 });
 
+let phaseTwoLessons = {fullstack:[],python:[],excel:[],powerbi:[]};
+
 function openGuidedLesson(topicIndex = 0, track, phase = track?.phases?.[0], phaseIndex = 0) {
   if (!track || !track.id || !phase) return;
-  const authoredLesson = track.id === "fullstack"
-    ? (phaseIndex === 0 ? guidedLessons[topicIndex] : fullStackPhaseLessons[phaseIndex - 1]?.[topicIndex])
-    : (phaseIndex === 0 ? foundationLessons[track.id]?.[topicIndex] : null);
+  const authoredLesson = phaseIndex === 0
+    ? (track.id === "fullstack" ? guidedLessons[topicIndex] : foundationLessons[track.id]?.[topicIndex])
+    : (phaseIndex === 1 ? phaseTwoLessons[track.id]?.[topicIndex] : null);
   const lesson = authoredLesson || {
     title: phase.topics[topicIndex] || "Course topic",
     lead: `Study this topic within ${phase.title}. Use the syllabus checkpoints and applied project to connect the concept to a working implementation.`,
