@@ -333,26 +333,87 @@ const guidedLessons = {
 
 const foundationLessons = {
   python: [
-    { title:"Python syntax, values and truthiness", lead:"Python programs are sequences of statements that operate on objects. Learn to read values, types, and branching before building larger scripts.", sections:[
-      ["Names, objects, and assignment","A variable name is a reference to an object, not a box that permanently owns a value. Assignment binds a name; assigning one name to another can make both refer to the same mutable object. Use type(value) when learning what a value is, and repr(value) when you need an unambiguous representation."],
-      ["Expressions, indentation, and truthiness","Python uses indentation to group blocks. if, elif, and else select a branch based on a condition. False, None, numeric zero, and empty collections are falsey; most other objects are truthy. Prefer explicit comparisons when the distinction matters, such as value is None."],
-      ["Mutability and safe updates","Numbers, strings, and tuples are immutable; lists and dictionaries are mutable. An operation that mutates a list changes the same object. Make a copy when you need an independent collection, and do not confuse a shallow copy with a deep copy of nested objects."]
-    ], code:"amount = 125\nname = \"Travel\"\nitems = [\"bus\", \"train\"]\n\nif amount and items:\n    print(f\"{name}: {amount} for {len(items)} items\")", practice:"Write a small script that stores a category, an amount, and a list of expenses. Print a readable summary. Then test the condition with 0, an empty list, and None.", sources:["https://docs.python.org/3/tutorial/introduction.html"]},
-    { title:"Built-in data structures and complexity", lead:"Choose a collection by the operations your program performs most often, not just by how its literal looks.", sections:[
-      ["List, tuple, set, and dictionary","A list is ordered and mutable, suited to sequences. A tuple is ordered and immutable, useful for fixed records. A set stores unique hashable values and supports membership and set algebra. A dictionary maps hashable keys to values and preserves insertion order in modern Python."],
-      ["Practical complexity","List indexing is O(1); appending is amortized O(1); inserting near the front and searching a list are O(n). Set and dictionary membership are average O(1), though worst-case behavior can differ. These are useful models, not guarantees about every workload or implementation."],
-      ["Memory and data shape","A dictionary is convenient for looking up a record by key; a list is convenient for preserving a sequence. For nested data, draw a tiny example and identify which level represents a row, a field, or a group. Measure before optimizing memory."]
-    ], code:"expenses = [120, 80, 120]\nunique_amounts = set(expenses)\nby_category = {\"food\": 120, \"travel\": 80}\n\nprint(120 in unique_amounts)  # True\nprint(by_category[\"food\"])  # 120", practice:"Create a list of five transactions. Use a dictionary to total amounts by category and a set to list the unique categories. Explain why each structure fits its task.", sources:["https://docs.python.org/3/tutorial/datastructures.html"]},
-    { title:"Strings, Unicode and encoding", lead:"Text is made of Unicode code points in Python; bytes are sequences of values used to represent encoded data.", sections:[
-      ["Text versus bytes","str represents text; bytes represents raw byte values. Encoding converts text to bytes, while decoding converts bytes to text. UTF-8 is a common encoding for files and network data, but you should still specify the encoding when reading and writing files."],
-      ["Normalize and inspect text","Visually identical text can have different underlying code-point sequences. When comparing user-entered text, consider Unicode normalization when appropriate. Avoid assuming one character equals one byte or one visible glyph."],
-      ["Robust file handling","Open text files with an explicit encoding such as utf-8. Handle UnicodeDecodeError when input may be malformed, and choose a documented error policy rather than silently corrupting data."]
-    ], code:"text = \"café\"\ndata = text.encode(\"utf-8\")\nprint(data)\nprint(data.decode(\"utf-8\"))", practice:"Write a string containing accented characters, encode it to UTF-8, and decode it. Explain why len(text) and len(data) may differ.", sources:["https://docs.python.org/3/howto/unicode.html"]},
-    { title:"Functions, arguments and scope", lead:"Functions package a task behind a name and a clear input/output contract.", sections:[
-      ["Define and return","Use def to create a function. Parameters name the inputs; return sends a result to the caller. A function without an explicit return returns None. Keep a function focused and make side effects visible in its name or documentation."],
-      ["Default arguments and keyword arguments","Default values are evaluated once when the def statement executes. Avoid mutable defaults such as [] because calls can share the same object; use None and create a new list inside the function. Keyword-only parameters can make optional behavior clearer."],
-      ["LEGB name lookup","Python resolves local, enclosing, global, and built-in names in that order. Prefer passing dependencies as parameters instead of modifying global state. *args collects extra positional arguments; **kwargs collects extra keyword arguments."]
-    ], code:"def add_expense(amount, category, tags=None):\n    if tags is None:\n        tags = []\n    return {\n        \"amount\": amount,\n        \"category\": category,\n        \"tags\": tags,\n    }", practice:"Write a function that accepts amount and category, plus optional tags. Call it twice without tags and prove the returned tag lists are independent.", sources:["https://docs.python.org/3/tutorial/controlflow.html#defining-functions"]}
+    {
+      title: "Your first steps: instructions and algorithms",
+      lead: "Start with everyday instructions before touching programming syntax. You will learn what makes a set of steps clear enough for a computer to follow.",
+      highlight: "A computer does not guess what you meant. Clear steps and stated assumptions are the beginning of programming.",
+      keyPoints: [
+        "An algorithm is a step-by-step plan for a task.",
+        "A program is a set of instructions expressed for a computer to execute.",
+        "The order of steps can change the outcome."
+      ],
+      sections: [
+        ["Start without code", "Imagine explaining how to make a cup of tea to a robot that cannot fill in missing details. What would you need to say? Start by listing actions in order, using ordinary words. There is no Python syntax to memorize in this lesson."],
+        ["Make a vague task clearer", "“Get the report ready” leaves questions unanswered. Which report? What does ready mean? A more useful instruction could be: “Open the daily report, check that its date is today, and confirm the file is saved.” Clear instructions describe actions someone can observe."],
+        ["Meet the programming words", "An algorithm is the plan: the ordered steps for solving a task. A program is that plan written in a form a computer can execute. In this course, Python will be the language we use to write those instructions."]
+      ],
+      practice: "Choose a familiar task such as packing your bag. Write 4–6 steps in everyday language. State where you start and what finished looks like. Ask: could a person who does not know your routine follow this without guessing?",
+      knowledgeCheck: [
+        {question:"Which is the clearest instruction?",answer:"“Check the report” is still vague. “Open the daily report and verify that the date field shows today” names an action and a checkable result."},
+        {question:"What is an algorithm?",answer:"A step-by-step plan for completing a task. It can be described without writing code."}
+      ]
+    },
+    {
+      title: "Get your Python workspace ready",
+      lead: "Set up or verify the tools you will use to write and run Python. You will learn what each tool is for before using it.",
+      highlight: "The editor is where you write the instructions; Python runs the saved instructions. These are different jobs.",
+      keyPoints: [
+        "Python is the language and runtime used in this course.",
+        "A code editor helps you create and save a program file.",
+        "The terminal or editor run command starts the program."
+      ],
+      sections: [
+        ["What you need", "You need Python 3, a code editor, and a way to run a command or use the editor’s Run action. A terminal is a text-based place to give your computer commands. Do not worry if the word terminal is new; the setup guide will show where to find it on your device."],
+        ["Check before installing", "First find out whether Python is already available. Follow the operating-system-specific setup steps in the course setup guide. Use the exact command shown there and compare the result with the expected version output. Do not copy commands from an unrelated device guide."],
+        ["If setup fails", "Stop and capture the full error text rather than repeatedly trying random fixes. Record your device and operating system, the command or button you used, and what you expected to happen. This is useful evidence for troubleshooting."]
+      ],
+      practice: "Complete the setup checklist for your device. Record your operating system, editor name, Python version shown by the setup check, and the method you will use to run a saved script. If setup is blocked, submit the exact error and continue with the lesson’s no-install prediction activity.",
+      knowledgeCheck: [
+        {question:"What is the editor for?",answer:"It is where you write and save the program text. Python is what executes that saved program."},
+        {question:"What should you do if a setup command fails?",answer:"Capture the full error and exact command, note your operating system and expected result, then follow the relevant troubleshooting step or ask for help with that evidence."}
+      ]
+    },
+    {
+      title: "Read and run your first tiny program",
+      lead: "Meet a tiny Python script with only one new action: displaying a line of text. Predict what it will show, run it, and compare.",
+      highlight: "You do not need to understand every symbol yet. First learn to connect one written instruction to one visible result.",
+      keyPoints: [
+        "A script is a saved file containing instructions.",
+        "The print instruction displays text on the screen.",
+        "The output is what appears after the script runs."
+      ],
+      sections: [
+        ["Look at the instruction", "Read the example below from left to right. The word print is the instruction name. The text in quotation marks is the message we want displayed. The parentheses hold the message for print. We will explain punctuation and syntax gradually, not all at once."],
+        ["Predict before running", "Before pressing Run, write down exactly what you think will appear. Then run the saved file and compare the actual output with your prediction. If the result differs, look carefully at spelling, quotation marks, and whether the file was saved."],
+        ["Code versus output", "The instruction you typed is called code. The line displayed after running it is output. Code describes what to do; output is the result you can observe. A program can also do work without printing anything, but for now we use visible output to make the first run easy to verify."]
+      ],
+      code: "print(\\"Hello, Python!\\")",
+      practice: "Create a file named first_steps.py and enter one print instruction that displays your first name or a neutral greeting. Save and run it. Write down the exact output. Then change the displayed message, save again, and run it a second time.",
+      knowledgeCheck: [
+        {question:"What is output?",answer:"The result displayed by the program when it runs. It is not the same as the code you wrote."},
+        {question:"What does print do in this example?",answer:"It displays the text message on the screen. It does not install Python or save the file."}
+      ]
+    },
+    {
+      title: "When something goes wrong: first debugging steps",
+      lead: "Learn to treat an error as information, not as proof you cannot code. Practice checking one small problem at a time.",
+      highlight: "Debugging is a calm loop: notice what happened, inspect the clue, make one change, and run the program again.",
+      keyPoints: [
+        "An error message is a clue about what went wrong.",
+        "Change one thing at a time so you can see what fixed it.",
+        "Always rerun after editing to verify the fix."
+      ],
+      sections: [
+        ["A safe first mistake", "In your first_steps.py file, temporarily remove the closing parenthesis from the print line. Save and run it. Python should report a syntax error because the instruction is incomplete. Restore the missing parenthesis, save, and run again."],
+        ["Read the clue", "A syntax error means Python cannot understand the way the instruction is written. The message usually points to a location near the problem. The exact wording can vary by Python version and editor. Read the message and inspect the line it identifies instead of guessing."],
+        ["Use a repeatable routine", "First reproduce the problem. Next, inspect the full message and the relevant line. Make one small correction. Save and rerun. Finally, compare the new result with what you expected and record what changed."]
+      ],
+      practice: "Use the deliberate missing-parenthesis mistake. In a short debug note, write what you changed, what error appeared, how you corrected it, and what happened on the successful rerun. Do not leave the file broken when you finish.",
+      knowledgeCheck: [
+        {question:"After changing a line to fix an error, what must you do?",answer:"Save and run the program again. A fix is not verified until the program is retested."},
+        {question:"What does a syntax error usually tell you?",answer:"Python could not understand how some code was written. Use the message and indicated location as clues, then inspect and retest."}
+      ]
+    }
   ],
   excel: [
     { title:"How Excel calculates formulas and references", lead:"A worksheet is a grid, but a formula is a dependency that Excel recalculates when its inputs change.", sections:[
