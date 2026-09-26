@@ -31,7 +31,7 @@
           ],
           [
             "Integration and failure modes",
-            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+            "Define the source contract first (required keys, accepted status values, numeric amount rules). Build the generator over an iterable rather than loading all records. Verify order preservation, zero/negative amounts, missing keys and one-pass exhaustion. If the downstream consumer needs a second pass, explicitly materialize once or create a fresh generator."
           ]
         ],
         "syntaxNotes": [
@@ -45,7 +45,7 @@
           ]
         ],
         "code": "def positive_amounts(rows):\n    for row in rows:\n        amount = row.get('amount', 0)\n        if amount > 0:\n            yield amount\n\npipeline = (amount * 1.1 for amount in positive_amounts(rows))\nprint(list(pipeline))",
-        "practice": "Add yield from to delegate a sub-generator; compare memory and reuse behavior against a list comprehension.",
+        "practice": "Add yield from to delegate a sub-generator; compare memory and reuse behavior against a list comprehension. Submission evidence: include the finished artifact, a short explanation of the design choice, and test evidence for at least one normal case and two edge cases.",
         "workedExample": {
           "title": "Study the pattern, then modify it",
           "code": "def positive_amounts(rows):\n    for row in rows:\n        amount = row.get('amount', 0)\n        if amount > 0:\n            yield amount\n\npipeline = (amount * 1.1 for amount in positive_amounts(rows))\nprint(list(pipeline))",
@@ -99,7 +99,7 @@
           ],
           [
             "Integration and failure modes",
-            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+            "Separate retry policy from the operation: retry only transient failures, cap attempts, use a delay/backoff policy where appropriate, and never retry validation or authorization failures blindly. Ensure the wrapper returns the wrapped result, preserves metadata and does not hide exceptions. Test cleanup on success and exception, including the exception path."
           ]
         ],
         "syntaxNotes": [
@@ -113,7 +113,7 @@
           ]
         ],
         "code": "from functools import wraps\nfrom time import perf_counter\n\ndef timed(fn):\n    @wraps(fn)\n    def wrapper(*args, **kwargs):\n        start = perf_counter()\n        try:\n            return fn(*args, **kwargs)\n        finally:\n            print(f'{fn.__name__}: {perf_counter()-start:.3f}s')\n    return wrapper\n\n@timed\ndef total(values):\n    return sum(values)",
-        "practice": "Implement a bounded retry decorator and both class-based and contextlib.contextmanager forms. Verify exception propagation and cleanup.",
+        "practice": "Implement a bounded retry decorator and both class-based and contextlib.contextmanager forms. Verify exception propagation and cleanup. Submission evidence: include the finished artifact, a short explanation of the design choice, and test evidence for at least one normal case and two edge cases.",
         "workedExample": {
           "title": "Study the pattern, then modify it",
           "code": "from functools import wraps\nfrom time import perf_counter\n\ndef timed(fn):\n    @wraps(fn)\n    def wrapper(*args, **kwargs):\n        start = perf_counter()\n        try:\n            return fn(*args, **kwargs)\n        finally:\n            print(f'{fn.__name__}: {perf_counter()-start:.3f}s')\n    return wrapper\n\n@timed\ndef total(values):\n    return sum(values)",
@@ -167,7 +167,7 @@
           ],
           [
             "Integration and failure modes",
-            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+            "Keep value objects immutable where useful, validate identifiers at construction boundaries, and make loan state transitions explicit. Test unknown ISBN/member, duplicate active loan, return of a non-loaned book, and repeated return. Avoid inheritance solely to share implementation; inject the catalog/storage collaborator into the service."
           ]
         ],
         "syntaxNotes": [
@@ -181,7 +181,7 @@
           ]
         ],
         "code": "from dataclasses import dataclass\nfrom abc import ABC, abstractmethod\n\n@dataclass(frozen=True)\nclass Book:\n    isbn: str\n    title: str\n\nclass Catalog(ABC):\n    @abstractmethod\n    def find(self, isbn: str) -> Book | None:\n        ...",
-        "practice": "Create Book, Member and Loan records plus an in-memory Catalog. Enforce the invariant that a book cannot have two active loans; test equality and hashing assumptions.",
+        "practice": "Create Book, Member and Loan records plus an in-memory Catalog. Enforce the invariant that a book cannot have two active loans; test equality and hashing assumptions. Submission evidence: include the finished artifact, a short explanation of the design choice, and test evidence for at least one normal case and two edge cases.",
         "workedExample": {
           "title": "Study the pattern, then modify it",
           "code": "from dataclasses import dataclass\nfrom abc import ABC, abstractmethod\n\n@dataclass(frozen=True)\nclass Book:\n    isbn: str\n    title: str\n\nclass Catalog(ABC):\n    @abstractmethod\n    def find(self, isbn: str) -> Book | None:\n        ...",
@@ -235,7 +235,7 @@
           ],
           [
             "Integration and failure modes",
-            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+            "Use annotations as a static contract and keep runtime checks for external data. A Protocol should describe only the members the function actually needs. Check None before dereferencing optional values; avoid broad Any and unnecessary casts. Run mypy --strict and add tests for valid, invalid, empty and heterogeneous inputs."
           ]
         ],
         "syntaxNotes": [
@@ -249,7 +249,7 @@
           ]
         ],
         "code": "from typing import Protocol\n\nclass HasAmount(Protocol):\n    amount: int\n\ndef total_amount(items: list[HasAmount]) -> int:\n    return sum(item.amount for item in items)\n\nprint(list(filter(lambda n: n > 0, [-2, 0, 4])))",
-        "practice": "Annotate the library project, use Optional/Union where needed, define a Protocol, then run mypy --strict and resolve errors without blanket ignores.",
+        "practice": "Annotate the library project, use Optional/Union where needed, define a Protocol, then run mypy --strict and resolve errors without blanket ignores. Submission evidence: include the finished artifact, a short explanation of the design choice, and test evidence for at least one normal case and two edge cases.",
         "workedExample": {
           "title": "Study the pattern, then modify it",
           "code": "from typing import Protocol\n\nclass HasAmount(Protocol):\n    amount: int\n\ndef total_amount(items: list[HasAmount]) -> int:\n    return sum(item.amount for item in items)\n\nprint(list(filter(lambda n: n > 0, [-2, 0, 4])))",
@@ -305,7 +305,7 @@
           ],
           [
             "Integration and failure modes",
-            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+            "Spill formulas need a clear destination area; merged cells, table boundaries and occupied cells can block the result. Test no-match and duplicate-only data, and confirm new rows are included by using an Excel Table as the source. For dependent dropdowns, validate the selected parent before presenting child options."
           ]
         ],
         "syntaxNotes": [
@@ -319,7 +319,7 @@
           ]
         ],
         "code": "=SORT(UNIQUE(Sales[Region]))\n=FILTER(Sales,Sales[Region]=H2,\"No matching rows\")\n=SEQUENCE(12,1,1,1)",
-        "practice": "Create a region list and selected-region view. Sort by revenue using SORTBY, use a spill reference in a dropdown, then add source rows and confirm the view expands.",
+        "practice": "Create a region list and selected-region view. Sort by revenue using SORTBY, use a spill reference in a dropdown, then add source rows and confirm the view expands. Submission evidence: include the finished artifact, a short explanation of the design choice, and test evidence for at least one normal case and two edge cases.",
         "workedExample": {
           "title": "Study the pattern, then modify it",
           "code": "=SORT(UNIQUE(Sales[Region]))\n=FILTER(Sales,Sales[Region]=H2,\"No matching rows\")\n=SEQUENCE(12,1,1,1)",
@@ -372,7 +372,7 @@
           ],
           [
             "Integration and failure modes",
-            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+            "Lookup keys must be normalized consistently (spaces, data types, leading zeros). XLOOKUP returns the first match unless search mode changes; duplicate keys therefore need a documented policy. Confirm return-array alignment and test missing keys. CHOOSECOLS uses positions, so column insertion can change meaning if positions are hard-coded."
           ]
         ],
         "syntaxNotes": [
@@ -386,7 +386,7 @@
           ]
         ],
         "code": "=XLOOKUP(H2,Products[SKU],Products[Price],\"SKU not found\")\n=INDEX(Products[Price],MATCH(H2,Products[SKU],0))\n=CHOOSECOLS(Sales,1,3,5)",
-        "practice": "Build a product lookup with missing-key handling and a compact report using CHOOSECOLS. Insert a source column and document how you keep field selection stable.",
+        "practice": "Build a product lookup with missing-key handling and a compact report using CHOOSECOLS. Insert a source column and document how you keep field selection stable. Submission evidence: include the finished artifact, a short explanation of the design choice, and test evidence for at least one normal case and two edge cases.",
         "workedExample": {
           "title": "Study the pattern, then modify it",
           "code": "=XLOOKUP(H2,Products[SKU],Products[Price],\"SKU not found\")\n=INDEX(Products[Price],MATCH(H2,Products[SKU],0))\n=CHOOSECOLS(Sales,1,3,5)",
@@ -439,7 +439,7 @@
           ],
           [
             "Integration and failure modes",
-            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+            "LET names must be valid identifiers and should clarify rather than obscure the formula. LAMBDA argument order is part of its interface: document it and test representative and boundary inputs. Guard division by zero and blank values explicitly. Keep a conventional formula alongside a custom LAMBDA during rollout if workbook users may not recognize it."
           ]
         ],
         "syntaxNotes": [
@@ -453,7 +453,7 @@
           ]
         ],
         "code": "=LET(net,[@Sales]-[@Returns],rate,IFERROR(net/[@Sales],0),rate)\n=LAMBDA(amount,discount,amount*(1-discount))(B2,C2)",
-        "practice": "Refactor a nested calculation with LET. Define a named NETSALES LAMBDA, test zero/blank inputs and record its argument contract.",
+        "practice": "Refactor a nested calculation with LET. Define a named NETSALES LAMBDA, test zero/blank inputs and record its argument contract. Submission evidence: include the finished artifact, a short explanation of the design choice, and test evidence for at least one normal case and two edge cases.",
         "workedExample": {
           "title": "Study the pattern, then modify it",
           "code": "=LET(net,[@Sales]-[@Returns],rate,IFERROR(net/[@Sales],0),rate)\n=LAMBDA(amount,discount,amount*(1-discount))(B2,C2)",
@@ -506,7 +506,7 @@
           ],
           [
             "Integration and failure modes",
-            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+            "A Data Table is a sensitivity tool, not a forecast: results only reflect the model and assumptions supplied. Confirm the row/column input cells are the intended model inputs, the output formula references both, and calculation settings permit recalculation. Scenario Manager stores values, so document assumptions and do not mistake scenario names for probability estimates."
           ]
         ],
         "syntaxNotes": [
@@ -520,7 +520,7 @@
           ]
         ],
         "code": "Model: Profit = (Price-Cost)*Units\nGoal Seek: target Profit cell; changing Price cell\nTwo-variable table: row inputs = price; column inputs = units",
-        "practice": "Create low/base/high cases and a two-variable sensitivity grid. Goal Seek a target profit; validate units, constraints and a manually calculated sample.",
+        "practice": "Create low/base/high cases and a two-variable sensitivity grid. Goal Seek a target profit; validate units, constraints and a manually calculated sample. Submission evidence: include the finished artifact, a short explanation of the design choice, and test evidence for at least one normal case and two edge cases.",
         "workedExample": {
           "title": "Study the pattern, then modify it",
           "code": "Model: Profit = (Price-Cost)*Units\nGoal Seek: target Profit cell; changing Price cell\nTwo-variable table: row inputs = price; column inputs = units",
@@ -575,7 +575,7 @@
           ],
           [
             "Integration and failure modes",
-            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+            "Before loading, verify the stated grain with a unique row key or a duplicate check. Dimension keys should be unique; fact foreign keys should match known dimension keys or be intentionally classified as unknown. Compare source totals to model totals and test a slice by each dimension. Do not place descriptive attributes in the fact table merely because they are available there."
           ]
         ],
         "syntaxNotes": [
@@ -589,7 +589,7 @@
           ]
         ],
         "code": "FactSales: one row per order line (OrderLineKey, OrderDateKey, ShipDateKey, ProductKey, CustomerKey, Quantity, NetSales)\nDimProduct(ProductKey, SKU, Category)\nDimDate(DateKey, Date, Year, Month)",
-        "practice": "Draw the model, state the grain and identify measures/dimensions. Reconcile a small sample by hand and check that joins do not duplicate fact rows.",
+        "practice": "Draw the model, state the grain and identify measures/dimensions. Reconcile a small sample by hand and check that joins do not duplicate fact rows. Submission evidence: include the finished artifact, a short explanation of the design choice, and test evidence for at least one normal case and two edge cases.",
         "workedExample": {
           "title": "Study the pattern, then modify it",
           "code": "FactSales: one row per order line (OrderLineKey, OrderDateKey, ShipDateKey, ProductKey, CustomerKey, Quantity, NetSales)\nDimProduct(ProductKey, SKU, Category)\nDimDate(DateKey, Date, Year, Month)",
@@ -643,7 +643,7 @@
           ],
           [
             "Integration and failure modes",
-            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+            "Check uniqueness on the one side and validate relationship cardinality before creating the relationship. Ambiguous paths and unnecessary bidirectional filters can produce confusing results or performance costs. For a bridge, define its grain and remove duplicate key pairs. Test order-date and ship-date measures against a small known set of records."
           ]
         ],
         "syntaxNotes": [
@@ -657,7 +657,7 @@
           ]
         ],
         "code": "Orders[OrderDateKey] -> DimDate[DateKey] active\nOrders[ShipDateKey] -> DimDate[DateKey] inactive\nShipped Sales = CALCULATE([Net Sales], USERELATIONSHIP(Orders[ShipDateKey], DimDate[DateKey]))",
-        "practice": "Model order and ship dates and a customer-segment bridge. Test slicer propagation and explain any bidirectional relationship rather than enabling it by habit.",
+        "practice": "Model order and ship dates and a customer-segment bridge. Test slicer propagation and explain any bidirectional relationship rather than enabling it by habit. Submission evidence: include the finished artifact, a short explanation of the design choice, and test evidence for at least one normal case and two edge cases.",
         "workedExample": {
           "title": "Study the pattern, then modify it",
           "code": "Orders[OrderDateKey] -> DimDate[DateKey] active\nOrders[ShipDateKey] -> DimDate[DateKey] inactive\nShipped Sales = CALCULATE([Net Sales], USERELATIONSHIP(Orders[ShipDateKey], DimDate[DateKey]))",
@@ -711,7 +711,7 @@
           ],
           [
             "Integration and failure modes",
-            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+            "CALCULATE modifies filter context, so explain each filter argument in business terms and test a measure under multiple slicer selections. FILTER over a large fact table may be less efficient than a simple Boolean filter argument when the condition permits it. Ensure the date table is complete and covers all selected periods; document calendar versus fiscal year and handle periods with no transactions."
           ]
         ],
         "syntaxNotes": [
@@ -725,7 +725,7 @@
           ]
         ],
         "code": "Net Sales = SUM(FactSales[NetSales])\nLarge Sales = CALCULATE([Net Sales], FILTER(FactSales, FactSales[NetSales] > 1000))\nSales YTD = TOTALYTD([Net Sales], DimDate[Date])\nSales LY = CALCULATE([Net Sales], SAMEPERIODLASTYEAR(DimDate[Date]))",
-        "practice": "Create Net Sales, Units, Orders, Sales YTD and Prior Year measures. Compare a short date range against hand-calculated expected values.",
+        "practice": "Create Net Sales, Units, Orders, Sales YTD and Prior Year measures. Compare a short date range against hand-calculated expected values. Submission evidence: include the finished artifact, a short explanation of the design choice, and test evidence for at least one normal case and two edge cases.",
         "workedExample": {
           "title": "Study the pattern, then modify it",
           "code": "Net Sales = SUM(FactSales[NetSales])\nLarge Sales = CALCULATE([Net Sales], FILTER(FactSales, FactSales[NetSales] > 1000))\nSales YTD = TOTALYTD([Net Sales], DimDate[Date])\nSales LY = CALCULATE([Net Sales], SAMEPERIODLASTYEAR(DimDate[Date]))",
@@ -780,7 +780,7 @@
           ],
           [
             "Hand-off to Power BI",
-            "Deliver a prepared table set, a one-page data dictionary, transformation notes, and a grain statement. In Power BI Phase 02, use this as the input for the star schema, relationships and DAX measures. If Excel Phase 03 is incomplete, pause here and complete it before continuing."
+            "Treat the hand-off as a reproducible data contract: record source files, transformation steps, column types, key rules and expected row counts. Reconcile totals before and after Power Query, then verify Power BI relationships do not multiply rows. Accept the dashboard only when measures reconcile at total and sliced levels and the report's date role is explicit."
           ]
         ],
         "syntaxNotes": [
@@ -802,7 +802,7 @@
           ]
         ],
         "code": "Excel Power Query hand-off checklist:\n1. Confirm data types and key uniqueness.\n2. Merge lookup attributes by stable keys.\n3. Append only schema-compatible period extracts.\n4. Unpivot period columns when periods are represented as separate fields.\n5. Record transformations and verify row counts before/after.",
-        "practice": "Complete the Excel Phase 03 Power Query and Power Pivot lessons first. Then prepare a sales dataset and hand-off package: clean tables, data dictionary, grain statement, relationship-key checks, and a reconciliation of source versus transformed row counts. Bring that exact package into Power BI Phase 02.",
+        "practice": "Complete the Excel Phase 03 Power Query and Power Pivot lessons first. Then prepare a sales dataset and hand-off package: clean tables, data dictionary, grain statement, relationship-key checks, and a reconciliation of source versus transformed row counts. Bring that exact package into Power BI Phase 02. Submission evidence: include the finished artifact, a short explanation of the design choice, and test evidence for at least one normal case and two edge cases.",
         "workedExample": {
           "title": "Turn a wide monthly extract into a model-ready table",
           "code": "Source columns: SKU, Region, JanSales, FebSales, MarSales\nAfter unpivot: SKU, Region, Month, Sales\nModel grain: one row per SKU-region-month",
