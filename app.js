@@ -2233,7 +2233,7 @@ document.querySelector("#phase-page").prepend(roadmapBack);
 searchInput.addEventListener("input", event => renderTracks(event.target.value));
 renderProgress();
 
-fetch(new URL("data/curriculum.json", document.baseURI), { cache: "no-store" })
+fetch(new URL("data/curriculum.json?v=20260926-python-zero-start", document.baseURI), { cache: "no-store" })
   .then(response => {
     if (!response.ok) throw new Error("Curriculum could not be loaded.");
     return response.json();
