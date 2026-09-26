@@ -96,19 +96,20 @@
         {
           "title": "Advanced Internals, Systems Design & Edge Cases",
           "topics": [
-            "V8 internals, garbage collection and memory leaks",
-            "React Fiber, concurrency, Suspense and error boundaries; advanced TypeScript",
-            "Scalable APIs: rate limiting, idempotency, webhooks and versioning",
-            "Database query plans, indexes, pooling, replicas and N+1 queries",
-            "JWT, OAuth2 PKCE, CSRF, XSS, SQL injection and secrets management"
+            "JavaScript engine internals: V8 object shapes, inline caching, garbage collection and memory-leak diagnosis",
+            "Advanced React: Fiber reconciliation, transitions, deferred rendering, Suspense, error boundaries and composition patterns",
+            "Advanced TypeScript: conditional and mapped types, template literal types, variance and declaration merging",
+            "Scalable API design: token-bucket rate limiting, idempotency keys, webhook delivery and API versioning",
+            "Database depth: EXPLAIN ANALYZE, composite/partial/covering indexes, connection pooling, read replicas and N+1 remediation",
+            "Application security: JWT validation and refresh rotation, OAuth2 PKCE, CSRF/XSS, parameterized SQL and secrets management"
           ],
-          "project": "Add realtime features and Redis rate limiting, fix N+1 queries, and architect a multi-tenant SaaS.",
+          "project": "Extend the Phase 02 task app with a real-time feature (WebSockets or SSE), Redis-backed rate limiting, and measured remediation of an intentionally introduced N+1 query. Begin the multi-tenant SaaS architecture with tenant isolation, RBAC and audit logging; finish production delivery in Phase 4.",
           "checkpoints": [
-            "Read EXPLAIN output",
-            "Explain Fiber interruptibility",
-            "Plan refresh-token rotation",
-            "Use heap snapshots",
-            "Discuss CAP tradeoffs"
+            "Read EXPLAIN ANALYZE and justify an index using actual plan evidence",
+            "Explain Fiber scheduling and demonstrate a responsive transition/deferred view",
+            "Design refresh-token rotation with atomic replay detection",
+            "Use a heap snapshot and retaining paths to diagnose a memory leak",
+            "Explain read-replica consistency limits and CAP-related trade-offs"
           ]
         },
         {
