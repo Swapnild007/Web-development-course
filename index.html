@@ -8,7 +8,370 @@
   <title>Learning Studio</title>
   <link rel="stylesheet" href="style.css?v=20260926-lms">
   <link rel="stylesheet" href="ui-polish.css?v=20260926-full-ui">
-  <script src="app.js?v=20260926-curriculum-visible" defer></script>
+<script id="curriculum-data" type="application/json">{
+  "tracks": [
+    {
+      "id": "fullstack",
+      "name": "Full-stack Web Development",
+      "icon": "⌘",
+      "accent": "#5577c7",
+      "tint": "#edf2ff",
+      "description": "Create accessible, responsive web applications and take them to production.",
+      "phases": [
+        {
+          "title": "Foundations & Core Mechanics",
+          "topics": [
+            "Semantic HTML5, ARIA, accessible forms, WCAG 2.1 AA contrast and focus",
+            "CSS architecture, box model, cascade layers, Flexbox, Grid, Tailwind methodology, container queries",
+            "JavaScript ESNext: scope, TDZ, closures, prototypes, this, event loop, promises, modules, Map and Set",
+            "Common pitfalls: async map, event-loop ordering, flex min-width: 0, event propagation and delegation"
+          ],
+          "project": "Build a responsive, no-framework portfolio/blog with a dynamic gallery; target Lighthouse accessibility score of at least 95.",
+          "checkpoints": [
+            "Explain microtask versus macrotask ordering",
+            "Diagnose async map behavior",
+            "Explain bubbling, capturing, and event delegation"
+          ]
+        },
+        {
+          "title": "Intermediate Architecture & Applied Workflows",
+          "topics": [
+            "TypeScript: types, generics, utility types, narrowing",
+            "React hooks, custom hooks, controlled inputs, context, state tools, React Query",
+            "Next.js App Router, server/client components, SSR, SSG, ISR, Server Actions, fetching and cache",
+            "Node backend with Express/Nest, middleware, REST, Zod and dependency injection",
+            "PostgreSQL normalization, indexes, transactions, Prisma/Drizzle"
+          ],
+          "project": "Build a CRUD task application with Next.js App Router, Prisma and PostgreSQL. Use Server Components for suitable reads, validated Server Actions for authenticated mutations, owner-scoped access, loading/error states and optimistic updates with rollback. Treat the Express API lesson as a separate alternative-service exercise, not a second required CRUD stack.",
+          "checkpoints": [
+            "Implement generic useFetch",
+            "Explain Next caching and revalidatePath",
+            "Design normalized many-to-many schema",
+            "Debug an effect loop"
+          ],
+          "projectBrief": {
+            "outcome": "Deliver a working authenticated task-management application with a typed React interface, Next.js App Router pages, validated server mutations, and PostgreSQL persistence.",
+            "requiredFeatures": [
+              "Create, list, edit, complete, and delete tasks; each task belongs to an authenticated owner.",
+              "Use TypeScript domain contracts and runtime validation for untrusted API input; narrow unknown values and avoid avoidable any.",
+              "Use controlled React forms and derive display values during render; reserve effects for external synchronization with cleanup.",
+              "Use App Router layouts and deliberate server/client boundaries; provide loading, empty, success, and error states.",
+              "Validate mutation inputs with Zod and enforce authentication plus per-task authorization on the server.",
+              "Keep handlers thin; inject a repository into a service and test the service with a fake repository.",
+              "Use normalized PostgreSQL tables, keys, constraints, a justified index, and transactions for multi-step writes.",
+              "Document rendering/cache decisions and refresh affected route data after successful mutations."
+            ],
+            "deliverables": [
+              "Runnable source, setup instructions, and an environment example with no real secrets.",
+              "Database schema, versioned migration, and repeatable seed/local setup.",
+              "Automated tests for validation, service logic, authorization, and failure/transaction cases.",
+              "README with architecture, action/API contract, data model, test commands, and cache/revalidation rationale."
+            ],
+            "acceptance": [
+              "Users can manage only their own tasks; cross-owner access is denied.",
+              "Blank, overlong, or malformed inputs produce stable safe errors.",
+              "Successful writes appear in the list after the documented revalidation behavior.",
+              "Failed multi-step writes leave no partial related records.",
+              "A clean setup reproduces the documented tests and behavior."
+            ]
+          },
+          "assessment": [
+            [
+              "TypeScript and runtime boundaries",
+              "20%",
+              "Accurate domain contracts; runtime validation and narrowing at untrusted boundaries; no avoidable any."
+            ],
+            [
+              "React and Next.js architecture",
+              "20%",
+              "Correct hook usage and state scope; intentional route and server/client structure; complete UI states."
+            ],
+            [
+              "API/service design and security",
+              "20%",
+              "Thin handlers, server-side validation/authorization, safe errors, injected testable dependencies."
+            ],
+            [
+              "PostgreSQL integrity and transactions",
+              "20%",
+              "Sound relationships and constraints; query-justified index; atomic multi-step writes."
+            ],
+            [
+              "Verification and engineering communication",
+              "20%",
+              "Normal and edge-case tests, reproducible setup, clear architecture and trade-off explanation."
+            ]
+          ]
+        },
+        {
+          "title": "Advanced Internals, Systems Design & Edge Cases",
+          "topics": [
+            "JavaScript engine internals: V8 object shapes, inline caching, garbage collection and memory-leak diagnosis",
+            "Advanced React: Fiber reconciliation, transitions, deferred rendering, Suspense, error boundaries and composition patterns",
+            "Advanced TypeScript: conditional and mapped types, template literal types, variance and declaration merging",
+            "Scalable API design: token-bucket rate limiting, idempotency keys, webhook delivery and API versioning",
+            "Database depth: EXPLAIN ANALYZE, composite/partial/covering indexes, connection pooling, read replicas and N+1 remediation",
+            "Application security: JWT validation and refresh rotation, OAuth2 PKCE, CSRF/XSS, parameterized SQL and secrets management"
+          ],
+          "project": "Extend the Phase 02 task app with a real-time feature (WebSockets or SSE), Redis-backed rate limiting, and measured remediation of an intentionally introduced N+1 query. Begin the multi-tenant SaaS architecture with tenant isolation, RBAC and audit logging; finish production delivery in Phase 4.",
+          "checkpoints": [
+            "Read EXPLAIN ANALYZE and justify an index using actual plan evidence",
+            "Explain Fiber scheduling and demonstrate a responsive transition/deferred view",
+            "Design refresh-token rotation with atomic replay detection",
+            "Use a heap snapshot and retaining paths to diagnose a memory leak",
+            "Explain read-replica consistency limits and CAP-related trade-offs"
+          ]
+        },
+        {
+          "title": "Production Mastery & Capstone",
+          "topics": [
+            "Docker production images: multi-stage builds, layer caching, non-root runtime and .dockerignore",
+            "CI/CD with GitHub Actions: lint, typecheck, tests, build, preview environments and gated deployment",
+            "Automated PostgreSQL migrations: expand-and-contract, backfills, compatibility and recovery",
+            "Observability: structured logs, metrics, distributed traces, health/readiness checks and incident response",
+            "Cloud deployment: runtime configuration, TLS, secure networking, CDN/edge caching, rollout and rollback",
+            "Redis: session store, cache-aside, cache invalidation, TTLs, eviction and stampede control",
+            "Production capstone: multi-tenant SaaS launch, RBAC, tenant isolation, audit logging and operational handover"
+          ],
+          "project": "Ship the Phase 3 multi-tenant SaaS fully containerized with a CI/CD pipeline, safe migrations, Redis sessions/cache, RBAC and tenant isolation, structured logging/tracing, cloud deployment, public URL and monitoring dashboard. Include reproducible setup, automated tests, security review and incident runbooks.",
+          "checkpoints": [
+            "Build and run a multi-stage non-root Docker image; measure image size and scan it",
+            "Configure CI gates so lint, typecheck, tests, build and image checks must pass before deployment",
+            "Design and test a zero-downtime expand-and-contract migration with a resumable backfill",
+            "Diagnose a simulated 500 spike using correlated logs, metrics and traces",
+            "Set safe CDN cache policy for public static assets and private tenant responses",
+            "Demonstrate Redis invalidation, session expiry/revocation and safe outage behavior",
+            "Prove RBAC and tenant isolation with two synthetic tenants and deliver a rollback/runbook package"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "python",
+      "name": "Python",
+      "icon": "Py",
+      "accent": "#328a81",
+      "tint": "#e7f6f2",
+      "description": "Learn Python fundamentals, concurrency, testing, and package delivery.",
+      "phases": [
+        {
+          "title": "Foundations & Core Mechanics",
+          "topics": [
+            "Start here: instructions, algorithms and what code means",
+            "Get ready: Python, editor and how to run a file",
+            "Your first tiny program: display text and observe output",
+            "First debugging: understand an error and verify a fix"
+          ],
+          "project": "Create a First Run Lab Notebook: set up your Python workspace, run a saved greeting script, make and fix one deliberate syntax mistake, and record evidence of the successful rerun.",
+          "checkpoints": [
+            "Explain in everyday words the difference between an algorithm and a program",
+            "Identify the editor, Python runtime, and run method used on your device",
+            "Run a saved Python file and describe the output",
+            "Use an error message to fix a deliberate mistake, then rerun the file"
+          ]
+        },
+        {
+          "title": "Intermediate Architecture & Applied Workflows",
+          "topics": [
+            "Generators and iterators",
+            "Decorators and context managers",
+            "OOP, dunder methods, dataclasses and abstract base classes",
+            "Functional patterns, type hints, Protocol and mypy"
+          ],
+          "project": "Build a library-management system using dataclasses, context managers, decorators and type hints; run strict mypy.",
+          "checkpoints": [
+            "Implement a retry decorator",
+            "Write context managers in both styles",
+            "Explain hash/eq consistency",
+            "Create a generator pipeline"
+          ]
+        },
+        {
+          "title": "Advanced Internals, Systems Design & Edge Cases",
+          "topics": [
+            "GIL and Python memory management",
+            "Metaclasses",
+            "Threading, multiprocessing and asyncio",
+            "Race conditions, locks, bounded concurrency and cancellation"
+          ],
+          "project": "Build an async scraper with bounded concurrency and cancellation, with multiprocessing fallback where appropriate.",
+          "checkpoints": [
+            "Compare threads and processes for CPU-bound work",
+            "Resolve a race condition with a lock",
+            "Explain slots",
+            "Handle exceptions from asyncio.gather"
+          ]
+        },
+        {
+          "title": "Production Mastery & Capstone",
+          "topics": [
+            "Virtual environments and Poetry/uv",
+            "pytest fixtures, mocking, coverage and Hypothesis",
+            "Packaging, PyPI and pyproject.toml",
+            "pathlib, logging, dataclasses, cache and argparse"
+          ],
+          "project": "Package the async scraper as a CLI with pytest coverage above 85%, mocked network calls and structured logs; make it publish-ready.",
+          "checkpoints": [
+            "Design fixtures and mocks",
+            "Distinguish dependency freeze from lockfile",
+            "Detect order-dependent tests",
+            "Configure logging handlers"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "excel",
+      "name": "Excel",
+      "icon": "▦",
+      "accent": "#39845c",
+      "tint": "#e9f6ed",
+      "description": "Build reliable workbooks, dynamic models, and executive dashboards.",
+      "phases": [
+        {
+          "title": "Foundations & Core Mechanics",
+          "topics": [
+            "Calculation engine, relative/absolute/mixed references, dependency graph and circular references",
+            "Tables, structured references and named ranges",
+            "SUMIFS, COUNTIFS, AVERAGEIFS, IF/IFS, IFERROR and VLOOKUP limitations",
+            "Conditional formatting, custom number formats and data validation"
+          ],
+          "project": "Build an expense workbook using Tables, SUMIFS, dropdowns and conditional formatting.",
+          "checkpoints": [
+            "Explain how inserted columns can affect VLOOKUP",
+            "Diagnose circular references",
+            "Write SUMIFS with three criteria"
+          ]
+        },
+        {
+          "title": "Intermediate Architecture & Applied Workflows",
+          "topics": [
+            "Dynamic arrays: UNIQUE, SORT, FILTER, spill behavior and SEQUENCE",
+            "XLOOKUP, INDEX/MATCH, CHOOSECOLS and CHOOSEROWS",
+            "LET and LAMBDA",
+            "Data Tables, Goal Seek and Scenario Manager"
+          ],
+          "project": "Build a dynamic sales dashboard with cascading dropdowns, LAMBDA and sensitivity analysis.",
+          "checkpoints": [
+            "Write a recursive LAMBDA",
+            "Refactor a formula with LET",
+            "Compare XLOOKUP and INDEX/MATCH",
+            "Use a spill range in a dropdown"
+          ]
+        },
+        {
+          "title": "Advanced Internals, Systems Design & Edge Cases",
+          "topics": [
+            "Power Query: merge, append, unpivot, pivot, group by, Applied Steps and M basics",
+            "Query folding, parameters and custom functions",
+            "Power Pivot star schema, relationships and calculated columns versus measures",
+            "Introductory DAX: SUM, CALCULATE, RELATED and TOTALYTD"
+          ],
+          "project": "Build a multi-source Power Query pipeline, unpivot messy data, create a star schema and write 3–5 measures.",
+          "checkpoints": [
+            "Explain query folding",
+            "Create a parameterized M function",
+            "Distinguish calculated columns from measures",
+            "Diagnose incorrect relationships"
+          ]
+        },
+        {
+          "title": "Production Mastery & Capstone",
+          "topics": [
+            "Dynamic dashboards and executive reporting",
+            "Formula auditing and #N/A, #SPILL and #CALC errors",
+            "Workbook performance and volatile functions",
+            "Documented audit trail and scenario analysis"
+          ],
+          "project": "Deliver an executive dashboard workbook with a Power Query-fed star schema, dynamic KPI cards, slicers, charts, scenario analysis and an audit trail.",
+          "checkpoints": [
+            "Use Evaluate Formula with LET/LAMBDA",
+            "Reduce volatile functions",
+            "Handle formula errors systematically"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "powerbi",
+      "name": "Power BI",
+      "icon": "▥",
+      "accent": "#b58b31",
+      "tint": "#fff6df",
+      "description": "Transform data, model it, build DAX measures, and deliver governed BI.",
+      "phases": [
+        {
+          "title": "Foundations & Core Mechanics",
+          "topics": [
+            "Connect to SQL, Excel, web and folder sources",
+            "Power Query ETL and incremental refresh",
+            "Report visuals, slicers and filters",
+            "Data types, data categorization and sort by column"
+          ],
+          "project": "Load a multi-table sample dataset, transform it and build a multi-page report.",
+          "checkpoints": [
+            "Describe a three-layer architecture",
+            "Explain incremental refresh",
+            "Set up sort-by-column correctly"
+          ]
+        },
+        {
+          "title": "Intermediate Architecture & Applied Workflows",
+          "topics": [
+            "Kimball dimensional modeling: star versus snowflake, facts, dimensions, grain and surrogate keys",
+            "Relationships: cardinality, filter direction, bridge tables and role-playing dimensions",
+            "Introductory DAX: CALCULATE, FILTER and time intelligence",
+            "Excel Power Query/data-modeling prerequisite: complete Excel Phase 3 first"
+          ],
+          "project": "Create a star-schema sales model and at least five DAX measures.",
+          "checkpoints": [
+            "Choose an appropriate schema",
+            "Model a role-playing date dimension",
+            "Build a many-to-many bridge",
+            "Explain bidirectional filtering"
+          ]
+        },
+        {
+          "title": "Advanced Internals, Systems Design & Edge Cases",
+          "topics": [
+            "DAX row context, filter context and context transition",
+            "CALCULATE filter modifiers and evaluation order",
+            "Semi-additive measures, time intelligence and custom calendars",
+            "Iterators: SUMX, AVERAGEX and RANKX",
+            "Report UX: bookmarks, drillthrough, tooltips and accessibility"
+          ],
+          "project": "Build a financial report with balances, Top-N analysis, drillthrough and bookmarks.",
+          "checkpoints": [
+            "Explain context transition",
+            "Diagnose totals affected by ALL",
+            "Calculate ending balance",
+            "Consider RANKX performance"
+          ]
+        },
+        {
+          "title": "Production Mastery & Capstone",
+          "topics": [
+            "Performance Analyzer, DAX Studio query plans and server timings",
+            "VertiPaq compression and cardinality",
+            "Static and dynamic row-level security with USERPRINCIPALNAME",
+            "Governance: refresh, workspaces, pipelines and dataflows"
+          ],
+          "project": "Deliver a governed BI solution with star schema, 10+ optimized measures, dynamic RLS, three slow visuals optimized with before/after timings, Dev/Test/Prod pipeline and scheduled refresh.",
+          "checkpoints": [
+            "Distinguish Storage Engine and Formula Engine",
+            "Implement dynamic RLS",
+            "Explain cardinality and compression",
+            "Diagnose slow visuals"
+          ]
+        }
+      ]
+    }
+  ],
+  "sequenceNote": "Excel Track Phase 3 introduces Power Query and data modeling that scaffold Power BI Track Phase 2. Complete Excel Phase 3 before beginning Power BI Phase 2. Full-stack and Python can be studied in parallel from day one.",
+  "sourceNote": "The four tracks and phase outlines follow the supplied Master Syllabus. Full-stack Web Development has guided lessons across all four phases, including expanded Phase 02 concepts, project integration decisions, and acceptance-based labs. Python, Excel, and Power BI have guided lessons for Phases 1–2; Phases 3–4 are syllabus outlines awaiting full lesson authoring."
+}
+</script>
+  <script src="app.js?v=20260926-inline-curriculum" defer></script>
   <script src="preferences.js?v=20260926-lms2" defer></script>
 </head>
 <body>
