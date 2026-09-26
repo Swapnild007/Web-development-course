@@ -1,0 +1,22 @@
+/* UI completion pass: responsive preferences, clearer progress and safer mobile spacing */
+.page-intro .hero-copy{max-width:650px}
+.profile-preferences{max-width:560px;padding:22px;background:#ffffffc9;border:1px solid #e4eaf0;border-radius:20px;box-shadow:0 12px 32px #3d58740d}
+.profile-preferences h2{font:700 18px Manrope,sans-serif;margin:0 0 18px;color:#1c304b}
+.profile-preferences>label{display:block;font-size:12px;font-weight:700;color:#52647e;margin:14px 0 8px}
+.profile-preferences select{width:100%;max-width:320px;min-height:44px;padding:0 12px;border:1px solid #dce4ee;border-radius:11px;background:#fff;color:#24334d;font:inherit}
+.profile-preferences .preference-toggle{display:flex;align-items:center;gap:10px;font-weight:500;min-height:42px}
+.profile-preferences input[type=checkbox]{width:18px;height:18px;accent-color:#5879c5}
+.profile-preferences :focus-visible{outline:3px solid #7899ef;outline-offset:3px}
+.progress-lesson{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-top:1px solid #e8edf3;border-bottom:1px solid #e8edf3;margin:18px 0}
+.progress-lesson strong{font-size:12px}.progress-lesson small{display:block;color:#8995a8;font-size:11px;line-height:1.5;margin-top:4px}
+.progress-state{font-size:11px;color:#64738b;white-space:nowrap}
+button,a,select,input{touch-action:manipulation}
+button{min-height:40px}
+.nav-item{min-height:48px}
+@media(max-width:650px){
+ .profile-preferences{padding:17px}
+ .progress-lesson{align-items:flex-start}
+ .floating-nav{bottom:max(12px,env(safe-area-inset-bottom));padding:6px}
+ .app-shell{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
+}
+@media(prefers-reduced-motion:reduce){html:focus-within{scroll-behavior:auto}}
