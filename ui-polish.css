@@ -193,3 +193,202 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
  html{scroll-behavior:auto}.view{animation:none}
  *,*::before,*::after{transition:none!important;animation:none!important}
 }
+
+
+/* === Full learner journey: curriculum, roadmap, phase and lesson surfaces === */
+#curriculum-view,#progress-view,#profile-view{max-width:1120px;margin:0 auto;padding-bottom:28px}
+#curriculum-view .page-intro,#progress-view .page-intro,#profile-view .page-intro{padding:clamp(34px,5vw,62px) 0 28px}
+#curriculum-view .page-intro h1,#progress-view .page-intro h1,#profile-view .page-intro h1{font-size:clamp(38px,5vw,58px)}
+.search-wrap{display:flex;align-items:center;gap:12px;width:min(100%,540px);min-height:50px;margin-top:24px;padding:0 16px;border:1px solid #dfe7f1;border-radius:15px;background:#ffffffdc;box-shadow:0 7px 24px rgba(35,62,99,.05)}
+.search-wrap span{color:#6781ad;font-size:23px}
+.search-wrap input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:#203957;font-size:13px}
+#curriculum-view>.section-head{align-items:center;margin:12px 0 18px;padding-bottom:14px;border-bottom:1px solid var(--ls-line)}
+#curriculum-view>.section-head h2{font-size:22px}
+.track-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.track-card{display:flex;flex-direction:column;min-height:230px;padding:24px;border:1px solid #e0e8f2;border-radius:24px;background:linear-gradient(150deg,#fff 0%,#f8faff 100%);box-shadow:0 12px 32px rgba(36,62,99,.06);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.track-card:hover{transform:translateY(-3px);border-color:#cbd9ed;box-shadow:0 18px 40px rgba(36,62,99,.11)}
+.card-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.track-icon{width:48px;height:48px;display:grid;place-items:center;border-radius:15px;font-size:20px}
+.phase-count{padding:7px 10px;border-radius:999px;background:#f1f5fa;color:#71839c;font-size:10px;font-weight:800;letter-spacing:.6px}
+.track-card h3{margin:18px 0 7px;color:#213a5a;font-size:19px;font-weight:760;letter-spacing:-.03em}
+.track-card>p{min-height:42px;margin:0;color:#6c7e95;font-size:13px;line-height:1.65}
+.track-status-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:18px}
+.track-status{padding:6px 9px;border-radius:999px;background:#edf6f2;color:#568572;font-size:10px;font-weight:750}
+.track-progress-text{color:#788aa1;font-size:11px}
+.track-progress{height:6px;overflow:hidden;margin-top:10px;border-radius:99px;background:#e8edf5}
+.track-progress span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#547bd5,#62bba2)}
+.track-card .card-bottom{margin-top:15px;padding-top:12px;border-top:1px solid #edf1f6}
+.track-card .card-bottom span{color:#8190a4;font-size:11px}
+.open-track,.phase-start-action,.topic-lesson-action{min-height:40px;padding:0 14px;border:1px solid #d9e4f4;border-radius:12px;background:#edf3ff;color:#4269c7;font-size:12px;font-weight:800;transition:transform .18s ease,background .18s ease}
+.open-track:hover,.phase-start-action:hover,.topic-lesson-action:hover{transform:translateY(-1px);background:#e3ecff}
+.note{display:flex;align-items:flex-start;gap:13px;margin-top:22px;padding:18px 20px;border:1px solid #dfe8f2;border-radius:18px;background:#f9fbff}
+.note-icon{color:#5d7ec6;font-size:20px}
+.note strong{color:#314966;font-size:13px}
+.note p{margin:5px 0 0;color:#6c7e95;font-size:12px;line-height:1.6}
+
+/* Roadmap is a dedicated page surface, not a cramped modal-like sheet. */
+#phase-page{max-width:980px;margin:0 auto;padding:28px 0 34px}
+.dialog-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin:0 0 12px;padding:0 0 18px;border-bottom:1px solid var(--ls-line)}
+.dialog-top h2{margin:0;color:#1e3656;font-size:clamp(26px,4vw,38px);font-weight:780;letter-spacing:-.045em;line-height:1.12}
+#dialog-description{max-width:720px;margin:0;color:#6d7f96;font-size:13px;line-height:1.65}
+.roadmap-hint{margin:12px 0 0;color:#8291a4;font-size:12px;line-height:1.6}
+.close{width:42px;height:42px;flex:0 0 auto;border:1px solid #dfe7f1;border-radius:14px;background:#fff;color:#526c90;font-size:23px;box-shadow:0 5px 16px rgba(35,62,99,.05)}
+.phase-list{display:grid;gap:13px;margin-top:20px}
+.phase-detail{overflow:hidden;border:1px solid #e0e8f2;border-radius:20px;background:#fff;box-shadow:0 8px 25px rgba(35,62,99,.045);transition:border-color .18s ease,box-shadow .18s ease}
+.phase-detail[open]{border-color:#c9d8ed;box-shadow:0 13px 30px rgba(35,62,99,.08)}
+.phase-summary{display:flex;align-items:center;gap:15px;min-height:82px;padding:18px 20px;cursor:pointer;list-style:none}
+.phase-summary::-webkit-details-marker{display:none}
+.phase-number{width:43px;height:43px;flex:0 0 auto;display:grid;place-items:center;border-radius:14px;background:#edf3ff;color:#5275c5;font-size:12px;font-weight:850}
+.phase-summary-text{display:flex;flex:1;flex-direction:column;gap:5px;min-width:0}
+.phase-summary-text strong{color:#263e5d;font-size:15px;font-weight:760;line-height:1.4}
+.phase-summary-text small{color:#7d8da2;font-size:11px;line-height:1.5}
+.phase-chevron{color:#6e83a3;font-size:21px;transition:transform .2s ease}
+.phase-detail[open] .phase-chevron{transform:rotate(180deg)}
+.phase-content{padding:0 24px 22px 78px}
+.detail-heading{margin:15px 0 8px;color:#47648f;font-size:11px;font-weight:850;letter-spacing:.8px;text-transform:uppercase}
+.detail-list{margin:0;padding-left:19px;color:#5e718b;font-size:13px;line-height:1.75}
+.detail-list li+li{margin-top:5px}
+.project-block{margin-top:16px;padding:16px 18px;border:1px solid #dfe8f7;border-radius:16px;background:#f5f8ff}
+.project-block .detail-heading{margin:0 0 7px}
+.project-copy{margin:0;color:#506781;font-size:13px;line-height:1.7}
+.sequence-note{margin:0 0 14px;padding:13px 16px;border:1px solid #dce7f8;border-radius:14px;background:#eff4ff;color:#4e6c9e;font-size:12px;line-height:1.65}
+#phase-study{margin-top:8px;padding:clamp(20px,4vw,34px);border:1px solid #dfe7f1;border-radius:25px;background:#fff;box-shadow:var(--ls-shadow)}
+#phase-study>.back-action{margin-bottom:22px}
+#study-phase-title{margin:5px 0 8px;color:#203957;font-size:clamp(24px,3.5vw,34px);letter-spacing:-.04em;line-height:1.2}
+#study-phase-description{margin:0 0 22px;color:#74859b;font-size:13px}
+.study-topic-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.study-topic{display:flex;flex-direction:column;align-items:flex-start;min-width:0;padding:17px;border:1px solid #e2e9f2;border-radius:17px;background:#fbfcff}
+.study-topic-number{color:#6c83ad;font-size:9px;font-weight:850;letter-spacing:1px}
+.study-topic-copy{margin:9px 0 14px;color:#2d4564;font-size:13px;font-weight:650;line-height:1.55}
+.topic-lesson-action{margin-top:auto}
+.study-reader-block{margin:18px 0 0;padding:18px 20px;border:1px solid #e1e9f3;border-radius:17px;background:#f7f9fd}
+.study-reader-block h4{margin:0 0 9px;color:#304b6e;font-size:14px;font-weight:800}
+.study-reader-block h5{margin:15px 0 7px;color:#536e97;font-size:12px}
+.study-reader-block p,.study-reader-block li{color:#637790;font-size:12px;line-height:1.7}
+.assessment-table{width:100%;border-collapse:collapse;font-size:12px}
+.assessment-table th{background:#edf3fc;color:#36557d;text-align:left;font-weight:800}
+.assessment-table th,.assessment-table td{padding:11px 12px;border-bottom:1px solid #e3eaf3;vertical-align:top}
+.study-note{margin:18px 0 0;color:#8190a3;font-size:11px;line-height:1.6}
+
+/* Lesson workspace: comfortable reading width, distinct teaching blocks and usable controls. */
+.lesson-page{max-width:940px;margin:0 auto;padding:20px 0 38px}
+.lesson-page-top{padding:12px 0 22px}
+.lesson-page-top .back-action{margin-bottom:23px}
+.lesson-page-top h2{margin:5px 0 0;color:#203957;font-size:clamp(27px,4vw,40px);font-weight:780;letter-spacing:-.045em;line-height:1.12}
+.lesson-reader{padding:clamp(22px,5vw,48px);border:1px solid #e0e8f2;border-radius:26px;background:#fff;box-shadow:0 16px 42px rgba(35,62,99,.07)}
+.lesson-reader>.eyebrow{margin-bottom:10px;color:#6983b3}
+.lesson-reader h4{margin:0 0 12px;color:#1e3656;font-size:clamp(22px,3.5vw,31px);font-weight:780;letter-spacing:-.04em;line-height:1.22}
+.lesson-lead{margin:0 0 24px;color:#61758f;font-size:15px;line-height:1.75}
+.lesson-reader h5{margin:27px 0 9px;color:#2e4a6d;font-size:16px;font-weight:780;letter-spacing:-.02em}
+.lesson-reader>p:not(.eyebrow):not(.lesson-lead):not(.muted){color:#526780;font-size:14px;line-height:1.85}
+.lesson-highlight{margin:22px 0;padding:18px 20px;border:1px solid #d7e4f7;border-left:4px solid #5b7fce;border-radius:15px;background:#f2f6ff}
+.lesson-highlight strong{color:#34598f;font-size:12px;font-weight:850;letter-spacing:.3px}
+.lesson-highlight p{margin:7px 0 0;color:#4f6685;font-size:13px;line-height:1.75}
+.lesson-key-points,.lesson-syntax-notes,.lesson-worked-example,.lesson-knowledge-check,.lesson-sources,.lesson-practice,.lesson-tools{margin:23px 0;padding:20px;border:1px solid #e1e9f3;border-radius:17px;background:#fafcff}
+.lesson-key-points h5,.lesson-syntax-notes h5,.lesson-knowledge-check h5,.lesson-sources h5{margin:0 0 12px;font-size:14px}
+.lesson-code{max-width:100%;overflow:auto;margin:17px 0;padding:18px 20px;border:1px solid #263d5c;border-radius:15px;background:#172b45;color:#e7f0ff;font:12px/1.75 ui-monospace,SFMono-Regular,Consolas,monospace;tab-size:2;white-space:pre}
+.lesson-code code{font:inherit;color:inherit}
+.syntax-note-list{display:grid;gap:10px}
+.syntax-note{padding:14px;border:1px solid #e3eaf3;border-radius:13px;background:#fff}
+.syntax-token{display:inline-block;margin-bottom:7px;padding:4px 7px;border-radius:7px;background:#edf3ff;color:#4a6eb5;font-size:11px}
+.syntax-note p{margin:0;color:#62758d;font-size:12px;line-height:1.7}
+.lesson-worked-example>h5{margin:0 0 5px;font-size:15px}
+.worked-example-label{margin:0;color:#7186a6;font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase}
+.lesson-practice{border-color:#d9e9e2;background:#f2faf6}
+.lesson-practice strong{color:#397b68;font-size:13px}
+.lesson-practice p{margin:8px 0 0;color:#4e7167;font-size:13px;line-height:1.75}
+.knowledge-check-item{margin:9px 0;padding:14px 15px;border:1px solid #e0e8f2;border-radius:13px;background:#fff}
+.knowledge-check-item summary{color:#304b6d;font-size:13px;font-weight:700;line-height:1.55;cursor:pointer}
+.knowledge-check-answer{margin:10px 0 0;color:#647891;font-size:12px;line-height:1.7}
+.lesson-tools{background:#f6f8fc}
+.lesson-tools-heading,.lesson-tool-actions,.lesson-pager,.lesson-actions{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.lesson-tools-heading strong{color:#304967;font-size:13px}
+.lesson-tool-actions{justify-content:flex-start;flex-wrap:wrap;margin-top:13px}
+.secondary-action{min-height:42px;padding:0 15px;border:1px solid #dce5f0;border-radius:12px;background:#fff;color:#4269c7;font-size:12px;font-weight:750}
+.lesson-pager{margin:24px 0 0;padding-top:20px;border-top:1px solid #e5ebf3}
+.lesson-pager button:disabled{opacity:.42;cursor:not-allowed}
+.lesson-actions{justify-content:flex-end;margin-top:14px}
+.lesson-feedback{min-height:20px;margin:12px 0 0;color:#48836e;font-size:12px}
+
+/* Progress and profile screens get the same visual language and useful hierarchy. */
+#progress-view .progress-summary{max-width:none;padding:clamp(20px,4vw,34px);border:1px solid #e0e8f2;border-radius:25px;background:#fff;box-shadow:var(--ls-shadow)}
+#progress-view .progress-summary h2{margin:5px 0 22px;color:#203957;font-size:25px;letter-spacing:-.04em}
+.progress-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.progress-metrics>div{padding:20px;border:1px solid #e4ebf4;border-radius:17px;background:#f7f9fd}
+.progress-metrics strong{color:#203957;font-size:30px;font-weight:800;letter-spacing:-.04em}
+.progress-metrics span{color:#7789a0;font-size:12px}
+.progress-meter{height:9px;margin:20px 0 12px;border-radius:99px;background:#e8edf5}
+.progress-meter span{background:linear-gradient(90deg,#5279d5,#61bca4)}
+#progress-status{margin:0;color:#71839a;font-size:12px;line-height:1.6}
+.progress-by-track{margin-top:26px;padding-top:22px;border-top:1px solid #e8edf4}
+.progress-by-track h3{margin:0 0 17px;color:#2a4362;font-size:17px}
+.progress-track-list{display:grid;gap:17px}
+.progress-track-row{grid-template-columns:minmax(110px,1fr) minmax(90px,2fr) 44px;gap:14px}
+.progress-track-meta strong{color:#2d4564;font-size:12px}
+.progress-track-meta small{color:#8291a4;font-size:10px}
+.progress-track-meter{height:7px;background:#e8edf5}
+.progress-track-percent{color:#5b759b;font-size:11px;font-weight:800}
+.progress-lesson{margin-top:22px;padding-top:20px;border-top:1px solid #e8edf4}
+.progress-lesson strong{color:#2d4564;font-size:13px}
+.progress-lesson small{color:#8190a4;font-size:11px}
+.progress-state{color:#5c789f;font-size:11px;font-weight:750}
+#profile-view .profile-preferences,#profile-view .saved-review-panel{max-width:none;padding:clamp(20px,4vw,30px);border:1px solid #e0e8f2;border-radius:23px;background:#fff;box-shadow:0 10px 30px rgba(35,62,99,.05)}
+.profile-preferences h2,.saved-review-panel h2{color:#203957;font-size:20px;letter-spacing:-.03em}
+.profile-preferences>label{margin:16px 0 8px;color:#4e6685;font-size:12px;font-weight:750}
+.profile-preferences select,.profile-preferences input:not([type=checkbox]){min-height:48px;border:1px solid #dce5f0;border-radius:13px;background:#f8faff;color:#263f60;font-size:13px}
+.preference-toggle{display:flex!important;align-items:center;gap:11px}
+.preference-toggle input{width:17px;height:17px;accent-color:#5278cf}
+#preferences-status{font-size:11px;line-height:1.6}
+.saved-review-list{display:grid;gap:10px}
+.saved-review-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;border:1px solid #e3eaf3;border-radius:14px;background:#fbfcff}
+.saved-review-item strong{color:#304968;font-size:12px}
+.saved-review-item small{color:#8291a4;font-size:10px}
+#profile-view .secondary-action{margin-top:8px}
+
+@media(max-width:760px){
+ .study-topic-list{grid-template-columns:1fr}
+ .phase-content{padding-left:20px}
+ .assessment-table{display:block;overflow-x:auto;white-space:normal}
+}
+@media(max-width:560px){
+ #curriculum-view,#progress-view,#profile-view{padding-bottom:16px}
+ #curriculum-view .page-intro,#progress-view .page-intro,#profile-view .page-intro{padding:27px 0 20px}
+ #curriculum-view .page-intro h1,#progress-view .page-intro h1,#profile-view .page-intro h1{font-size:39px}
+ .search-wrap{min-height:47px;margin-top:18px}
+ #curriculum-view>.section-head{margin-top:8px}
+ #curriculum-view>.section-head h2{font-size:19px}
+ .track-grid{grid-template-columns:1fr;gap:11px}
+ .track-card{min-height:0;padding:18px;border-radius:19px}
+ .track-card h3{margin:13px 0 6px;font-size:17px}
+ .track-card>p{min-height:0;font-size:12px}
+ .track-status-row{padding-top:14px}
+ #phase-page{padding:18px 0 28px}
+ .dialog-top{padding-bottom:14px}
+ .dialog-top h2{font-size:25px}
+ .phase-list{gap:10px;margin-top:16px}
+ .phase-summary{min-height:70px;padding:13px;gap:11px}
+ .phase-number{width:36px;height:36px;border-radius:12px}
+ .phase-summary-text strong{font-size:12px}
+ .phase-summary-text small{font-size:10px}
+ .phase-content{padding:0 14px 16px}
+ .detail-list{font-size:12px}
+ #phase-study{padding:17px;border-radius:20px}
+ .study-topic{padding:14px}
+ .lesson-page{padding-top:8px}
+ .lesson-page-top{padding:10px 0 16px}
+ .lesson-reader{padding:19px;border-radius:20px}
+ .lesson-lead{font-size:13px}
+ .lesson-reader>p:not(.eyebrow):not(.lesson-lead):not(.muted){font-size:13px}
+ .lesson-reader h5{font-size:14px}
+ .lesson-key-points,.lesson-syntax-notes,.lesson-worked-example,.lesson-knowledge-check,.lesson-sources,.lesson-practice,.lesson-tools{padding:15px;margin:17px 0;border-radius:15px}
+ .lesson-code{padding:14px;font-size:11px}
+ .lesson-pager{align-items:stretch}
+ .lesson-pager button{flex:1;min-width:0;padding:0 9px;font-size:11px}
+ .progress-metrics{gap:9px}
+ .progress-metrics>div{padding:14px}
+ .progress-metrics strong{font-size:25px}
+ .progress-track-row{grid-template-columns:minmax(90px,1fr) minmax(55px,1.2fr) 34px;gap:8px}
+ .progress-track-meta strong{font-size:10px}
+ .progress-track-meta small{font-size:9px}
+ .saved-review-item{align-items:flex-start;flex-direction:column}
+}
