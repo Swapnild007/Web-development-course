@@ -54,7 +54,7 @@ function showView(viewName) {
 navButtons.forEach(button => {
   button.addEventListener("click", () => showView(button.dataset.view));
 });
-document.querySelector("#browse-curriculum").addEventListener("click", () => showView("curriculum"));
+document.querySelector("#browse-curriculum").onclick = () => showView("curriculum");
 document.querySelector("#home-link").addEventListener("click", event => {
   event.preventDefault();
   showView("learn");
@@ -1965,6 +1965,7 @@ function openGuidedLesson(topicIndex = 0, track, phase = track?.phases?.[0], pha
     bookmarkButton.textContent = exists ? "☆ Save for review" : "★ Saved for review";
     bookmarkButton.setAttribute("aria-pressed", String(!exists));
     lessonFeedback.textContent = exists ? "Removed from your review list." : "Added to your review list.";
+    renderSavedReviews();
   });
   toolActions.append(bookmarkButton);
   const notesLabel = makeElement("label", "lesson-notes-label", "Personal notes");
@@ -2056,6 +2057,33 @@ function renderProgress() {
     : `${completedCount} of ${lessonIds.length} available guided lessons completed.`;
 }
 
+
+function renderSavedReviews() {
+  const panel = document.querySelector("#saved-review-list");
+  if (!panel) return;
+  panel.replaceChildren();
+  let bookmarks = [];
+  try { bookmarks = JSON.parse(readSaved(bookmarkStorageKey) || "[]"); if (!Array.isArray(bookmarks)) bookmarks = []; } catch (_) {}
+  if (!bookmarks.length) {
+    panel.append(makeElement("p", "muted", "No saved lessons yet. Use “Save for review” inside a lesson to build your review list."));
+    return;
+  }
+  bookmarks.forEach(item => {
+    const track = tracks.find(entry => entry.id === item.trackId);
+    const phase = track?.phases?.[item.phaseIndex];
+    if (!track || !phase || !phase.topics[item.topicIndex]) return;
+    const row = makeElement("article", "saved-review-item");
+    const meta = makeElement("div", "");
+    meta.append(makeElement("strong", "", item.title || phase.topics[item.topicIndex]));
+    meta.append(makeElement("small", "", track.name + " · Phase " + (item.phaseIndex + 1)));
+    const open = makeElement("button", "secondary-action", "Review →");
+    open.type = "button";
+    open.addEventListener("click", () => openGuidedLesson(item.topicIndex, track, phase, item.phaseIndex));
+    row.append(meta, open);
+    panel.append(row);
+  });
+}
+
 function renderResumeCard() {
   const heading = document.querySelector("#active-track-title");
   const card = document.querySelector(".active-learning-card");
@@ -2111,6 +2139,7 @@ fetch(new URL("data/curriculum.json", document.baseURI), { cache: "no-store" })
     renderTracks();
     renderProgress();
     renderResumeCard();
+    renderSavedReviews();
   })
   .catch(error => {
     trackRoot.textContent = `${error.message} Please refresh or check the published curriculum file.`;
