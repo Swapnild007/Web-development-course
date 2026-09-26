@@ -908,6 +908,314 @@ const phase1TutorRebuild = {
       ],
       "practice": "Write `summarize_expenses(records, threshold=...)` to return total and count without printing. Add an optional category list safely, call it twice without that list, and test empty records, zero amount and a missing category. State the function's contract."
     }
+  ,
+    {
+      "highlight": "A computer works with data it receives, follows a defined process, and produces a result. This input → process → output model is a useful way to describe almost any small program.",
+      "sections": [
+        [
+          "Start with a familiar task",
+          "Imagine a snack kiosk. Someone chooses a snack (input), the kiosk checks the choice and calculates a price (process), then displays the price (output). A program can be understood the same way. The model is not Python-specific and does not require you to know code yet."
+        ],
+        [
+          "Name the three parts",
+          "Input is information coming into a system. Processing is the rule or transformation applied to it. Output is the result a person or another system can use. Some programs also store information or repeat a process, but the three-part model is a dependable starting point."
+        ],
+        [
+          "Walk through a small example",
+          "Task: calculate the total cost for 3 notebooks at 20 rupees each. Input: quantity 3 and unit price 20. Process: multiply quantity by price. Output: total 60 rupees. Before writing code, state what each input means and what output you expect."
+        ],
+        [
+          "Make the steps testable",
+          "Try the same task with quantity 0, quantity 1, and quantity 3. Write down expected results before calculating. This habit catches misunderstandings early and becomes the basis of software testing."
+        ]
+      ],
+      "syntaxNotes": [
+        [
+          "Input → process → output",
+          "Describe the data entering a task, the transformation, and the useful result. You can plan this in plain language before writing Python."
+        ],
+        [
+          "Algorithm",
+          "A finite sequence of clear steps for solving a task. A good algorithm states important assumptions and handles relevant edge cases."
+        ]
+      ],
+      "workedExample": {
+        "title": "Plan a price calculator without code",
+        "code": "INPUT: quantity = 3 notebooks; unit price = ₹20\nPROCESS: quantity × unit price\nOUTPUT: total = ₹60",
+        "explanation": [
+          "The inputs are the two facts the task needs.",
+          "The process is the multiplication rule, not a guess.",
+          "The output is a value with a clear meaning and unit."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "In a price calculator, what is the processing step?",
+          "answer": "Multiplying the quantity by the unit price."
+        },
+        {
+          "question": "Why should you write an expected result before running a program?",
+          "answer": "It gives you an independent prediction to compare with the program's output."
+        },
+        {
+          "question": "Is input always typed by a person?",
+          "answer": "No. Input can come from a file, another program, a device, or a person."
+        }
+      ],
+      "practice": "Plan a simple weekly-hours calculator using plain language only. List its inputs, processing rule, and output. Work through examples for 0 hours, 8 hours, and 40 hours. Add one assumption (for example, whether breaks are included) and explain how that assumption affects the result."
+    },
+    {
+      "highlight": "Python is the language; the editor helps you write a file; the Python interpreter runs it. These are different tools with different jobs.",
+      "sections": [
+        [
+          "Know the three pieces",
+          "Python is the programming language you will learn. A code editor is an application for writing and saving text files. The Python interpreter is the program that reads and executes Python code. A terminal is a place to enter commands that start programs."
+        ],
+        [
+          "Choose a beginner setup",
+          "Use a supported Python 3 release from python.org and an editor you are comfortable with. A simple setup is enough: do not install multiple toolchains or extensions before you can run one file. On some systems Python may already be installed; check which version the terminal finds before installing another."
+        ],
+        [
+          "Check the setup calmly",
+          "Open a terminal and try `python --version`. If that command is not recognized, try `python3 --version` on macOS/Linux or `py --version` on Windows. These commands ask the system to report a version; they do not run your course program. If none works, follow the official installation instructions for your operating system."
+        ],
+        [
+          "Save your first file",
+          "Create a folder for practice. In your editor, make a plain-text file named `hello.py`. The `.py` ending helps identify it as a Python source file. Save it somewhere easy to find, and avoid naming it `python.py` because that can confuse imports later."
+        ],
+        [
+          "Avoid setup rabbit holes",
+          "If the editor has a Run button, it may need to be configured to use the interpreter you installed. When a run fails, note the exact command and error, the operating system, and the version command's output. Change one setup detail at a time."
+        ]
+      ],
+      "syntaxNotes": [
+        [
+          "Interpreter",
+          "The installed Python program that executes your source code."
+        ],
+        [
+          "Editor",
+          "A tool for creating and editing source files. It does not automatically mean Python is installed."
+        ],
+        [
+          "Terminal",
+          "A text interface where you can run commands such as checking the Python version or starting a script."
+        ]
+      ],
+      "workedExample": {
+        "title": "Setup checklist",
+        "code": "1. Install a supported Python 3 version if needed.\n2. Open a terminal.\n3. Run: python --version\n4. If needed, try: python3 --version\n5. Create a practice folder.\n6. Save a plain-text file named hello.py",
+        "explanation": [
+          "The version command confirms that a Python interpreter can be found by that command name.",
+          "A file is not the same thing as a running program; you will execute it in the next lesson.",
+          "If your computer uses a different command, record it so you can repeat the same workflow."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "Does installing a code editor necessarily install Python?",
+          "answer": "No. The editor and interpreter are separate tools."
+        },
+        {
+          "question": "What does `python --version` check?",
+          "answer": "It reports the version of the Python interpreter found by that command."
+        },
+        {
+          "question": "Why should your practice file not be named `python.py`?",
+          "answer": "It can shadow the Python module name and cause confusing import behavior."
+        }
+      ],
+      "practice": "Complete the setup checklist and write down your operating system, the exact version command that worked, and the reported Python version. Create a folder named `python-practice` and save an empty `hello.py` file inside it. If a step fails, capture the exact message and document the single change that resolved it."
+    },
+    {
+      "highlight": "A program is source text saved in a file. Running it asks the Python interpreter to execute its instructions; the output you see is the program's observable behavior.",
+      "sections": [
+        [
+          "Read the tiny program",
+          "Open `hello.py` and enter the two-line example below. The first line tells Python to display a piece of text. The quoted words are text data. The parentheses group the value being passed to the display operation."
+        ],
+        [
+          "Predict, then run",
+          "Before running, write down exactly what you expect to appear. In the terminal, move to the folder containing the file and run `python hello.py` (or the command that worked on your setup). Compare the actual output with your prediction."
+        ],
+        [
+          "Understand source and output",
+          "The source file contains instructions. The interpreter executes them. The terminal displays the output. The output is not automatically saved back into the source file. This distinction helps you identify whether a problem is in the instructions, the run command, or the result you expected."
+        ],
+        [
+          "Change one thing at a time",
+          "Change the greeting text and run the file again. Then add a second display instruction on a new line. Predict the order of the two lines before running. Keeping each experiment small makes cause and effect easier to see."
+        ],
+        [
+          "Build a tiny success test",
+          "A test can be a simple check: did the exact expected text appear, once, and in the expected order? You are not expected to use a testing library yet. You are practicing how to define correct behavior."
+        ]
+      ],
+      "syntaxNotes": [
+        [
+          "print(...)",
+          "A built-in function that writes a readable representation of its arguments to the output stream, usually the terminal."
+        ],
+        [
+          "Quoted text",
+          "Text such as `\"Hello, world!\"` is called a string. Keep the opening and closing quote paired."
+        ],
+        [
+          "Line order",
+          "Python normally executes top-level statements in the order they appear, from top to bottom."
+        ]
+      ],
+      "workedExample": {
+        "title": "Your first running Python file",
+        "code": "print(\"Hello, world!\")\nprint(\"I ran my first Python program.\")",
+        "explanation": [
+          "The first instruction displays `Hello, world!`.",
+          "The second instruction runs after the first and displays its own text on the next line.",
+          "Expected terminal output:\nHello, world!\nI ran my first Python program."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "Where do you type the program's instructions?",
+          "answer": "In the source file in your code editor."
+        },
+        {
+          "question": "What should happen if two print instructions appear one after the other?",
+          "answer": "Their output appears in the same order, on separate lines."
+        },
+        {
+          "question": "What is the purpose of predicting output before running?",
+          "answer": "It makes a clear comparison possible and helps you notice misunderstandings."
+        }
+      ],
+      "practice": "Create `hello.py` with a greeting, your chosen learning goal, and one question you want Python to help answer. Predict the three output lines, run the file, and compare. Then change only the greeting and rerun. Submit the source text, the output, and a short note describing what changed."
+    },
+    {
+      "highlight": "Debugging is a disciplined investigation, not random editing. Read the exact error, find the location it points to, form one hypothesis, make one small change, and rerun.",
+      "sections": [
+        [
+          "A deliberate first mistake",
+          "In your practice file, temporarily remove the closing quote from a print instruction. Run the file and observe the error. This is a safe, reversible experiment. Restore the quote after you have read the message."
+        ],
+        [
+          "Read the message in layers",
+          "An error often includes a type/name, a message, a file name, and a line number. The final line usually tells you the immediate problem. A caret or highlighted location points near where Python noticed it, which may be slightly after where the underlying mistake began."
+        ],
+        [
+          "Separate observation from guess",
+          "Observation: the message says a string was never closed. Guess: the missing closing quote caused it. Test the guess by restoring the quote and rerunning. If the error remains, revise the hypothesis using the new evidence instead of making several unrelated edits."
+        ],
+        [
+          "Use a four-step routine",
+          "1. Reproduce the issue. 2. Read the full message and note the file/line. 3. Change one likely cause. 4. Run again and compare with the expected behavior. Keep a short record of the original error and the verified fix."
+        ],
+        [
+          "Know when it is not your code",
+          "A command-not-found message can mean the terminal cannot find Python or the file path, rather than a mistake in the Python instructions. Check the command, current folder, and exact file name before changing source code."
+        ]
+      ],
+      "syntaxNotes": [
+        [
+          "Syntax error",
+          "Python cannot parse the source as valid Python instructions, often because punctuation or structure is incomplete."
+        ],
+        [
+          "Runtime error",
+          "The source was accepted, but execution encountered a problem while the program was running."
+        ],
+        [
+          "Traceback",
+          "A report that shows the chain of calls leading to an error; later lessons will teach you to read it in more detail."
+        ]
+      ],
+      "workedExample": {
+        "title": "Debug the missing quote",
+        "code": "print(\"Hello, world!)  # missing closing quote\n\n# Corrected:\nprint(\"Hello, world!\")",
+        "explanation": [
+          "The first line has an opening quote but no matching closing quote.",
+          "Python cannot understand the intended end of the text, so it reports a syntax problem.",
+          "The corrected line pairs the quotes. Run it to verify the expected greeting appears."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "What is a useful first step when a program fails?",
+          "answer": "Reproduce the issue and read the full error message before editing."
+        },
+        {
+          "question": "Why change only one likely cause at a time?",
+          "answer": "So you can tell which change affected the result and avoid introducing unrelated errors."
+        },
+        {
+          "question": "Does every terminal error mean your Python source code is wrong?",
+          "answer": "No. It may be a command, file-location, or environment problem."
+        }
+      ],
+      "practice": "Make one intentional syntax mistake in your own tiny program, run it, and record the exact error and line reference. Correct only that issue and rerun. Then create a second experiment by using a file name that does not exist in the run command; compare the type of failure. Restore the correct file and submit a short observation-versus-hypothesis debugging log."
+    },
+    {
+      "highlight": "Python reads instructions in a defined order. The interpreter evaluates expressions, uses values, and performs operations; later lessons will teach you to express those operations in code.",
+      "sections": [
+        [
+          "A machine follows rules, not intentions",
+          "A computer does not infer a missing step the way a person might. If a task says “make the total,” it still needs to know which values to combine and which operation to use. Clear instructions remove ambiguity."
+        ],
+        [
+          "Trace a task on paper",
+          "Suppose a vending machine begins with a balance of 100 points. A user selects an item costing 35 points. The steps are: start with 100, subtract 35, display 65. Write the current value after every step before trying to express it in code."
+        ],
+        [
+          "Order matters",
+          "If you subtract 35 from 100, the result is 65. If you subtract 100 from 35, the result is -65. The same numbers and operation can produce a different result when the order changes."
+        ],
+        [
+          "State assumptions",
+          "What if the item costs more than the available balance? A real design must decide whether to reject the purchase, allow a negative balance, or ask for more points. The computer cannot choose the business rule for you. Write the rule before implementing it."
+        ],
+        [
+          "From plan to program",
+          "An algorithm is the plan. Code is the plan written in a language the computer can execute. A trace is a record of the values and decisions as the plan runs. Tracing helps explain what happened without relying on intuition."
+        ]
+      ],
+      "syntaxNotes": [
+        [
+          "Step-by-step execution",
+          "At a basic level, Python executes top-level instructions in order. Expressions are evaluated to produce values, and statements use those values to perform an action."
+        ],
+        [
+          "State",
+          "The information a program currently holds, such as the balance in the vending-machine example."
+        ],
+        [
+          "Trace",
+          "A written or observed record of how values change as instructions execute."
+        ]
+      ],
+      "workedExample": {
+        "title": "Trace the balance by hand",
+        "code": "Starting balance: 100 points\nItem cost:       35 points\nOperation:       100 - 35\nNew balance:     65 points\n\nIf cost > balance: reject the purchase",
+        "explanation": [
+          "The current balance is the state before the operation.",
+          "The subtraction is the processing step.",
+          "The final line is a business rule for an edge case, not a Python syntax requirement."
+        ]
+      },
+      "knowledgeCheck": [
+        {
+          "question": "Why must instructions be explicit?",
+          "answer": "The computer follows the stated rules and does not reliably fill in missing assumptions."
+        },
+        {
+          "question": "What does a trace show?",
+          "answer": "The values and decisions as a sequence of steps executes."
+        },
+        {
+          "question": "What should you do if the requirements do not say what happens when funds are insufficient?",
+          "answer": "Clarify and document the intended rule before implementing it."
+        }
+      ],
+      "practice": "Write an algorithm in plain English for checking whether a learner can borrow a library book. Include at least three inputs or facts, the order of checks, and what output should be shown. Add edge cases such as an overdue book and an unavailable copy. Trace two sample cases manually and explain why each step occurs."
+    }
   ],
   "excel": [
     {
