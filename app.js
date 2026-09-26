@@ -1711,6 +1711,37 @@ function openPhaseStudy(track, phase, index) {
   studyProject.textContent = phase.project;
   studyCheckpoints.replaceChildren();
   phase.checkpoints.forEach(checkpoint => studyCheckpoints.append(makeElement("li", "", checkpoint)));
+  const priorProject = phaseStudy.querySelector(".phase-project-brief");
+  if (priorProject) priorProject.remove();
+  const priorAssessment = phaseStudy.querySelector(".phase-assessment");
+  if (priorAssessment) priorAssessment.remove();
+  if (phase.projectBrief) {
+    const brief = makeElement("section", "study-reader-block phase-project-brief");
+    brief.append(makeElement("h4", "", "Project brief · Required build"));
+    brief.append(makeElement("p", "", phase.projectBrief.outcome));
+    for (const [heading, entries] of [["Required features", phase.projectBrief.requiredFeatures], ["Submission deliverables", phase.projectBrief.deliverables], ["Acceptance criteria", phase.projectBrief.acceptance]]) {
+      brief.append(makeElement("h5", "", heading));
+      const list = makeElement("ul", "detail-list");
+      entries.forEach(entry => list.append(makeElement("li", "", entry)));
+      brief.append(list);
+    }
+    phaseStudy.append(brief);
+  }
+  if (Array.isArray(phase.assessment)) {
+    const assessment = makeElement("section", "study-reader-block phase-assessment");
+    assessment.append(makeElement("h4", "", "Assessment rubric"));
+    const table = makeElement("table", "assessment-table");
+    const head = makeElement("tr");
+    ["Dimension", "Weight", "Evidence expected"].forEach(label => head.append(makeElement("th", "", label)));
+    table.append(head);
+    phase.assessment.forEach(([dimension, weight, evidence]) => {
+      const row = makeElement("tr");
+      [dimension, weight, evidence].forEach(value => row.append(makeElement("td", "", value)));
+      table.append(row);
+    });
+    assessment.append(table);
+    phaseStudy.append(assessment);
+  }
   phaseList.hidden = true;
   phaseStudy.hidden = false;
   const studyNote = phaseStudy.querySelector(".study-note");
