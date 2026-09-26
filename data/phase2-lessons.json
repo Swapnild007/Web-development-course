@@ -1,0 +1,824 @@
+{
+  "version": 1,
+  "phase": 2,
+  "tracks": {
+    "python": [
+      {
+        "title": "Generators and iterators",
+        "lead": "Phase 02 lesson: Generators and iterators. Demand-driven iteration.",
+        "highlight": "Demand-driven iteration",
+        "keyPoints": [
+          "Demand-driven iteration",
+          "Implement a generator with yield, chain a generator expression, and explain exhaustion and lazy evaluation.",
+          "Connect this concept to the phase project and verify it with a small independent test."
+        ],
+        "sections": [
+          [
+            "Learning objective",
+            "Explain and apply Generators and iterators in a realistic workflow."
+          ],
+          [
+            "Mental model",
+            "Demand-driven iteration"
+          ],
+          [
+            "Guided walkthrough",
+            "Implement a generator with yield, chain a generator expression, and explain exhaustion and lazy evaluation."
+          ],
+          [
+            "Worked example",
+            "def positive_amounts(rows):\n    for row in rows:\n        amount = row.get('amount', 0)\n        if amount > 0:\n            yield amount\n\npipeline = (amount * 1.1 for amount in positive_amounts(rows))\nprint(list(pipeline))"
+          ],
+          [
+            "Integration and failure modes",
+            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+          ]
+        ],
+        "syntaxNotes": [
+          [
+            "Core pattern",
+            "def positive_amounts(rows):\n    for row in rows:\n        amount = row.get('amount', 0)\n        if amount > 0:\n            yield amount\n\npipeline = (amount * 1.1 for amount in positive_amounts(rows))\nprint(list(pipeline))"
+          ],
+          [
+            "Important design rule",
+            "Implement a generator with yield, chain a generator expression, and explain exhaustion and lazy evaluation."
+          ]
+        ],
+        "code": "def positive_amounts(rows):\n    for row in rows:\n        amount = row.get('amount', 0)\n        if amount > 0:\n            yield amount\n\npipeline = (amount * 1.1 for amount in positive_amounts(rows))\nprint(list(pipeline))",
+        "practice": "Add yield from to delegate a sub-generator; compare memory and reuse behavior against a list comprehension.",
+        "workedExample": {
+          "title": "Study the pattern, then modify it",
+          "code": "def positive_amounts(rows):\n    for row in rows:\n        amount = row.get('amount', 0)\n        if amount > 0:\n            yield amount\n\npipeline = (amount * 1.1 for amount in positive_amounts(rows))\nprint(list(pipeline))",
+          "explanation": [
+            "Demand-driven iteration",
+            "Implement a generator with yield, chain a generator expression, and explain exhaustion and lazy evaluation.",
+            "Predict how one changed input affects the result, run the modified example, and explain any difference."
+          ]
+        },
+        "knowledgeCheck": [
+          {
+            "question": "What is the central idea behind Generators and iterators?",
+            "answer": "Demand-driven iteration"
+          },
+          {
+            "question": "What should you validate before calling the result correct?",
+            "answer": "Check assumptions, boundary cases and a small independently verified example; document what the test proves and what it does not prove."
+          }
+        ],
+        "sources": [
+          "https://docs.python.org/3/tutorial/classes.html",
+          "https://docs.python.org/3/library/functools.html",
+          "https://mypy.readthedocs.io/en/stable/"
+        ]
+      },
+      {
+        "title": "Decorators and context managers",
+        "lead": "Phase 02 lesson: Decorators and context managers. Cross-cutting behavior and safe cleanup.",
+        "highlight": "Cross-cutting behavior and safe cleanup",
+        "keyPoints": [
+          "Cross-cutting behavior and safe cleanup",
+          "A decorator wraps a callable; a context manager brackets a block. Preserve metadata and guarantee cleanup on both success and exceptions.",
+          "Connect this concept to the phase project and verify it with a small independent test."
+        ],
+        "sections": [
+          [
+            "Learning objective",
+            "Explain and apply Decorators and context managers in a realistic workflow."
+          ],
+          [
+            "Mental model",
+            "Cross-cutting behavior and safe cleanup"
+          ],
+          [
+            "Guided walkthrough",
+            "A decorator wraps a callable; a context manager brackets a block. Preserve metadata and guarantee cleanup on both success and exceptions."
+          ],
+          [
+            "Worked example",
+            "from functools import wraps\nfrom time import perf_counter\n\ndef timed(fn):\n    @wraps(fn)\n    def wrapper(*args, **kwargs):\n        start = perf_counter()\n        try:\n            return fn(*args, **kwargs)\n        finally:\n            print(f'{fn.__name__}: {perf_counter()-start:.3f}s')\n    return wrapper\n\n@timed\ndef total(values):\n    return sum(values)"
+          ],
+          [
+            "Integration and failure modes",
+            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+          ]
+        ],
+        "syntaxNotes": [
+          [
+            "Core pattern",
+            "from functools import wraps\nfrom time import perf_counter\n\ndef timed(fn):\n    @wraps(fn)\n    def wrapper(*args, **kwargs):\n        start = perf_counter()\n        try:\n            return fn(*args, **kwargs)\n        finally:\n            print(f'{fn.__name__}: {perf_counter()-start:.3f}s')\n    return wrapper\n\n@timed\ndef total(values):\n    return sum(values)"
+          ],
+          [
+            "Important design rule",
+            "A decorator wraps a callable; a context manager brackets a block. Preserve metadata and guarantee cleanup on both success and exceptions."
+          ]
+        ],
+        "code": "from functools import wraps\nfrom time import perf_counter\n\ndef timed(fn):\n    @wraps(fn)\n    def wrapper(*args, **kwargs):\n        start = perf_counter()\n        try:\n            return fn(*args, **kwargs)\n        finally:\n            print(f'{fn.__name__}: {perf_counter()-start:.3f}s')\n    return wrapper\n\n@timed\ndef total(values):\n    return sum(values)",
+        "practice": "Implement a bounded retry decorator and both class-based and contextlib.contextmanager forms. Verify exception propagation and cleanup.",
+        "workedExample": {
+          "title": "Study the pattern, then modify it",
+          "code": "from functools import wraps\nfrom time import perf_counter\n\ndef timed(fn):\n    @wraps(fn)\n    def wrapper(*args, **kwargs):\n        start = perf_counter()\n        try:\n            return fn(*args, **kwargs)\n        finally:\n            print(f'{fn.__name__}: {perf_counter()-start:.3f}s')\n    return wrapper\n\n@timed\ndef total(values):\n    return sum(values)",
+          "explanation": [
+            "Cross-cutting behavior and safe cleanup",
+            "A decorator wraps a callable; a context manager brackets a block. Preserve metadata and guarantee cleanup on both success and exceptions.",
+            "Predict how one changed input affects the result, run the modified example, and explain any difference."
+          ]
+        },
+        "knowledgeCheck": [
+          {
+            "question": "What is the central idea behind Decorators and context managers?",
+            "answer": "Cross-cutting behavior and safe cleanup"
+          },
+          {
+            "question": "What should you validate before calling the result correct?",
+            "answer": "Check assumptions, boundary cases and a small independently verified example; document what the test proves and what it does not prove."
+          }
+        ],
+        "sources": [
+          "https://docs.python.org/3/tutorial/classes.html",
+          "https://docs.python.org/3/library/functools.html",
+          "https://mypy.readthedocs.io/en/stable/"
+        ]
+      },
+      {
+        "title": "OOP, dunder methods, dataclasses and ABCs",
+        "lead": "Phase 02 lesson: OOP, dunder methods, dataclasses and ABCs. Domain model and object protocols.",
+        "highlight": "Domain model and object protocols",
+        "keyPoints": [
+          "Domain model and object protocols",
+          "Use dataclasses for value records, dunder methods for Python protocols, and an ABC for required behavior. Prefer composition unless subtype substitutability is real.",
+          "Connect this concept to the phase project and verify it with a small independent test."
+        ],
+        "sections": [
+          [
+            "Learning objective",
+            "Explain and apply OOP, dunder methods, dataclasses and ABCs in a realistic workflow."
+          ],
+          [
+            "Mental model",
+            "Domain model and object protocols"
+          ],
+          [
+            "Guided walkthrough",
+            "Use dataclasses for value records, dunder methods for Python protocols, and an ABC for required behavior. Prefer composition unless subtype substitutability is real."
+          ],
+          [
+            "Worked example",
+            "from dataclasses import dataclass\nfrom abc import ABC, abstractmethod\n\n@dataclass(frozen=True)\nclass Book:\n    isbn: str\n    title: str\n\nclass Catalog(ABC):\n    @abstractmethod\n    def find(self, isbn: str) -> Book | None:\n        ..."
+          ],
+          [
+            "Integration and failure modes",
+            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+          ]
+        ],
+        "syntaxNotes": [
+          [
+            "Core pattern",
+            "from dataclasses import dataclass\nfrom abc import ABC, abstractmethod\n\n@dataclass(frozen=True)\nclass Book:\n    isbn: str\n    title: str\n\nclass Catalog(ABC):\n    @abstractmethod\n    def find(self, isbn: str) -> Book | None:\n        ..."
+          ],
+          [
+            "Important design rule",
+            "Use dataclasses for value records, dunder methods for Python protocols, and an ABC for required behavior. Prefer composition unless subtype substitutability is real."
+          ]
+        ],
+        "code": "from dataclasses import dataclass\nfrom abc import ABC, abstractmethod\n\n@dataclass(frozen=True)\nclass Book:\n    isbn: str\n    title: str\n\nclass Catalog(ABC):\n    @abstractmethod\n    def find(self, isbn: str) -> Book | None:\n        ...",
+        "practice": "Create Book, Member and Loan records plus an in-memory Catalog. Enforce the invariant that a book cannot have two active loans; test equality and hashing assumptions.",
+        "workedExample": {
+          "title": "Study the pattern, then modify it",
+          "code": "from dataclasses import dataclass\nfrom abc import ABC, abstractmethod\n\n@dataclass(frozen=True)\nclass Book:\n    isbn: str\n    title: str\n\nclass Catalog(ABC):\n    @abstractmethod\n    def find(self, isbn: str) -> Book | None:\n        ...",
+          "explanation": [
+            "Domain model and object protocols",
+            "Use dataclasses for value records, dunder methods for Python protocols, and an ABC for required behavior. Prefer composition unless subtype substitutability is real.",
+            "Predict how one changed input affects the result, run the modified example, and explain any difference."
+          ]
+        },
+        "knowledgeCheck": [
+          {
+            "question": "What is the central idea behind OOP, dunder methods, dataclasses and ABCs?",
+            "answer": "Domain model and object protocols"
+          },
+          {
+            "question": "What should you validate before calling the result correct?",
+            "answer": "Check assumptions, boundary cases and a small independently verified example; document what the test proves and what it does not prove."
+          }
+        ],
+        "sources": [
+          "https://docs.python.org/3/tutorial/classes.html",
+          "https://docs.python.org/3/library/functools.html",
+          "https://mypy.readthedocs.io/en/stable/"
+        ]
+      },
+      {
+        "title": "Functional patterns, type hints, Protocol and mypy",
+        "lead": "Phase 02 lesson: Functional patterns, type hints, Protocol and mypy. Readable transformations and explicit contracts.",
+        "highlight": "Readable transformations and explicit contracts",
+        "keyPoints": [
+          "Readable transformations and explicit contracts",
+          "map/filter are lazy iterators, reduce folds values, and small lambdas can express short transforms. Type hints document contracts; Protocol enables structural typing but does not validate runtime input.",
+          "Connect this concept to the phase project and verify it with a small independent test."
+        ],
+        "sections": [
+          [
+            "Learning objective",
+            "Explain and apply Functional patterns, type hints, Protocol and mypy in a realistic workflow."
+          ],
+          [
+            "Mental model",
+            "Readable transformations and explicit contracts"
+          ],
+          [
+            "Guided walkthrough",
+            "map/filter are lazy iterators, reduce folds values, and small lambdas can express short transforms. Type hints document contracts; Protocol enables structural typing but does not validate runtime input."
+          ],
+          [
+            "Worked example",
+            "from typing import Protocol\n\nclass HasAmount(Protocol):\n    amount: int\n\ndef total_amount(items: list[HasAmount]) -> int:\n    return sum(item.amount for item in items)\n\nprint(list(filter(lambda n: n > 0, [-2, 0, 4])))"
+          ],
+          [
+            "Integration and failure modes",
+            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+          ]
+        ],
+        "syntaxNotes": [
+          [
+            "Core pattern",
+            "from typing import Protocol\n\nclass HasAmount(Protocol):\n    amount: int\n\ndef total_amount(items: list[HasAmount]) -> int:\n    return sum(item.amount for item in items)\n\nprint(list(filter(lambda n: n > 0, [-2, 0, 4])))"
+          ],
+          [
+            "Important design rule",
+            "map/filter are lazy iterators, reduce folds values, and small lambdas can express short transforms. Type hints document contracts; Protocol enables structural typing but does not validate runtime input."
+          ]
+        ],
+        "code": "from typing import Protocol\n\nclass HasAmount(Protocol):\n    amount: int\n\ndef total_amount(items: list[HasAmount]) -> int:\n    return sum(item.amount for item in items)\n\nprint(list(filter(lambda n: n > 0, [-2, 0, 4])))",
+        "practice": "Annotate the library project, use Optional/Union where needed, define a Protocol, then run mypy --strict and resolve errors without blanket ignores.",
+        "workedExample": {
+          "title": "Study the pattern, then modify it",
+          "code": "from typing import Protocol\n\nclass HasAmount(Protocol):\n    amount: int\n\ndef total_amount(items: list[HasAmount]) -> int:\n    return sum(item.amount for item in items)\n\nprint(list(filter(lambda n: n > 0, [-2, 0, 4])))",
+          "explanation": [
+            "Readable transformations and explicit contracts",
+            "map/filter are lazy iterators, reduce folds values, and small lambdas can express short transforms. Type hints document contracts; Protocol enables structural typing but does not validate runtime input.",
+            "Predict how one changed input affects the result, run the modified example, and explain any difference."
+          ]
+        },
+        "knowledgeCheck": [
+          {
+            "question": "What is the central idea behind Functional patterns, type hints, Protocol and mypy?",
+            "answer": "Readable transformations and explicit contracts"
+          },
+          {
+            "question": "What should you validate before calling the result correct?",
+            "answer": "Check assumptions, boundary cases and a small independently verified example; document what the test proves and what it does not prove."
+          }
+        ],
+        "sources": [
+          "https://docs.python.org/3/tutorial/classes.html",
+          "https://docs.python.org/3/library/functools.html",
+          "https://mypy.readthedocs.io/en/stable/"
+        ]
+      }
+    ],
+    "excel": [
+      {
+        "title": "Dynamic arrays: UNIQUE, SORT, FILTER, spill and SEQUENCE",
+        "lead": "Phase 02 lesson: Dynamic arrays: UNIQUE, SORT, FILTER, spill and SEQUENCE. Formula-driven, expanding result sets.",
+        "highlight": "Formula-driven, expanding result sets",
+        "keyPoints": [
+          "Formula-driven, expanding result sets",
+          "Dynamic arrays spill from one formula cell; # references the complete spill. Use FILTER's empty-result argument and keep the spill area unobstructed to avoid #SPILL!.",
+          "Connect this concept to the phase project and verify it with a small independent test."
+        ],
+        "sections": [
+          [
+            "Learning objective",
+            "Explain and apply Dynamic arrays: UNIQUE, SORT, FILTER, spill and SEQUENCE in a realistic workflow."
+          ],
+          [
+            "Mental model",
+            "Formula-driven, expanding result sets"
+          ],
+          [
+            "Guided walkthrough",
+            "Dynamic arrays spill from one formula cell; # references the complete spill. Use FILTER's empty-result argument and keep the spill area unobstructed to avoid #SPILL!."
+          ],
+          [
+            "Worked example",
+            "=SORT(UNIQUE(Sales[Region]))\n=FILTER(Sales,Sales[Region]=H2,\"No matching rows\")\n=SEQUENCE(12,1,1,1)"
+          ],
+          [
+            "Integration and failure modes",
+            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+          ]
+        ],
+        "syntaxNotes": [
+          [
+            "Core pattern",
+            "=SORT(UNIQUE(Sales[Region]))\n=FILTER(Sales,Sales[Region]=H2,\"No matching rows\")\n=SEQUENCE(12,1,1,1)"
+          ],
+          [
+            "Important design rule",
+            "Dynamic arrays spill from one formula cell; # references the complete spill. Use FILTER's empty-result argument and keep the spill area unobstructed to avoid #SPILL!."
+          ]
+        ],
+        "code": "=SORT(UNIQUE(Sales[Region]))\n=FILTER(Sales,Sales[Region]=H2,\"No matching rows\")\n=SEQUENCE(12,1,1,1)",
+        "practice": "Create a region list and selected-region view. Sort by revenue using SORTBY, use a spill reference in a dropdown, then add source rows and confirm the view expands.",
+        "workedExample": {
+          "title": "Study the pattern, then modify it",
+          "code": "=SORT(UNIQUE(Sales[Region]))\n=FILTER(Sales,Sales[Region]=H2,\"No matching rows\")\n=SEQUENCE(12,1,1,1)",
+          "explanation": [
+            "Formula-driven, expanding result sets",
+            "Dynamic arrays spill from one formula cell; # references the complete spill. Use FILTER's empty-result argument and keep the spill area unobstructed to avoid #SPILL!.",
+            "Predict how one changed input affects the result, run the modified example, and explain any difference."
+          ]
+        },
+        "knowledgeCheck": [
+          {
+            "question": "What is the central idea behind Dynamic arrays: UNIQUE, SORT, FILTER, spill and SEQUENCE?",
+            "answer": "Formula-driven, expanding result sets"
+          },
+          {
+            "question": "What should you validate before calling the result correct?",
+            "answer": "Check assumptions, boundary cases and a small independently verified example; document what the test proves and what it does not prove."
+          }
+        ],
+        "sources": [
+          "https://support.microsoft.com/en-us/excel",
+          "https://support.microsoft.com/en-us/office/xlookup-function"
+        ]
+      },
+      {
+        "title": "XLOOKUP, INDEX/MATCH, CHOOSECOLS and CHOOSEROWS",
+        "lead": "Phase 02 lesson: XLOOKUP, INDEX/MATCH, CHOOSECOLS and CHOOSEROWS. Robust retrieval and array shaping.",
+        "highlight": "Robust retrieval and array shaping",
+        "keyPoints": [
+          "Robust retrieval and array shaping",
+          "Separate lookup key, lookup array and return array. XLOOKUP defaults to exact match; supply a not-found result. INDEX/MATCH remains useful for compatibility and flexible layouts.",
+          "Connect this concept to the phase project and verify it with a small independent test."
+        ],
+        "sections": [
+          [
+            "Learning objective",
+            "Explain and apply XLOOKUP, INDEX/MATCH, CHOOSECOLS and CHOOSEROWS in a realistic workflow."
+          ],
+          [
+            "Mental model",
+            "Robust retrieval and array shaping"
+          ],
+          [
+            "Guided walkthrough",
+            "Separate lookup key, lookup array and return array. XLOOKUP defaults to exact match; supply a not-found result. INDEX/MATCH remains useful for compatibility and flexible layouts."
+          ],
+          [
+            "Worked example",
+            "=XLOOKUP(H2,Products[SKU],Products[Price],\"SKU not found\")\n=INDEX(Products[Price],MATCH(H2,Products[SKU],0))\n=CHOOSECOLS(Sales,1,3,5)"
+          ],
+          [
+            "Integration and failure modes",
+            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+          ]
+        ],
+        "syntaxNotes": [
+          [
+            "Core pattern",
+            "=XLOOKUP(H2,Products[SKU],Products[Price],\"SKU not found\")\n=INDEX(Products[Price],MATCH(H2,Products[SKU],0))\n=CHOOSECOLS(Sales,1,3,5)"
+          ],
+          [
+            "Important design rule",
+            "Separate lookup key, lookup array and return array. XLOOKUP defaults to exact match; supply a not-found result. INDEX/MATCH remains useful for compatibility and flexible layouts."
+          ]
+        ],
+        "code": "=XLOOKUP(H2,Products[SKU],Products[Price],\"SKU not found\")\n=INDEX(Products[Price],MATCH(H2,Products[SKU],0))\n=CHOOSECOLS(Sales,1,3,5)",
+        "practice": "Build a product lookup with missing-key handling and a compact report using CHOOSECOLS. Insert a source column and document how you keep field selection stable.",
+        "workedExample": {
+          "title": "Study the pattern, then modify it",
+          "code": "=XLOOKUP(H2,Products[SKU],Products[Price],\"SKU not found\")\n=INDEX(Products[Price],MATCH(H2,Products[SKU],0))\n=CHOOSECOLS(Sales,1,3,5)",
+          "explanation": [
+            "Robust retrieval and array shaping",
+            "Separate lookup key, lookup array and return array. XLOOKUP defaults to exact match; supply a not-found result. INDEX/MATCH remains useful for compatibility and flexible layouts.",
+            "Predict how one changed input affects the result, run the modified example, and explain any difference."
+          ]
+        },
+        "knowledgeCheck": [
+          {
+            "question": "What is the central idea behind XLOOKUP, INDEX/MATCH, CHOOSECOLS and CHOOSEROWS?",
+            "answer": "Robust retrieval and array shaping"
+          },
+          {
+            "question": "What should you validate before calling the result correct?",
+            "answer": "Check assumptions, boundary cases and a small independently verified example; document what the test proves and what it does not prove."
+          }
+        ],
+        "sources": [
+          "https://support.microsoft.com/en-us/excel",
+          "https://support.microsoft.com/en-us/office/xlookup-function"
+        ]
+      },
+      {
+        "title": "LET and LAMBDA",
+        "lead": "Phase 02 lesson: LET and LAMBDA. Readable formulas and reusable workbook functions.",
+        "highlight": "Readable formulas and reusable workbook functions",
+        "keyPoints": [
+          "Readable formulas and reusable workbook functions",
+          "LET names intermediate values inside a formula and avoids repeated expressions. LAMBDA packages a calculation as a reusable function; recursive versions require a base case.",
+          "Connect this concept to the phase project and verify it with a small independent test."
+        ],
+        "sections": [
+          [
+            "Learning objective",
+            "Explain and apply LET and LAMBDA in a realistic workflow."
+          ],
+          [
+            "Mental model",
+            "Readable formulas and reusable workbook functions"
+          ],
+          [
+            "Guided walkthrough",
+            "LET names intermediate values inside a formula and avoids repeated expressions. LAMBDA packages a calculation as a reusable function; recursive versions require a base case."
+          ],
+          [
+            "Worked example",
+            "=LET(net,[@Sales]-[@Returns],rate,IFERROR(net/[@Sales],0),rate)\n=LAMBDA(amount,discount,amount*(1-discount))(B2,C2)"
+          ],
+          [
+            "Integration and failure modes",
+            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+          ]
+        ],
+        "syntaxNotes": [
+          [
+            "Core pattern",
+            "=LET(net,[@Sales]-[@Returns],rate,IFERROR(net/[@Sales],0),rate)\n=LAMBDA(amount,discount,amount*(1-discount))(B2,C2)"
+          ],
+          [
+            "Important design rule",
+            "LET names intermediate values inside a formula and avoids repeated expressions. LAMBDA packages a calculation as a reusable function; recursive versions require a base case."
+          ]
+        ],
+        "code": "=LET(net,[@Sales]-[@Returns],rate,IFERROR(net/[@Sales],0),rate)\n=LAMBDA(amount,discount,amount*(1-discount))(B2,C2)",
+        "practice": "Refactor a nested calculation with LET. Define a named NETSALES LAMBDA, test zero/blank inputs and record its argument contract.",
+        "workedExample": {
+          "title": "Study the pattern, then modify it",
+          "code": "=LET(net,[@Sales]-[@Returns],rate,IFERROR(net/[@Sales],0),rate)\n=LAMBDA(amount,discount,amount*(1-discount))(B2,C2)",
+          "explanation": [
+            "Readable formulas and reusable workbook functions",
+            "LET names intermediate values inside a formula and avoids repeated expressions. LAMBDA packages a calculation as a reusable function; recursive versions require a base case.",
+            "Predict how one changed input affects the result, run the modified example, and explain any difference."
+          ]
+        },
+        "knowledgeCheck": [
+          {
+            "question": "What is the central idea behind LET and LAMBDA?",
+            "answer": "Readable formulas and reusable workbook functions"
+          },
+          {
+            "question": "What should you validate before calling the result correct?",
+            "answer": "Check assumptions, boundary cases and a small independently verified example; document what the test proves and what it does not prove."
+          }
+        ],
+        "sources": [
+          "https://support.microsoft.com/en-us/excel",
+          "https://support.microsoft.com/en-us/office/xlookup-function"
+        ]
+      },
+      {
+        "title": "Data Tables, Goal Seek and Scenario Manager",
+        "lead": "Phase 02 lesson: Data Tables, Goal Seek and Scenario Manager. Sensitivity analysis with explicit assumptions.",
+        "highlight": "Sensitivity analysis with explicit assumptions",
+        "keyPoints": [
+          "Sensitivity analysis with explicit assumptions",
+          "Goal Seek changes one input to reach one target. A one- or two-variable Data Table substitutes input combinations into a formula; Scenario Manager stores named assumption sets.",
+          "Connect this concept to the phase project and verify it with a small independent test."
+        ],
+        "sections": [
+          [
+            "Learning objective",
+            "Explain and apply Data Tables, Goal Seek and Scenario Manager in a realistic workflow."
+          ],
+          [
+            "Mental model",
+            "Sensitivity analysis with explicit assumptions"
+          ],
+          [
+            "Guided walkthrough",
+            "Goal Seek changes one input to reach one target. A one- or two-variable Data Table substitutes input combinations into a formula; Scenario Manager stores named assumption sets."
+          ],
+          [
+            "Worked example",
+            "Model: Profit = (Price-Cost)*Units\nGoal Seek: target Profit cell; changing Price cell\nTwo-variable table: row inputs = price; column inputs = units"
+          ],
+          [
+            "Integration and failure modes",
+            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+          ]
+        ],
+        "syntaxNotes": [
+          [
+            "Core pattern",
+            "Model: Profit = (Price-Cost)*Units\nGoal Seek: target Profit cell; changing Price cell\nTwo-variable table: row inputs = price; column inputs = units"
+          ],
+          [
+            "Important design rule",
+            "Goal Seek changes one input to reach one target. A one- or two-variable Data Table substitutes input combinations into a formula; Scenario Manager stores named assumption sets."
+          ]
+        ],
+        "code": "Model: Profit = (Price-Cost)*Units\nGoal Seek: target Profit cell; changing Price cell\nTwo-variable table: row inputs = price; column inputs = units",
+        "practice": "Create low/base/high cases and a two-variable sensitivity grid. Goal Seek a target profit; validate units, constraints and a manually calculated sample.",
+        "workedExample": {
+          "title": "Study the pattern, then modify it",
+          "code": "Model: Profit = (Price-Cost)*Units\nGoal Seek: target Profit cell; changing Price cell\nTwo-variable table: row inputs = price; column inputs = units",
+          "explanation": [
+            "Sensitivity analysis with explicit assumptions",
+            "Goal Seek changes one input to reach one target. A one- or two-variable Data Table substitutes input combinations into a formula; Scenario Manager stores named assumption sets.",
+            "Predict how one changed input affects the result, run the modified example, and explain any difference."
+          ]
+        },
+        "knowledgeCheck": [
+          {
+            "question": "What is the central idea behind Data Tables, Goal Seek and Scenario Manager?",
+            "answer": "Sensitivity analysis with explicit assumptions"
+          },
+          {
+            "question": "What should you validate before calling the result correct?",
+            "answer": "Check assumptions, boundary cases and a small independently verified example; document what the test proves and what it does not prove."
+          }
+        ],
+        "sources": [
+          "https://support.microsoft.com/en-us/excel",
+          "https://support.microsoft.com/en-us/office/xlookup-function"
+        ]
+      }
+    ],
+    "powerbi": [
+      {
+        "title": "Dimensional modeling: star/snowflake, facts, dimensions, grain",
+        "lead": "Phase 02 lesson: Dimensional modeling: star/snowflake, facts, dimensions, grain. Build a semantic model around business events.",
+        "highlight": "Build a semantic model around business events",
+        "keyPoints": [
+          "Build a semantic model around business events",
+          "A fact row represents a declared grain; dimensions supply descriptive slicing context. Star schemas are generally simpler to query; snowflaking can normalize hierarchies but adds joins.",
+          "Connect this concept to the phase project and verify it with a small independent test."
+        ],
+        "sections": [
+          [
+            "Learning objective",
+            "Explain and apply Dimensional modeling: star/snowflake, facts, dimensions, grain in a realistic workflow."
+          ],
+          [
+            "Mental model",
+            "Build a semantic model around business events"
+          ],
+          [
+            "Guided walkthrough",
+            "A fact row represents a declared grain; dimensions supply descriptive slicing context. Star schemas are generally simpler to query; snowflaking can normalize hierarchies but adds joins."
+          ],
+          [
+            "Worked example",
+            "FactSales: one row per order line (OrderLineKey, OrderDateKey, ShipDateKey, ProductKey, CustomerKey, Quantity, NetSales)\nDimProduct(ProductKey, SKU, Category)\nDimDate(DateKey, Date, Year, Month)"
+          ],
+          [
+            "Integration and failure modes",
+            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+          ]
+        ],
+        "syntaxNotes": [
+          [
+            "Core pattern",
+            "FactSales: one row per order line (OrderLineKey, OrderDateKey, ShipDateKey, ProductKey, CustomerKey, Quantity, NetSales)\nDimProduct(ProductKey, SKU, Category)\nDimDate(DateKey, Date, Year, Month)"
+          ],
+          [
+            "Important design rule",
+            "A fact row represents a declared grain; dimensions supply descriptive slicing context. Star schemas are generally simpler to query; snowflaking can normalize hierarchies but adds joins."
+          ]
+        ],
+        "code": "FactSales: one row per order line (OrderLineKey, OrderDateKey, ShipDateKey, ProductKey, CustomerKey, Quantity, NetSales)\nDimProduct(ProductKey, SKU, Category)\nDimDate(DateKey, Date, Year, Month)",
+        "practice": "Draw the model, state the grain and identify measures/dimensions. Reconcile a small sample by hand and check that joins do not duplicate fact rows.",
+        "workedExample": {
+          "title": "Study the pattern, then modify it",
+          "code": "FactSales: one row per order line (OrderLineKey, OrderDateKey, ShipDateKey, ProductKey, CustomerKey, Quantity, NetSales)\nDimProduct(ProductKey, SKU, Category)\nDimDate(DateKey, Date, Year, Month)",
+          "explanation": [
+            "Build a semantic model around business events",
+            "A fact row represents a declared grain; dimensions supply descriptive slicing context. Star schemas are generally simpler to query; snowflaking can normalize hierarchies but adds joins.",
+            "Predict how one changed input affects the result, run the modified example, and explain any difference."
+          ]
+        },
+        "knowledgeCheck": [
+          {
+            "question": "What is the central idea behind Dimensional modeling: star/snowflake, facts, dimensions, grain?",
+            "answer": "Build a semantic model around business events"
+          },
+          {
+            "question": "What should you validate before calling the result correct?",
+            "answer": "Check assumptions, boundary cases and a small independently verified example; document what the test proves and what it does not prove."
+          }
+        ],
+        "sources": [
+          "https://learn.microsoft.com/en-us/power-bi/guidance/star-schema",
+          "https://learn.microsoft.com/en-us/dax/calculate-function-dax",
+          "https://learn.microsoft.com/en-us/dax/time-intelligence-functions-dax"
+        ]
+      },
+      {
+        "title": "Relationships: cardinality, filter direction, bridges, role-playing dates",
+        "lead": "Phase 02 lesson: Relationships: cardinality, filter direction, bridges, role-playing dates. Make filter propagation intentional.",
+        "highlight": "Make filter propagation intentional",
+        "keyPoints": [
+          "Make filter propagation intentional",
+          "Use dimension-to-fact one-to-many relationships with single-direction filtering as a default. Use bridge tables for many-to-many mappings; activate an inactive date relationship in a measure when needed.",
+          "Connect this concept to the phase project and verify it with a small independent test."
+        ],
+        "sections": [
+          [
+            "Learning objective",
+            "Explain and apply Relationships: cardinality, filter direction, bridges, role-playing dates in a realistic workflow."
+          ],
+          [
+            "Mental model",
+            "Make filter propagation intentional"
+          ],
+          [
+            "Guided walkthrough",
+            "Use dimension-to-fact one-to-many relationships with single-direction filtering as a default. Use bridge tables for many-to-many mappings; activate an inactive date relationship in a measure when needed."
+          ],
+          [
+            "Worked example",
+            "Orders[OrderDateKey] -> DimDate[DateKey] active\nOrders[ShipDateKey] -> DimDate[DateKey] inactive\nShipped Sales = CALCULATE([Net Sales], USERELATIONSHIP(Orders[ShipDateKey], DimDate[DateKey]))"
+          ],
+          [
+            "Integration and failure modes",
+            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+          ]
+        ],
+        "syntaxNotes": [
+          [
+            "Core pattern",
+            "Orders[OrderDateKey] -> DimDate[DateKey] active\nOrders[ShipDateKey] -> DimDate[DateKey] inactive\nShipped Sales = CALCULATE([Net Sales], USERELATIONSHIP(Orders[ShipDateKey], DimDate[DateKey]))"
+          ],
+          [
+            "Important design rule",
+            "Use dimension-to-fact one-to-many relationships with single-direction filtering as a default. Use bridge tables for many-to-many mappings; activate an inactive date relationship in a measure when needed."
+          ]
+        ],
+        "code": "Orders[OrderDateKey] -> DimDate[DateKey] active\nOrders[ShipDateKey] -> DimDate[DateKey] inactive\nShipped Sales = CALCULATE([Net Sales], USERELATIONSHIP(Orders[ShipDateKey], DimDate[DateKey]))",
+        "practice": "Model order and ship dates and a customer-segment bridge. Test slicer propagation and explain any bidirectional relationship rather than enabling it by habit.",
+        "workedExample": {
+          "title": "Study the pattern, then modify it",
+          "code": "Orders[OrderDateKey] -> DimDate[DateKey] active\nOrders[ShipDateKey] -> DimDate[DateKey] inactive\nShipped Sales = CALCULATE([Net Sales], USERELATIONSHIP(Orders[ShipDateKey], DimDate[DateKey]))",
+          "explanation": [
+            "Make filter propagation intentional",
+            "Use dimension-to-fact one-to-many relationships with single-direction filtering as a default. Use bridge tables for many-to-many mappings; activate an inactive date relationship in a measure when needed.",
+            "Predict how one changed input affects the result, run the modified example, and explain any difference."
+          ]
+        },
+        "knowledgeCheck": [
+          {
+            "question": "What is the central idea behind Relationships: cardinality, filter direction, bridges, role-playing dates?",
+            "answer": "Make filter propagation intentional"
+          },
+          {
+            "question": "What should you validate before calling the result correct?",
+            "answer": "Check assumptions, boundary cases and a small independently verified example; document what the test proves and what it does not prove."
+          }
+        ],
+        "sources": [
+          "https://learn.microsoft.com/en-us/power-bi/guidance/star-schema",
+          "https://learn.microsoft.com/en-us/dax/calculate-function-dax",
+          "https://learn.microsoft.com/en-us/dax/time-intelligence-functions-dax"
+        ]
+      },
+      {
+        "title": "DAX: CALCULATE, FILTER and time intelligence",
+        "lead": "Phase 02 lesson: DAX: CALCULATE, FILTER and time intelligence. Understand measure evaluation in filter context.",
+        "highlight": "Understand measure evaluation in filter context",
+        "keyPoints": [
+          "Understand measure evaluation in filter context",
+          "CALCULATE evaluates an expression in modified filter context; FILTER returns a filtered table. Use a complete date table for classic time intelligence and test selected periods and fiscal/calendar assumptions.",
+          "Connect this concept to the phase project and verify it with a small independent test."
+        ],
+        "sections": [
+          [
+            "Learning objective",
+            "Explain and apply DAX: CALCULATE, FILTER and time intelligence in a realistic workflow."
+          ],
+          [
+            "Mental model",
+            "Understand measure evaluation in filter context"
+          ],
+          [
+            "Guided walkthrough",
+            "CALCULATE evaluates an expression in modified filter context; FILTER returns a filtered table. Use a complete date table for classic time intelligence and test selected periods and fiscal/calendar assumptions."
+          ],
+          [
+            "Worked example",
+            "Net Sales = SUM(FactSales[NetSales])\nLarge Sales = CALCULATE([Net Sales], FILTER(FactSales, FactSales[NetSales] > 1000))\nSales YTD = TOTALYTD([Net Sales], DimDate[Date])\nSales LY = CALCULATE([Net Sales], SAMEPERIODLASTYEAR(DimDate[Date]))"
+          ],
+          [
+            "Integration and failure modes",
+            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+          ]
+        ],
+        "syntaxNotes": [
+          [
+            "Core pattern",
+            "Net Sales = SUM(FactSales[NetSales])\nLarge Sales = CALCULATE([Net Sales], FILTER(FactSales, FactSales[NetSales] > 1000))\nSales YTD = TOTALYTD([Net Sales], DimDate[Date])\nSales LY = CALCULATE([Net Sales], SAMEPERIODLASTYEAR(DimDate[Date]))"
+          ],
+          [
+            "Important design rule",
+            "CALCULATE evaluates an expression in modified filter context; FILTER returns a filtered table. Use a complete date table for classic time intelligence and test selected periods and fiscal/calendar assumptions."
+          ]
+        ],
+        "code": "Net Sales = SUM(FactSales[NetSales])\nLarge Sales = CALCULATE([Net Sales], FILTER(FactSales, FactSales[NetSales] > 1000))\nSales YTD = TOTALYTD([Net Sales], DimDate[Date])\nSales LY = CALCULATE([Net Sales], SAMEPERIODLASTYEAR(DimDate[Date]))",
+        "practice": "Create Net Sales, Units, Orders, Sales YTD and Prior Year measures. Compare a short date range against hand-calculated expected values.",
+        "workedExample": {
+          "title": "Study the pattern, then modify it",
+          "code": "Net Sales = SUM(FactSales[NetSales])\nLarge Sales = CALCULATE([Net Sales], FILTER(FactSales, FactSales[NetSales] > 1000))\nSales YTD = TOTALYTD([Net Sales], DimDate[Date])\nSales LY = CALCULATE([Net Sales], SAMEPERIODLASTYEAR(DimDate[Date]))",
+          "explanation": [
+            "Understand measure evaluation in filter context",
+            "CALCULATE evaluates an expression in modified filter context; FILTER returns a filtered table. Use a complete date table for classic time intelligence and test selected periods and fiscal/calendar assumptions.",
+            "Predict how one changed input affects the result, run the modified example, and explain any difference."
+          ]
+        },
+        "knowledgeCheck": [
+          {
+            "question": "What is the central idea behind DAX: CALCULATE, FILTER and time intelligence?",
+            "answer": "Understand measure evaluation in filter context"
+          },
+          {
+            "question": "What should you validate before calling the result correct?",
+            "answer": "Check assumptions, boundary cases and a small independently verified example; document what the test proves and what it does not prove."
+          }
+        ],
+        "sources": [
+          "https://learn.microsoft.com/en-us/power-bi/guidance/star-schema",
+          "https://learn.microsoft.com/en-us/dax/calculate-function-dax",
+          "https://learn.microsoft.com/en-us/dax/time-intelligence-functions-dax"
+        ]
+      },
+      {
+        "title": "Integrated sales model and dashboard validation",
+        "lead": "Phase 02 lesson: Integrated sales model and dashboard validation. Deliver a traceable model and report.",
+        "highlight": "Deliver a traceable model and report",
+        "keyPoints": [
+          "Deliver a traceable model and report",
+          "Trust depends on aligned grain, relationship paths, measure definitions and visual filters. Validate totals, subtotals, blank selections and cross-filter behavior before styling the report.",
+          "Connect this concept to the phase project and verify it with a small independent test."
+        ],
+        "sections": [
+          [
+            "Learning objective",
+            "Explain and apply Integrated sales model and dashboard validation in a realistic workflow."
+          ],
+          [
+            "Mental model",
+            "Deliver a traceable model and report"
+          ],
+          [
+            "Guided walkthrough",
+            "Trust depends on aligned grain, relationship paths, measure definitions and visual filters. Validate totals, subtotals, blank selections and cross-filter behavior before styling the report."
+          ],
+          [
+            "Worked example",
+            "Measures: Net Sales, Units, Orders, Sales YTD, Sales Prior Year\nShip-date measure = CALCULATE([Net Sales], USERELATIONSHIP(FactSales[ShipDateKey],DimDate[DateKey]))"
+          ],
+          [
+            "Integration and failure modes",
+            "Check input assumptions, missing or empty values, data growth, and invalid relationships between inputs and outputs. Keep the logic inspectable, compare a small example against an independently calculated result, and note trade-offs before integrating it into the phase project."
+          ]
+        ],
+        "syntaxNotes": [
+          [
+            "Core pattern",
+            "Measures: Net Sales, Units, Orders, Sales YTD, Sales Prior Year\nShip-date measure = CALCULATE([Net Sales], USERELATIONSHIP(FactSales[ShipDateKey],DimDate[DateKey]))"
+          ],
+          [
+            "Important design rule",
+            "Trust depends on aligned grain, relationship paths, measure definitions and visual filters. Validate totals, subtotals, blank selections and cross-filter behavior before styling the report."
+          ]
+        ],
+        "code": "Measures: Net Sales, Units, Orders, Sales YTD, Sales Prior Year\nShip-date measure = CALCULATE([Net Sales], USERELATIONSHIP(FactSales[ShipDateKey],DimDate[DateKey]))",
+        "practice": "Build KPI cards, monthly trend, category breakdown and region slicer. Hand off a model diagram, grain statement, measure glossary and reproducible test cases.",
+        "workedExample": {
+          "title": "Study the pattern, then modify it",
+          "code": "Measures: Net Sales, Units, Orders, Sales YTD, Sales Prior Year\nShip-date measure = CALCULATE([Net Sales], USERELATIONSHIP(FactSales[ShipDateKey],DimDate[DateKey]))",
+          "explanation": [
+            "Deliver a traceable model and report",
+            "Trust depends on aligned grain, relationship paths, measure definitions and visual filters. Validate totals, subtotals, blank selections and cross-filter behavior before styling the report.",
+            "Predict how one changed input affects the result, run the modified example, and explain any difference."
+          ]
+        },
+        "knowledgeCheck": [
+          {
+            "question": "What is the central idea behind Integrated sales model and dashboard validation?",
+            "answer": "Deliver a traceable model and report"
+          },
+          {
+            "question": "What should you validate before calling the result correct?",
+            "answer": "Check assumptions, boundary cases and a small independently verified example; document what the test proves and what it does not prove."
+          }
+        ],
+        "sources": [
+          "https://learn.microsoft.com/en-us/power-bi/guidance/star-schema",
+          "https://learn.microsoft.com/en-us/dax/calculate-function-dax",
+          "https://learn.microsoft.com/en-us/dax/time-intelligence-functions-dax"
+        ]
+      }
+    ]
+  }
+}
