@@ -7,6 +7,7 @@
   <meta name="description" content="A guided learning studio for Full-stack Web Development, Python, Excel, and Power BI.">
   <title>Learning Studio</title>
   <link rel="stylesheet" href="style.css?v=20260925-lesson-aids1">
+  <link rel="stylesheet" href="ui-polish.css?v=20260926">
   <script src="app.js?v=20260926-final-audit" defer></script>
 </head>
 <body>
@@ -20,10 +21,10 @@
         <div class="study-dashboard">
           <div class="study-heading"><p class="eyebrow">LEARNING STUDIO · YOUR STUDY DESK</p><h1 id="home-title">Welcome to your<br><span>learning space.</span></h1><p class="hero-copy">A calm place to understand concepts, practice skills, and build confidence one lesson at a time.</p></div>
           <section class="active-learning-card" aria-labelledby="active-track-title">
-            <div class="desk-card-top"><span class="desk-label">YOUR CURRENT STUDY</span><span class="empty-state-tag">Not started</span></div>
+            <div class="desk-card-top"><span class="desk-label">YOUR CURRENT STUDY</span><span class="empty-state-tag">Ready when you are</span></div>
             <div class="empty-study-icon" aria-hidden="true">▤</div>
-            <h2 id="active-track-title">No active track yet</h2>
-            <p>Choose one of your learning tracks to begin. Your lessons and study progress will have a dedicated space here.</p>
+            <h2 id="active-track-title">Choose your next learning track</h2>
+            <p>Your study desk is ready. Open Curriculum to choose a track, then start with its first phase. Completed lessons are saved on this device.</p>
             <button class="primary-action" id="browse-curriculum" type="button">Browse curriculum <span aria-hidden="true">→</span></button>
           </section>
           <section class="learning-method" aria-labelledby="method-title"><div class="method-heading"><p class="eyebrow">HOW YOU’LL LEARN</p><h2 id="method-title">A practical learning cycle</h2><p>Move from understanding a concept to applying it in a real task.</p></div>
@@ -36,10 +37,10 @@
         <div class="page-intro">
           <p class="eyebrow">YOUR LEARNING PATHS</p>
           <h1 id="curriculum-title">Curriculum</h1>
-          <p class="hero-copy">Explore the four tracks and open a roadmap to review phase topics, projects, and knowledge checkpoints.</p>
+          <p class="hero-copy">Explore the available tracks and open a roadmap to review phase topics, projects, and knowledge checkpoints. Course status and lesson depth vary by track and phase.</p>
           <label class="search-wrap"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search tracks or skills…" aria-label="Search tracks or skills"></label>
         </div>
-        <section class="section-head"><div><p class="eyebrow">FOUR COMPLETE TRACKS</p><h2>Choose your learning track</h2></div><span class="muted" id="track-count">4 tracks</span></section>
+        <section class="section-head"><div><p class="eyebrow">FOUR LEARNING TRACKS</p><h2>Choose your learning track</h2></div><span class="muted" id="track-count">4 tracks</span></section>
         <section id="tracks" class="track-grid" aria-live="polite"></section>
         <section class="note"><span class="note-icon">✦</span><div><strong>Recommended sequence</strong><p>Complete Excel Phase 3 before starting Power BI Phase 2. Full-stack and Python can be studied in parallel.</p></div></section>
       </section>
@@ -51,12 +52,12 @@
 <div class="progress-metrics"><div><strong id="progress-completed">0</strong><span>Completed</span></div><div><strong id="progress-available">0</strong><span>Topics in tracked phases</span></div></div>
 <div class="progress-meter" role="progressbar" aria-label="Completion of currently tracked topics" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0"><span id="progress-meter-fill"></span></div>
 <p id="progress-status" class="muted">No tracked topics completed yet. Open a topic to begin.</p>
-<div class="progress-lesson"><div><strong>Semantic HTML and accessible structure</strong><small>Full-stack Web Development · Foundations</small></div><span id="progress-lesson-state" class="progress-state">Not started</span></div>
+<div class="progress-lesson"><div><strong>Guided lesson progress</strong><small>Counts lessons with authored guided content in supported phases.</small></div><span id="progress-lesson-state" class="progress-state">No activity</span></div>
 <button class="secondary-action" type="button" data-view="curriculum">Continue learning →</button>
 </section>
       </section>
       <section class="view" id="profile-view" aria-labelledby="profile-title" hidden>
-        <div class="page-intro"><p class="eyebrow">LEARNING STUDIO</p><h1 id="profile-title">Profile</h1><p class="hero-copy">Personal profile and learning preferences are not configured in this starter version.</p><button class="secondary-action" type="button" data-view="curriculum">Browse curriculum →</button></div>
+        <div class="page-intro"><p class="eyebrow">LEARNING STUDIO</p><h1 id="profile-title">Profile</h1><p class="hero-copy">Manage your local study preferences. These settings stay in this browser and are not synced to an account.</p><section class="profile-preferences" aria-labelledby="preferences-title"><h2 id="preferences-title">Study preferences</h2><label for="study-goal">Weekly study goal</label><select id="study-goal"><option value="2">2 hours / week</option><option value="4">4 hours / week</option><option value="6">6 hours / week</option><option value="8">8 hours / week</option><option value="10">10 hours / week</option></select><label class="preference-toggle"><input id="reduce-motion" type="checkbox"> Reduce interface motion</label><p id="preferences-status" class="muted" aria-live="polite">Preferences are stored on this device.</p><button class="secondary-action" type="button" data-view="curriculum">Browse curriculum →</button></section></div>
       </section>
   <section class="view phase-page" id="phase-page" aria-labelledby="dialog-title" hidden>
     <div class="dialog-top"><div><p class="eyebrow">TRACK ROADMAP</p><h2 id="dialog-title"></h2></div><button class="close" type="button" aria-label="Close dialog">×</button></div>
