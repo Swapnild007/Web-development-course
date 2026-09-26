@@ -84,6 +84,30 @@ if (!completeLessonButton) {
   completeLessonButton.type = "button";
 }
 
+function renderHomePaths() {
+  const root = document.querySelector("#home-paths");
+  if (!root) return;
+  root.replaceChildren();
+  tracks.slice(0, 4).forEach(track => {
+    const phases = track.id === "fullstack" ? [0,1,2,3] : [0,1];
+    const keys = [];
+    phases.forEach(pi => (track.phases[pi]?.topics || []).forEach((_,ti) => keys.push("learning-studio.lesson."+track.id+".phase"+(pi+1)+".topic"+ti)));
+    const done = keys.filter(key => readSaved(key) === "complete").length;
+    const pct = keys.length ? Math.round(done / keys.length * 100) : 0;
+    const card = makeElement("article","home-path-card");
+    const top = makeElement("div","home-path-card-top");
+    const icon = makeElement("span","home-path-icon",track.icon || "✦");
+    icon.style.background=track.tint || "#edf2ff"; icon.style.color=track.accent || "#5577c5";
+    top.append(icon,makeElement("span","home-path-badge",done ? "In progress" : "Ready to start"));
+    const bar=makeElement("div","home-path-meter");bar.setAttribute("role","progressbar");bar.setAttribute("aria-label",track.name+" completion");bar.setAttribute("aria-valuemin","0");bar.setAttribute("aria-valuemax",String(keys.length));bar.setAttribute("aria-valuenow",String(done));
+    const fill=makeElement("span","");fill.style.width=pct+"%";bar.append(fill);
+    const foot=makeElement("div","home-path-card-foot");
+    foot.append(makeElement("small","",done+" / "+keys.length+" tracked topics"));
+    const open=makeElement("button","home-path-open","Open path →");open.type="button";open.addEventListener("click",()=>openRoadmap(track));foot.append(open);
+    card.append(top,makeElement("h3","",track.name),makeElement("p","",track.description),bar,foot);root.append(card);
+  });
+}
+
 function renderTracks(filter = "") {
   const query = filter.trim().toLowerCase();
   const visibleTracks = tracks.filter(track => {
@@ -1988,19 +2012,7 @@ function openGuidedLesson(topicIndex = 0, track, phase = track?.phases?.[0], pha
     renderSavedReviews();
   });
   toolActions.append(bookmarkButton);
-  const notesLabel = makeElement("label", "lesson-notes-label", "Personal notes");
-  notesLabel.htmlFor = "lesson-personal-notes";
-  const notes = makeElement("textarea", "lesson-notes", "");
-  notes.id = "lesson-personal-notes";
-  notes.rows = 4;
-  notes.placeholder = "Capture an insight, question, or reminder for this lesson…";
-  notes.value = readSaved(activeLessonKey + ".notes");
-  const noteStatus = makeElement("p", "lesson-note-status muted", "Notes save as you type.");
-  notes.addEventListener("input", () => {
-    try { window.localStorage.setItem(activeLessonKey + ".notes", notes.value); noteStatus.textContent = "Note saved on this device."; }
-    catch (_) { noteStatus.textContent = "Could not save notes in this browser."; }
-  });
-  learningTools.append(toolHeader, toolActions, notesLabel, notes, noteStatus);
+  learningTools.append(toolHeader, toolActions);
   lessonReader.append(learningTools);
   const pager = makeElement("div", "lesson-pager");
   const previous = makeElement("button", "secondary-action", "← Previous topic");
@@ -2058,6 +2070,20 @@ function renderProgress() {
     });
   });
   const completedCount = lessonIds.filter(id => readSaved(id) === "complete").length;
+  const byTrack = document.querySelector("#progress-track-list");
+  if (byTrack) {
+    byTrack.replaceChildren();
+    ["fullstack","python","excel","powerbi"].forEach(trackId => {
+      const track=tracks.find(item=>item.id===trackId); if(!track)return;
+      const phaseIndexes=trackId==="fullstack"?[0,1,2,3]:[0,1], ids=[];
+      phaseIndexes.forEach(pi=>(track.phases[pi]?.topics||[]).forEach((_,ti)=>ids.push("learning-studio.lesson."+trackId+".phase"+(pi+1)+".topic"+ti)));
+      const done=ids.filter(key=>readSaved(key)==="complete").length,pct=ids.length?Math.round(done/ids.length*100):0;
+      const row=makeElement("article","progress-track-row"),meta=makeElement("div","progress-track-meta");
+      meta.append(makeElement("strong","",track.name),makeElement("small","",done+" / "+ids.length+" tracked topics"));
+      const bar=makeElement("div","progress-track-meter"),fill=makeElement("span","");fill.style.width=pct+"%";bar.append(fill);
+      row.append(meta,bar,makeElement("span","progress-track-percent",pct+"%"));byTrack.append(row);
+    });
+  }
   const completed = document.querySelector("#progress-completed");
   const available = document.querySelector("#progress-available");
   const meter = document.querySelector(".progress-meter");
@@ -2125,7 +2151,7 @@ function renderResumeCard() {
   }
   heading.textContent = record.title || phase.topics[record.topicIndex];
   const copy = card.querySelector("p");
-  if (copy) copy.textContent = "Pick up where you left off. Your lesson notes, review saves, and completion status stay in this browser.";
+  if (copy) copy.textContent = "Pick up where you left off. Your review saves and completion status stay in this browser.";
   button.textContent = "Continue learning →";
   button.onclick = () => openGuidedLesson(record.topicIndex, track, phase, record.phaseIndex);
 }
@@ -2161,6 +2187,7 @@ fetch(new URL("data/curriculum.json", document.baseURI), { cache: "no-store" })
     }
     tracks = data.tracks;
     renderTracks();
+    renderHomePaths();
     renderProgress();
     renderResumeCard();
     renderSavedReviews();
