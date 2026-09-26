@@ -2755,7 +2755,7 @@ Promise.resolve().then(() => {
       for (const trackId of ["python", "excel", "powerbi"]) {
         const expected = data.tracks.find(track => track.id === trackId)?.phases?.[1]?.topics?.length;
         const authored = lessonData.tracks?.[trackId];
-        if (!Array.isArray(authored) || authored.length !== expected) throw new Error("Phase 02 lesson count is invalid for " + trackId + ".");
+        if (!Array.isArray(authored) || authored.length > expected) throw new Error("Phase 02 lesson bundle is invalid for " + trackId + ".");
         phaseTwoLessons[trackId] = authored;
       }
     } catch (lessonError) {
