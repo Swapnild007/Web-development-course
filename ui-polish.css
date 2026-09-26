@@ -20,3 +20,5 @@ button{min-height:40px}
  .app-shell{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 }
 @media(prefers-reduced-motion:reduce){html:focus-within{scroll-behavior:auto}}
+
+html.user-reduced-motion *,html.user-reduced-motion *::before,html.user-reduced-motion *::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
