@@ -156,3 +156,67 @@ html.user-reduced-motion .track-progress span{transition:none}
  .section-head{align-items:flex-start}
 }
 @media(prefers-reduced-motion:reduce){.home-path-card,.home-path-meter span,.progress-track-meter span{transition:none}.home-path-card:hover{transform:none}}
+
+/* VISUAL V2: editorial hierarchy, high-contrast focus card, generous type, real mobile grid */
+:root{--ls-ink:#172b49;--ls-muted:#63748e;--ls-blue:#456bd0;--ls-line:#e1e9f2}
+body{background:#f4f7fb;background-image:radial-gradient(ellipse at 5% 0%,#dce9ff 0,transparent 38%),radial-gradient(ellipse at 95% 24%,#d9f3eb 0,transparent 34%),linear-gradient(180deg,#f7f9fd,#f1f5f6)}
+.app-shell{max-width:1240px;padding-left:clamp(20px,5vw,64px);padding-right:clamp(20px,5vw,64px)}
+.topbar{height:76px}.brand{font-size:15px}.brand small{font-size:11px}.status-pill{font-size:11px}
+.study-dashboard{max-width:1120px}
+.home-welcome{padding:28px 0 28px;min-height:0;gap:24px}
+.home-welcome h1{font-size:clamp(44px,6vw,72px);line-height:1.01;letter-spacing:-3.8px}
+.home-welcome .hero-copy{font-size:16px;line-height:1.65;color:#5d6f89;max-width:540px;margin-top:18px}
+.welcome-orbit{width:clamp(130px,18vw,205px);border-color:#d5e2f2;background:linear-gradient(145deg,#fff,#e6efff);box-shadow:inset 0 0 0 13px #ffffff75,0 22px 55px #466da51a}
+.active-learning-card{padding:clamp(22px,3.5vw,34px);border-radius:26px;background:linear-gradient(110deg,#203f70 0%,#315c9a 62%,#377f88 130%);border:1px solid #ffffff75;box-shadow:0 22px 52px #274d7b2b;color:#fff}
+.active-learning-card:after{width:340px;height:340px;right:-90px;top:-160px;background:radial-gradient(circle,#ffffff20 0,transparent 70%)}
+.desk-label{color:#cbdaf3;font-size:10px;letter-spacing:1.7px}.empty-state-tag{background:#ffffff1b;color:#e4f2f0;border:1px solid #ffffff20;font-size:10px}
+.resume-card-body{margin:26px 0 22px;gap:17px}.resume-symbol{width:54px;height:54px;background:#ffffff1c;color:#fff;border:1px solid #ffffff35;border-radius:17px;font-size:18px}
+.resume-copy h2{color:#fff;font-size:clamp(20px,2.4vw,25px);letter-spacing:-.6px}.resume-copy p{font-size:13px;line-height:1.65;color:#d7e3f3;max-width:650px}
+.resume-card-footer{border-top:1px solid #ffffff2b;padding-top:20px}.resume-meta{font-size:11px;color:#d2def0}
+.primary-action{background:#fff;color:#254b7d;border-radius:12px;padding:13px 19px;font-size:12px;box-shadow:0 8px 22px #102d4d26}
+.quick-insights{gap:14px;margin:18px 0 34px}.insight-card{padding:18px 20px;border:1px solid #e6edf5;border-radius:18px;background:#ffffffdf;box-shadow:0 8px 24px #314c6c0a;flex-direction:row;align-items:center}
+.insight-icon{width:42px;height:42px;border-radius:14px;font-size:18px;background:#edf3ff;color:#4e72c6}
+.insight-card strong{font-size:23px;color:#203958}.insight-card span:last-child{font-size:11px;color:#71819a}
+.home-path-section{margin:34px 0 32px}.section-head{margin-bottom:18px}
+.section-head h2,.method-heading h2{font-size:25px;letter-spacing:-.9px;color:#1c3455}
+.section-subtitle{font-size:14px;color:#6d7e96;margin-top:6px}.text-action{font-size:12px;color:#4167c5}
+.home-path-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}
+.home-path-card{padding:21px;border-radius:22px;border:1px solid #e3ebf4;background:linear-gradient(145deg,#fff,#f9fbff);box-shadow:0 12px 30px #2d4d7110;min-height:190px}
+.home-path-card:hover{transform:translateY(-3px);box-shadow:0 18px 38px #2d4d7118}
+.home-path-icon{width:46px;height:46px;border-radius:15px;font-size:19px}.home-path-badge{font-size:10px;padding:7px 10px}
+.home-path-card h3{font-size:17px;margin:17px 0 7px;color:#1f3657}.home-path-card>p{font-size:13px;line-height:1.6;color:#667992;min-height:0;margin-bottom:17px}
+.home-path-meter,.progress-track-meter{height:7px;background:#e7edf5}.home-path-meter span,.progress-track-meter span{background:linear-gradient(90deg,#5279d5,#62bea5)}
+.home-path-card-foot{margin-top:13px}.home-path-card-foot small{font-size:11px;color:#6f8098}.home-path-open{font-size:12px;color:#4268c7}
+.learning-method{padding:27px 29px;border:1px solid #e3ebf3;border-radius:24px;background:#ffffffd9;box-shadow:0 10px 30px #2d4d7108}
+.method-heading h2{margin:0 0 8px}.method-heading>p:last-child{font-size:13px;color:#6d7e96}
+.learning-steps{gap:18px;margin-top:24px}.learning-steps li{gap:12px}.step-number{width:34px;height:34px;border-radius:11px;font-size:11px}
+.learning-steps strong{font-size:13px;color:#263e60}.learning-steps small{font-size:12px;line-height:1.55;color:#71819a}
+.page-intro{padding-top:34px}.page-intro h1{font-size:clamp(42px,6vw,68px);letter-spacing:-3px}.hero-copy{font-size:15px;line-height:1.7;color:#687b95}
+.track-card{border:1px solid #e3ebf4;background:linear-gradient(145deg,#fff,#f8fbff);box-shadow:0 12px 30px #2d4d7110;border-radius:24px}
+.track-card h3{font-size:20px;color:#1f3657}.track-card p{font-size:14px;line-height:1.65;color:#667992}.phase-count{font-size:11px}.card-bottom span{font-size:12px}.open-track{font-size:13px;padding:11px 14px;border-radius:12px}
+.progress-summary{max-width:900px;padding:30px;border-radius:24px;border:1px solid #e2eaf3;box-shadow:0 12px 30px #2d4d710b}.progress-summary h2{font-size:23px}
+.progress-metrics>div{padding:20px;border-radius:16px}.progress-metrics strong{font-size:30px}.progress-metrics span,.progress-lesson small{font-size:13px}
+.progress-by-track h3{font-size:18px}.progress-track-meta strong{font-size:13px}.progress-track-meta small{font-size:11px}.progress-track-percent{font-size:12px}
+.profile-preferences,.saved-review-panel{border-radius:22px;border:1px solid #e2eaf3;background:#fff;padding:24px}
+.floating-nav{bottom:18px;padding:9px;gap:6px;border-radius:20px;box-shadow:0 14px 38px #263f6025}.nav-item{min-width:76px;padding:10px 13px}.nav-item span{font-size:20px}.nav-item small{font-size:10px}.nav-item.active{background:#eaf0ff;color:#3e65bd}
+button,a,input,select{touch-action:manipulation}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #7394ed;outline-offset:3px}
+@media(max-width:900px){.home-path-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.home-welcome{padding-top:24px}.home-welcome h1{font-size:clamp(39px,7vw,58px)}}
+@media(max-width:600px){
+ .app-shell{padding-left:18px;padding-right:18px;padding-bottom:116px}.topbar{height:68px}
+ .home-welcome{padding:25px 0 20px;gap:12px}.home-welcome h1{font-size:clamp(36px,10vw,48px);line-height:1.04;letter-spacing:-2.2px}
+ .home-welcome .hero-copy{font-size:14px;line-height:1.55;margin-top:12px}.welcome-orbit{width:70px;min-width:70px}
+ .active-learning-card{padding:20px;border-radius:21px}.resume-card-body{margin:20px 0 17px}.resume-copy h2{font-size:19px}.resume-copy p{font-size:12px}
+ .resume-card-footer{align-items:flex-start;flex-direction:column;gap:13px}
+ .quick-insights{gap:8px;margin:12px 0 26px}.insight-card{padding:12px 10px;gap:8px;flex-direction:row;align-items:center;border-radius:14px}
+ .insight-icon{width:30px;height:30px;border-radius:10px;font-size:14px}.insight-card strong{font-size:18px}.insight-card span:last-child{font-size:10px}
+ .home-path-section{margin:26px 0}.section-head h2,.method-heading h2{font-size:21px}.section-subtitle{font-size:12px}
+ .home-path-grid{grid-template-columns:1fr;gap:11px;margin-top:13px}.home-path-card{padding:17px;border-radius:18px;min-height:0}
+ .home-path-card h3{font-size:16px;margin:12px 0 5px}.home-path-card>p{font-size:12px;min-height:0;margin-bottom:13px}
+ .home-path-card-foot{flex-direction:row;align-items:center}.home-path-card-foot small{font-size:10px}.home-path-open{font-size:11px}
+ .learning-method{padding:20px 17px;border-radius:20px}.learning-steps{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 12px;margin-top:18px}
+ .learning-steps strong{font-size:12px}.learning-steps small{font-size:11px}.page-intro{padding-top:26px}.page-intro h1{font-size:42px}
+ .track-grid{grid-template-columns:1fr}.progress-summary{padding:20px}
+ .progress-track-row{grid-template-columns:minmax(90px,1fr) minmax(70px,1.3fr) 34px;gap:8px}
+ .floating-nav{bottom:12px;max-width:calc(100% - 32px)}.nav-item{min-width:0;flex:1;padding:9px 12px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
