@@ -38,6 +38,59 @@
             "Explain Next caching and revalidatePath",
             "Design normalized many-to-many schema",
             "Debug an effect loop"
+          ],
+          "projectBrief": {
+            "outcome": "Deliver a working authenticated task-management application with a typed React interface, Next.js App Router pages, validated server mutations, and PostgreSQL persistence.",
+            "requiredFeatures": [
+              "Create, list, edit, complete, and delete tasks; each task belongs to an authenticated owner.",
+              "Use TypeScript domain contracts and runtime validation for untrusted API input; narrow unknown values and avoid avoidable any.",
+              "Use controlled React forms and derive display values during render; reserve effects for external synchronization with cleanup.",
+              "Use App Router layouts and deliberate server/client boundaries; provide loading, empty, success, and error states.",
+              "Validate mutation inputs with Zod and enforce authentication plus per-task authorization on the server.",
+              "Keep handlers thin; inject a repository into a service and test the service with a fake repository.",
+              "Use normalized PostgreSQL tables, keys, constraints, a justified index, and transactions for multi-step writes.",
+              "Document rendering/cache decisions and refresh affected route data after successful mutations."
+            ],
+            "deliverables": [
+              "Runnable source, setup instructions, and an environment example with no real secrets.",
+              "Database schema, versioned migration, and repeatable seed/local setup.",
+              "Automated tests for validation, service logic, authorization, and failure/transaction cases.",
+              "README with architecture, action/API contract, data model, test commands, and cache/revalidation rationale."
+            ],
+            "acceptance": [
+              "Users can manage only their own tasks; cross-owner access is denied.",
+              "Blank, overlong, or malformed inputs produce stable safe errors.",
+              "Successful writes appear in the list after the documented revalidation behavior.",
+              "Failed multi-step writes leave no partial related records.",
+              "A clean setup reproduces the documented tests and behavior."
+            ]
+          },
+          "assessment": [
+            [
+              "TypeScript and runtime boundaries",
+              "20%",
+              "Accurate domain contracts; runtime validation and narrowing at untrusted boundaries; no avoidable any."
+            ],
+            [
+              "React and Next.js architecture",
+              "20%",
+              "Correct hook usage and state scope; intentional route and server/client structure; complete UI states."
+            ],
+            [
+              "API/service design and security",
+              "20%",
+              "Thin handlers, server-side validation/authorization, safe errors, injected testable dependencies."
+            ],
+            [
+              "PostgreSQL integrity and transactions",
+              "20%",
+              "Sound relationships and constraints; query-justified index; atomic multi-step writes."
+            ],
+            [
+              "Verification and engineering communication",
+              "20%",
+              "Normal and edge-case tests, reproducible setup, clear architecture and trade-off explanation."
+            ]
           ]
         },
         {
