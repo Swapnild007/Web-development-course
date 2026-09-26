@@ -2240,21 +2240,32 @@ fetch(new URL("data/curriculum.json?v=20260926-python-zero-start", document.base
   })
   .then(async data => {
     if (!Array.isArray(data.tracks) || data.tracks.length !== 4) throw new Error("Curriculum data is incomplete or invalid.");
-    const response = await fetch(new URL("data/phase2-lessons.json", document.baseURI), { cache: "no-store" });
-    if (!response.ok) throw new Error("Phase 02 lessons could not be loaded.");
-    const lessonData = await response.json();
-    for (const trackId of ["python", "excel", "powerbi"]) {
-      const expected = data.tracks.find(track => track.id === trackId)?.phases?.[1]?.topics?.length;
-      const authored = lessonData.tracks?.[trackId];
-      if (!Array.isArray(authored) || authored.length !== expected) throw new Error("Phase 02 lesson count is invalid for " + trackId + ".");
-      phaseTwoLessons[trackId] = authored;
-    }
+
+    // Render the main curriculum immediately. A separate lesson bundle must
+    // never prevent learners from seeing the roadmap and opening a topic.
     tracks = data.tracks;
     renderTracks();
     renderHomePaths();
     renderProgress();
     renderResumeCard();
     renderSavedReviews();
+
+    try {
+      const response = await fetch(new URL("data/phase2-lessons.json?v=20260926-loader-resilience", document.baseURI), { cache: "no-store" });
+      if (!response.ok) throw new Error("Phase 02 lesson bundle could not be loaded.");
+      const lessonData = await response.json();
+      for (const trackId of ["python", "excel", "powerbi"]) {
+        const expected = data.tracks.find(track => track.id === trackId)?.phases?.[1]?.topics?.length;
+        const authored = lessonData.tracks?.[trackId];
+        if (!Array.isArray(authored) || authored.length !== expected) throw new Error("Phase 02 lesson count is invalid for " + trackId + ".");
+        phaseTwoLessons[trackId] = authored;
+      }
+    } catch (lessonError) {
+      console.error("Optional Phase 02 lesson bundle unavailable; curriculum remains accessible.", lessonError);
+      const notice = makeElement("p", "sequence-note", "Some detailed Phase 02 lesson pages are temporarily unavailable. The curriculum roadmap is still available.");
+      const root = document.querySelector("#tracks");
+      if (root && !root.querySelector(".sequence-note")) root.prepend(notice);
+    }
   })
   .catch(error => {
     trackRoot.textContent = `${error.message} Please refresh or check the published curriculum file.`;
