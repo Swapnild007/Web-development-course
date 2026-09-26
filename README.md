@@ -4,7 +4,7 @@ A mobile-first learning app for four tracks: Full-stack Web Development, Python,
 
 ## Run locally
 
-Open `index.html` in a browser, or serve this folder with any static HTTP server.
+Serve this folder with a static HTTP server, then open its local HTTP address in a browser. The app fetches JSON curriculum files, so opening `index.html` directly as a `file://` URL may be blocked by browser security.
 
 ## Publish with GitHub Pages
 
