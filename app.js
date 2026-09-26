@@ -1814,7 +1814,7 @@ function openGuidedLesson(topicIndex = 0, track, phase = track?.phases?.[0], pha
     ]
   };
   lessonReader.replaceChildren();
-  const eyebrow = makeElement("p", "eyebrow", `GUIDED LESSON · ${track?.name || "FOUNDATIONS"}`);
+  const eyebrow = makeElement("p", "eyebrow", `${authoredLesson ? "GUIDED LESSON" : "TOPIC STUDY SCAFFOLD"} · ${track?.name || "FOUNDATIONS"}`);
   const heading = makeElement("h4", "", lesson.title);
   heading.id = "lesson-title";
   heading.dataset.topicIndex = String(topicIndex);
