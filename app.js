@@ -16,6 +16,9 @@ const lessonReader = document.querySelector("#lesson-reader");
 let lessonFeedback = document.querySelector("#lesson-feedback");
 let completeLessonButton = document.querySelector("#complete-lesson");
 let activeLessonKey = "learning-studio.lesson.fullstack.phase1.topic0";
+let activeStudyContext = null;
+const resumeStorageKey = "learning-studio.resume.v1";
+const bookmarkStorageKey = "learning-studio.bookmarks.v1";
 const trackCount = document.querySelector("#track-count");
 const views = [...document.querySelectorAll(".view")];
 const navButtons = [...document.querySelectorAll(".nav-item")];
@@ -1826,6 +1829,7 @@ let phaseTwoLessons = {fullstack:[],python:[],excel:[],powerbi:[]};
 
 function openGuidedLesson(topicIndex = 0, track, phase = track?.phases?.[0], phaseIndex = 0) {
   if (!track || !track.id || !phase) return;
+  activeStudyContext = { trackId: track.id, phaseIndex, topicIndex };
   const authoredLesson = phaseIndex === 0
     ? (track.id === "fullstack" ? guidedLessons[topicIndex] : foundationLessons[track.id]?.[topicIndex])
     : (phaseIndex === 1 ? (track.id === "fullstack" ? (fullStackPhaseLessons[1]?.[topicIndex] || phaseTwoLessons.fullstack[topicIndex]) : phaseTwoLessons[track.id]?.[topicIndex]) : (phaseIndex === 2 && track.id === "fullstack" ? fullStackPhaseLessons[2]?.[topicIndex] : (phaseIndex === 3 && track.id === "fullstack" ? fullStackPhaseLessons[3]?.[topicIndex] : null)));
@@ -1937,6 +1941,58 @@ function openGuidedLesson(topicIndex = 0, track, phase = track?.phases?.[0], pha
     sourceBlock.append(sourceList);
     lessonReader.append(sourceBlock);
   }
+
+  // Persist a lightweight resume pointer so learners can return to their last topic.
+  const resumeRecord = {trackId: track.id, phaseIndex, topicIndex, title: lesson.title, savedAt: Date.now()};
+  try { window.localStorage.setItem(resumeStorageKey, JSON.stringify(resumeRecord)); } catch (_) {}
+  const learningTools = makeElement("section", "lesson-tools");
+  const toolHeader = makeElement("div", "lesson-tools-heading");
+  toolHeader.append(makeElement("strong", "", "Your study tools"), makeElement("span", "muted", "Saved on this device"));
+  const toolActions = makeElement("div", "lesson-tool-actions");
+  const bookmarkButton = makeElement("button", "secondary-action lesson-bookmark", "☆ Save for review");
+  bookmarkButton.type = "button";
+  let bookmarks = [];
+  try { bookmarks = JSON.parse(readSaved(bookmarkStorageKey) || "[]"); if (!Array.isArray(bookmarks)) bookmarks = []; } catch (_) {}
+  const isBookmarked = bookmarks.some(item => item.key === activeLessonKey);
+  bookmarkButton.textContent = isBookmarked ? "★ Saved for review" : "☆ Save for review";
+  bookmarkButton.setAttribute("aria-pressed", String(isBookmarked));
+  bookmarkButton.addEventListener("click", () => {
+    let current = [];
+    try { current = JSON.parse(readSaved(bookmarkStorageKey) || "[]"); if (!Array.isArray(current)) current = []; } catch (_) {}
+    const exists = current.some(item => item.key === activeLessonKey);
+    current = exists ? current.filter(item => item.key !== activeLessonKey) : [...current, {key:activeLessonKey, trackId:track.id, phaseIndex, topicIndex, title:lesson.title}];
+    try { window.localStorage.setItem(bookmarkStorageKey, JSON.stringify(current)); } catch (_) {}
+    bookmarkButton.textContent = exists ? "☆ Save for review" : "★ Saved for review";
+    bookmarkButton.setAttribute("aria-pressed", String(!exists));
+    lessonFeedback.textContent = exists ? "Removed from your review list." : "Added to your review list.";
+  });
+  toolActions.append(bookmarkButton);
+  const notesLabel = makeElement("label", "lesson-notes-label", "Personal notes");
+  notesLabel.htmlFor = "lesson-personal-notes";
+  const notes = makeElement("textarea", "lesson-notes", "");
+  notes.id = "lesson-personal-notes";
+  notes.rows = 4;
+  notes.placeholder = "Capture an insight, question, or reminder for this lesson…";
+  notes.value = readSaved(activeLessonKey + ".notes");
+  const noteStatus = makeElement("p", "lesson-note-status muted", "Notes save as you type.");
+  notes.addEventListener("input", () => {
+    try { window.localStorage.setItem(activeLessonKey + ".notes", notes.value); noteStatus.textContent = "Note saved on this device."; }
+    catch (_) { noteStatus.textContent = "Could not save notes in this browser."; }
+  });
+  learningTools.append(toolHeader, toolActions, notesLabel, notes, noteStatus);
+  lessonReader.append(learningTools);
+  const pager = makeElement("div", "lesson-pager");
+  const previous = makeElement("button", "secondary-action", "← Previous topic");
+  const next = makeElement("button", "primary-action", "Next topic →");
+  previous.type = next.type = "button";
+  const topics = phase.topics || [];
+  previous.disabled = topicIndex <= 0;
+  next.disabled = topicIndex >= topics.length - 1;
+  previous.addEventListener("click", () => openGuidedLesson(topicIndex - 1, track, phase, phaseIndex));
+  next.addEventListener("click", () => openGuidedLesson(topicIndex + 1, track, phase, phaseIndex));
+  pager.append(previous, next);
+  lessonReader.append(pager);
+
   const actions = makeElement("div", "lesson-actions");
   actions.append(completeLessonButton);
   lessonReader.append(actions, lessonFeedback);
@@ -1993,11 +2049,35 @@ function renderProgress() {
   meter.setAttribute("aria-valuemax", String(lessonIds.length));
   meter.setAttribute("aria-valuenow", String(completedCount));
   fill.style.width = `${lessonIds.length ? (completedCount / lessonIds.length) * 100 : 0}%`;
-  lessonState.textContent = readSaved(lessonIds[0]) === "complete" ? "Completed ✓" : "Not started";
+  let resume = null; try { resume = JSON.parse(readSaved(resumeStorageKey) || "null"); } catch (_) {}
+  lessonState.textContent = resume ? "In progress" : (completedCount ? "Learning started" : "Not started");
   status.textContent = completedCount === lessonIds.length
     ? "All available guided lessons are complete."
     : `${completedCount} of ${lessonIds.length} available guided lessons completed.`;
 }
+
+function renderResumeCard() {
+  const heading = document.querySelector("#active-track-title");
+  const card = document.querySelector(".active-learning-card");
+  const button = document.querySelector("#browse-curriculum");
+  if (!heading || !card || !button) return;
+  let record = null;
+  try { record = JSON.parse(readSaved(resumeStorageKey) || "null"); } catch (_) {}
+  const track = tracks.find(item => item.id === record?.trackId);
+  const phase = track?.phases?.[record?.phaseIndex];
+  if (!track || !phase || !Number.isInteger(record.topicIndex) || !phase.topics[record.topicIndex]) {
+    heading.textContent = "Choose your next learning track";
+    button.textContent = "Browse curriculum →";
+    button.onclick = () => showView("curriculum");
+    return;
+  }
+  heading.textContent = record.title || phase.topics[record.topicIndex];
+  const copy = card.querySelector("p");
+  if (copy) copy.textContent = "Pick up where you left off. Your lesson notes, review saves, and completion status stay in this browser.";
+  button.textContent = "Continue learning →";
+  button.onclick = () => openGuidedLesson(record.topicIndex, track, phase, record.phaseIndex);
+}
+
 function getSequenceNote() {
   return "Complete Excel Phase 3 before Power BI Phase 2. Full-stack and Python can be studied in parallel from day one.";
 }
@@ -2030,6 +2110,7 @@ fetch(new URL("data/curriculum.json", document.baseURI), { cache: "no-store" })
     tracks = data.tracks;
     renderTracks();
     renderProgress();
+    renderResumeCard();
   })
   .catch(error => {
     trackRoot.textContent = `${error.message} Please refresh or check the published curriculum file.`;
