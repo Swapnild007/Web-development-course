@@ -48,3 +48,75 @@ html.user-reduced-motion *,html.user-reduced-motion *::before,html.user-reduced-
  .saved-review-panel{padding:16px}
  .saved-review-item{align-items:flex-start}
 }
+
+/* Premium LMS dashboard refresh */
+body{background:radial-gradient(ellipse at 8% 0%,#e7f0ff 0,transparent 34%),radial-gradient(ellipse at 94% 20%,#e5f6f0 0,transparent 31%),#f7f8f6}
+.app-shell{max-width:1180px;padding-left:clamp(18px,4vw,52px);padding-right:clamp(18px,4vw,52px)}
+.study-dashboard{max-width:1060px;margin:0 auto}
+.home-welcome{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:clamp(34px,7vw,74px) 0 30px}
+.welcome-copy{max-width:650px}
+.home-welcome h1{font:800 clamp(38px,6vw,66px)/1.04 Manrope,sans-serif;letter-spacing:-3px;color:#1a2b43;margin:0}
+.home-welcome h1 span{color:#6885cb}
+.home-welcome .hero-copy{max-width:520px;margin:16px 0 0;font-size:14px}
+.welcome-orbit{position:relative;display:grid;place-items:center;flex:none;width:clamp(112px,17vw,190px);aspect-ratio:1;border:1px solid #dbe7f4;border-radius:50%;background:linear-gradient(145deg,#ffffffbd,#e8f1ff80);box-shadow:inset 0 0 0 12px #ffffff55,0 22px 60px #718eb01a}
+.welcome-orbit:before,.welcome-orbit:after{content:"";position:absolute;border:1px solid #cbdcf0;border-radius:50%;inset:17%}
+.welcome-orbit:after{inset:32%;border-color:#d6e3f0}
+.orbit-core{z-index:1;display:grid;place-items:center;width:45%;aspect-ratio:1;border-radius:18px;background:linear-gradient(145deg,#fff,#e7efff);color:#5476c5;font:800 22px Manrope;box-shadow:0 8px 25px #6b86bb25}
+.welcome-orbit i,.welcome-orbit b{position:absolute;width:10px;height:10px;border-radius:50%;background:#70bba7;top:18%;right:23%;box-shadow:0 0 0 6px #70bba71c}
+.welcome-orbit b{background:#8da4dc;top:auto;right:auto;bottom:20%;left:16%;width:7px;height:7px}
+.active-learning-card{padding:clamp(18px,3vw,28px);border:1px solid #fff;border-radius:25px;background:linear-gradient(115deg,#ffffffdc,#f1f5ffba 72%,#eef9f5bd);box-shadow:0 18px 55px #425d7c10,inset 0 1px #fff}
+.desk-card-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.desk-label{font-size:10px;letter-spacing:1.5px;font-weight:800;color:#72819a}
+.empty-state-tag{font-size:10px;color:#698077;background:#e9f5ef;padding:7px 10px;border-radius:20px}
+.resume-card-body{display:flex;align-items:center;gap:16px;margin:24px 0 18px}
+.resume-symbol{display:grid;place-items:center;flex:none;width:50px;height:50px;border-radius:16px;background:#e8efff;color:#5476c5;font-size:17px}
+.resume-copy{min-width:0}
+.resume-copy h2{font:700 clamp(17px,2vw,21px) Manrope,sans-serif;letter-spacing:-.5px;margin:0 0 7px;color:#20334c}
+.resume-copy p{font-size:12px;line-height:1.65;color:#8290a4;margin:0;max-width:620px}
+.resume-card-footer{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-top:17px;border-top:1px solid #e7edf3}
+.resume-meta{font-size:10px;color:#8b98aa}
+.primary-action{background:#203b61;color:#fff;padding:13px 18px;box-shadow:0 8px 20px #213d6120}
+.primary-action:hover{filter:brightness(1.08)}
+.quick-insights{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:17px 0 30px}
+.insight-card{display:flex;align-items:center;gap:13px;padding:16px 18px;border:1px solid #fff;border-radius:18px;background:#ffffffb8;box-shadow:0 8px 28px #405a7810}
+.insight-icon{display:grid;place-items:center;width:36px;height:36px;border-radius:12px;background:#edf2ff;color:#6a83c3;font-size:16px}
+.insight-card strong{display:block;font:800 20px Manrope;color:#20344f;line-height:1.2}
+.insight-card span:last-child{display:block;font-size:10px;color:#8491a4;margin-top:4px}
+.learning-method{padding:22px 24px;border:1px solid #fff;border-radius:22px;background:#ffffffa6}
+.method-heading h2{font:700 20px Manrope;color:#20344f;letter-spacing:-.5px;margin:0 0 5px}
+.method-heading>p:last-child{font-size:11px;color:#8995a8;margin:0}
+.learning-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:0;margin:20px 0 0;list-style:none}
+.learning-steps li{display:flex;align-items:flex-start;gap:10px;min-width:0}
+.step-number{display:grid;place-items:center;flex:none;width:30px;height:30px;border-radius:9px;background:#edf2ff;color:#5f7cc4;font-size:10px;font-weight:800}
+.learning-steps strong{display:block;font-size:11px;color:#2a3e58}
+.learning-steps small{display:block;font-size:10px;line-height:1.5;color:#8b97a8;margin-top:3px}
+.track-status-row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:17px}
+.track-status{font-size:10px;font-weight:700;color:#648477}
+.track-status:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#68b49c;margin:0 6px 1px 0}
+.track-progress-text{font-size:10px;color:#8794a6}
+.track-progress{height:5px;border-radius:9px;background:#e9eef5;overflow:hidden;margin-top:8px}
+.track-progress span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#6f91d5,#76bca7);transition:width .25s ease}
+.track-card{padding:22px;border-radius:22px}
+.open-track{min-height:40px}
+@media(max-width:700px){
+ .app-shell{padding-left:17px;padding-right:17px;padding-bottom:125px}
+ .home-welcome{padding:35px 0 22px}
+ .home-welcome h1{font-size:clamp(35px,9vw,48px);letter-spacing:-2px}
+ .home-welcome .hero-copy{font-size:13px;margin-top:12px}
+ .welcome-orbit{width:76px;opacity:.82}
+ .orbit-core{font-size:13px;border-radius:11px}
+ .active-learning-card{border-radius:20px}
+ .resume-card-body{gap:12px;margin:19px 0 15px}
+ .resume-symbol{width:42px;height:42px;border-radius:13px}
+ .resume-card-footer{align-items:flex-start;flex-direction:column}
+ .quick-insights{gap:8px;margin:12px 0 20px}
+ .insight-card{padding:12px 9px;gap:7px;flex-direction:column;align-items:flex-start;border-radius:15px}
+ .insight-icon{width:28px;height:28px;font-size:13px}
+ .insight-card strong{font-size:17px}
+ .insight-card span:last-child{font-size:9px;line-height:1.3}
+ .learning-method{padding:18px 15px;border-radius:19px}
+ .learning-steps{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:16px;margin-top:16px}
+ .learning-steps small{font-size:10px}
+}
+@media(max-width:380px){.welcome-orbit{display:none}.quick-insights{grid-template-columns:repeat(3,minmax(0,1fr))}.insight-card{padding:10px 7px}}
+html.user-reduced-motion .track-progress span{transition:none}
